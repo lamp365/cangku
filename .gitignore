@@ -1,7 +1,7 @@
-./Application/Home/Conf/
-./Application/Admin/Conf/
-./Application/User/Conf/
-./Application/Common/Conf/
+./Application/Home/Conf
+./Application/Admin/Conf
+./Application/User/Conf
+./Application/Common/Conf
 .DS_Store
 .idea
 ./Runtime

@@ -2,7 +2,7 @@
 <block name="body">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>会员信息</h5>
+            <h5>用户管理</h5>
             <div class="ibox-tools" style="display:none;">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up"></i>
@@ -33,15 +33,17 @@
                             <button id="edit" class="btn btn-primary" disabled>
                                 编辑
                             </button>
-                            <button id="remove" class="btn btn-danger" disabled>
+                           <!-- <button id="remove" class="btn btn-danger" disabled>
                                 <i class="glyphicon glyphicon-remove"></i> 删除
-                            </button>
+                            </button>-->
                             <button id="editPWD" class="btn btn-primary" disabled>
                                 重置密码
                             </button>
-
-                        <button id="black" class="btn btn-primary" disabled>
-                            举报拉黑
+                        <button id="zuzhang" class="btn btn-primary" disabled>
+                            设为组长
+                        </button>
+                        <button id="see" class="btn btn-primary" disabled>
+                            查看发货地址
                         </button>
 
                     </div>
@@ -74,7 +76,7 @@
 </block>
 <block name="modal">
     <div class="modal fade" id="addCustomer" role="dialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lt">
             <div class="modal-content">
 
             </div>
@@ -86,7 +88,8 @@
         var $table = $('#table'), $edit=$('#edit');$remove = $('#remove'), selections = [];
         var $pwd = $('#editPWD');
         var $add = $('#addform');
-        var $black = $('#black');
+        var $see = $('#see');
+        var $zuzhang = $('#zuzhang');
         function initTable() {
             $table.bootstrapTable({
                 height: getHeight(),
@@ -106,12 +109,12 @@
                         //{field: 'Number', title: 'Number', formatter: function (value, row, index) {return index + 1;}},
                         {checkbox: true, align: 'center', valign: 'middle'},
                         //{field: 'Sort',title: '排序', align: 'center', valign: 'middle', sortable: true,},
-                        {field: 'user_name',title: '会员名称', align: 'center'},
+                        {field: 'user_name',title: '用户名称', align: 'center'},
                         {field: 'gid', title: '所属组', align: 'center'},
-                        {field: 'mobile', title: '手机', align: 'center'},
+                        {field: 'mobile', title: '手机号码', align: 'center'},
                         {field: 'is_frobid', title: '状态', align: 'center'},
-                        {field: 'level', title: '是否是组长', align: 'center'},
-                        {field: 'c_date', title: '创建时间', align: 'center'},
+                        {field: 'level', title: '级别', align: 'center'},
+                        {field: 'c_date', title: '加入时间', align: 'center'},
 
                     ]
                 ]
@@ -128,12 +131,14 @@
                     //$edit.attr("data-remote",""+getIdSelections()+'&t=' + Math.random(1000) );
                     $pwd.prop('disabled',false);
                     $edit.prop('disabled',false);
-                    $black.prop('disabled',false);
+                    $see.prop('disabled',false);
+                    $zuzhang.prop('disabled',false);
                 }else{
                     //$edit.attr("data-remote","javascript:void(0);");
                     $pwd.prop('disabled',true);
                     $edit.prop('disabled',true);
-                    $black.prop('disabled',true);
+                    $see.prop('disabled',true);
+                    $zuzhang.prop('disabled',true);
                 }
                 selections = getIdSelections();
             });
@@ -156,13 +161,24 @@
                     ,keyboard: false
                 });
             });
-            $black.click(function(){
+            $see.click(function() {
                 $("#addCustomer").modal({
-                    remote: "/index.php/admin/user/blacklist?id=" + getIdSelections()+'&t=' + Math.random(1000)
-                    ,backdrop: 'static'
-                    ,keyboard: false
+                    remote: "/index.php/admin/user/blacklist?id=" + getIdSelections() + '&t=' + Math.random(1000)
+                    , backdrop: 'static'
+                    , keyboard: false
                 });
             });
+
+            $zuzhang.click(function(){
+                var url = "/index.php/admin/user/zuzhang?id=" + getIdSelections();
+                window.location.href=url;
+                /*$("#addCustomer").modal({
+                    remote: "/index.php/admin/user/zuzhang?id=" + getIdSelections()+'&t=' + Math.random(1000)
+                    ,backdrop: 'static'
+                    ,keyboard: false
+                });*/
+            });
+
             $pwd.click(function(){
                 $("#addCustomer").modal({
                     remote: "/index.php/admin/user/editPWD?id=" + getIdSelections()+'&t=' + Math.random(1000)

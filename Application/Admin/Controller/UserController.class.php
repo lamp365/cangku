@@ -48,19 +48,23 @@ class UserController extends AdminController
             $data = i('post.');
 
             $data['c_date'] = time();
-
+            if(empty($data['mobile']) || empty($data['user_name'])){
+                $this->error('用户名和手机不能为空');
+            }
+            if(empty($data['gid'])){
+                $this->error('请选择用户属组');
+            }
             $res = M('user') -> where(array('mobile' =>$data['mobile'])) -> find();
             if($res){
-                $this->error('该手机已经有人使用，请输入新的手机！');
+                $this->error('该手机已有人使用！');
             }
+            //添加成功要给初始化密码
+            $data['password'] = md5(md5('123456'));
             //dump($data);
             //exit;
             $result = M('user') -> add($data);
             if($result){
-                //添加成功要给初始化密码
-                $string = 123456;
-                M('user') -> where(array('id'=>$result)) -> save(['password' => md5(md5($string))]);
-                $this -> success('添加成功！该会员的初始密码为'.$string);
+                $this -> success('添加成功！该会员的初始密码为123456');
             }else{
                 $this -> error('添加失败！');
             }
@@ -83,7 +87,12 @@ class UserController extends AdminController
         if(IS_POST){
             $data = i('post.');
 
-
+            if(empty($data['mobile']) || empty($data['user_name'])){
+                $this->error('用户名和手机不能为空');
+            }
+            if(empty($data['gid'])){
+                $this->error('请选择用户属组');
+            }
             M('user') -> where($where) -> save($data);
             $this->success('修改成功！');
         }else{
@@ -125,27 +134,24 @@ class UserController extends AdminController
         }
     }
 
-    //会员拉黑
+    //设为组长
 
-    public function blacklist(){
-        $id = i('id');
-        if(IS_POST){
-            $data = i('post.');
-            $data['c_date'] = time();
-            $result = M('dangeruser') -> add($data);
-
-            if($result){
-                $this -> success('拉黑成功');
-            }else{
-                $this -> error('拉黑失败！');
+    public function zuzhang(){
+        $id    = i('id');
+        $umode = M('user');
+        //组下其他成员取消组长,该用户设置为组长
+        $user  = $umode->find($id);
+        $gid   = $user['gid'];
+        $alluser = $umode->where(array('gid'=>$gid))->select();
+        foreach ($alluser as $item){
+            if($item['level'] == 1){
+                //取消组长
+                $where = array('id'=>$item['id'],'level'=>0);
+                $umode->where($where)->save();
             }
-
-        }else{
-            $this->assign('id', $id);
-            $this -> display('blacklist');
         }
-
-
+        $umode->where(array('id'=>$id,'level'=>1))->save();
+        $this -> success('设置成功');
     }
 
     //会员店铺

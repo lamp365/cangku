@@ -320,9 +320,16 @@ class UserController extends AdminController
         if(IS_POST){
             $data = i('post.');
             $data['c_date'] = time();
+            $data['money']  = intval($data['money']);
+            if(empty($data['group_name'])){
+                $this->error('属组名不能为空!');
+            }
             M('user_group') -> add($data);
             $this->success('增加成功！');
         }else{
+            $res['group_name']  = '';
+            $res['money']       = 0;
+            $this->assign('info',$res);
             $this->display('editGroup');
         }
 
@@ -332,7 +339,11 @@ class UserController extends AdminController
         $id = i('id');
         $where['id'] = $id;
         if(IS_POST){
-            $data = i('post.');
+            $data           = i('post.');
+            if(empty($data['group_name'])){
+                $this->error('属组名不能为空!');
+            }
+            $data['money']  = intval($data['money']);
             M('user_group') -> where($where) -> save($data);
             $this->success('修改成功！');
         }else{
@@ -343,9 +354,18 @@ class UserController extends AdminController
     }
     //删除用户组
     public function delGroup(){
-        $array_id['id'] = array('in',$_POST['ids']);
-        $data['is_delete'] = 1;
-        M('user_group') -> where($array_id) -> save($data);
+        $ids   = $_POST['ids'];
+        $user  = M('user');
+        $group = M('user_group');
+        foreach ($ids as $id){
+            //查询以下是否有用户 没有则可删除
+            $uwhere['gid'] = $id;
+            $data = $user->where($uwhere)->find();
+            if(empty($data)){
+                $where['id'] = $id;
+                $group->where($where)->delete();
+            }
+        }
         $this -> success('删除成功！');
     }
 

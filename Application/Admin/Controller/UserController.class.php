@@ -146,12 +146,19 @@ class UserController extends AdminController
         foreach ($alluser as $item){
             if($item['level'] == 1){
                 //取消组长
-                $where = array('id'=>$item['id'],'level'=>0);
-                $umode->where($where)->save();
+                $where = array('id'=>$item['id']);
+                $umode->where($where)->save(array('level'=>0));
             }
         }
-        $umode->where(array('id'=>$id,'level'=>1))->save();
+        $umode->where(array('id'=>$id))->save(array('level'=>1));
         $this -> success('设置成功');
+    }
+    //查看用户发货地址
+    public function address(){
+        $id    = i('id');
+        $alladdress = M('address')->where(array('uid'=>$id))->select();
+        $this->assign('alladdress',$alladdress);
+        $this -> display();
     }
 
     //会员店铺

@@ -76,7 +76,7 @@
 </block>
 <block name="modal">
     <div class="modal fade" id="addCustomer" role="dialog">
-        <div class="modal-dialog modal-lt">
+        <div class="modal-dialog modal-lt" id="showbox">
             <div class="modal-content">
 
             </div>
@@ -148,6 +148,7 @@
                 confirmDelete("/index.php/admin/user/delUser",param,$table,$remove,"id",ids);
             });
             $add.click(function(){
+                $("#showbox").removeClass('modal-lg').addClass("modal-lt");
                 $("#addCustomer").modal({
                     remote: "/index.php/admin/user/addUser"
                     ,backdrop: 'static'
@@ -155,6 +156,7 @@
                 });
             });
             $edit.click(function(){
+                $("#showbox").removeClass('modal-lg').addClass("modal-lt");
                 $("#addCustomer").modal({
                     remote: "/index.php/admin/user/editUser?id=" + getIdSelections()+'&t=' + Math.random(1000)
                     ,backdrop: 'static'
@@ -162,14 +164,16 @@
                 });
             });
             $see.click(function() {
+                $("#showbox").removeClass('modal-lt').addClass("modal-lg");
                 $("#addCustomer").modal({
-                    remote: "/index.php/admin/user/blacklist?id=" + getIdSelections() + '&t=' + Math.random(1000)
+                    remote: "/index.php/admin/user/address?id=" + getIdSelections() + '&t=' + Math.random(1000)
                     , backdrop: 'static'
                     , keyboard: false
                 });
             });
 
             $zuzhang.click(function(){
+                $("#showbox").removeClass('modal-lg').addClass("modal-lt");
                 var url = "/index.php/admin/user/zuzhang?id=" + getIdSelections();
                 window.location.href=url;
                 /*$("#addCustomer").modal({
@@ -180,6 +184,7 @@
             });
 
             $pwd.click(function(){
+                $("#showbox").removeClass('modal-lg').addClass("modal-lt");
                 $("#addCustomer").modal({
                     remote: "/index.php/admin/user/editPWD?id=" + getIdSelections()+'&t=' + Math.random(1000)
                     ,backdrop: 'static'

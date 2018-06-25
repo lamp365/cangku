@@ -2,3 +2,5 @@
 ./Application/Admin/Conf/
 ./Application/User/Conf/
 ./Application/Common/Conf/
+.DS_Store
+.idea

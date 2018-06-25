@@ -180,9 +180,14 @@ class UserController extends AdminController
         foreach ($res as &$v) {
             $v['c_date'] = date('Y-m-d H:i:s' ,$v['c_date']);
             $v['group_name'] = M('user_group') -> where(['id' => $v['gid']]) ->getField('group_name');
-            $v['user_name'] = M('user') -> where(['id' => $v['gid']]) ->getField('user_name');
-            $v['is_forbid'] = $v['is_forbid'] == 0 ? '正常' : '禁用';
-
+            $userInfo = M('user') -> where(['id' => $v['gid']]) ->field('user_name,mobile')->find();
+            $v['user_name'] = $userInfo['user_name'];
+            $v['mobile']    = $userInfo['mobile'];
+            if($v['is_forbid'] == 0){
+                $v['forbid'] = '<button class="btn btn-success btn-sm" >正常</button>';
+            }else{
+                $v['forbid'] = '<button class="btn btn-danger btn-sm">禁用</button>';
+            }
         }
 
         $list_array= array("total"=>$count,"rows"=>$res?$res:array());
@@ -190,77 +195,20 @@ class UserController extends AdminController
 
     }
 
-    //新增会员店铺
-    public function addShop(){
+    //查看备注信息
+    public function seeinfo(){
+        $id         = i('id');
         if(IS_POST){
-            $data = i('post.');
-
-            $data['c_date'] = time();
-
-            $res = M('user_shop') -> where(array('shop_name' =>$data['shop_name'])) -> find();
-
-            if($res){
-                $this->error('该店铺名称已经存在，请输入新的店铺名称！');
-            }
-
-            $user_id = M('user') -> where(array('user_name' =>$data['user_name'])) -> getField('id');
-            $g_id = M('user') -> where(array('user_name' =>$data['user_name'])) -> getField('gid');
-
-            if(!$user_id){
-                $this->error('该会员不存在');
-            }
-
-            $data['uid'] = $user_id;
-            $data['gid'] = $g_id;
-            unset($data['user_name']);
-            $result = M('user_shop') -> add($data);
-            if($result){
-                $this -> success('添加成功');
-            }else{
-                $this -> error('添加失败！');
-            }
-
+            $info = i('info');
+            M('user_shop')->where(array('id'=>$id))->save(array('info'=>$info));
+            $this->success('操作成功');
         }else{
-
-            $this-> display('editshop');
-        }
-    }
-
-    //修改会员店铺
-    public function editShop(){
-
-        $id = i('id');
-        $where['id'] = $id;
-        if(IS_POST){
-            $data = i('post.');
-
-            $user_id = M('user') -> where(array('user_name' =>$data['user_name'])) -> getField('id');
-            $g_id = M('user') -> where(array('user_name' =>$data['user_name'])) -> getField('gid');
-            unset($data['user_name']);
-            $data['uid'] = $user_id;
-            $data['gid'] = $g_id;
-
-            M('user_shop') -> where($where) -> save($data);
-            $this->success('修改成功！');
-        }else{
-            $res = M('user_shop') -> where($where)-> find();
-            $res['user_name'] = M('user') -> where(array('id' => $res['uid'])) -> getField('user_name');
-
-            $this->assign('info',$res);
-            $this-> display('editshop');
+            $info = M('user_shop')->find($id);
+            $this->assign('info',$info);
+            $this->display();
         }
 
     }
-
-    //删除会员店铺
-//删除用户组
-    public function delShop(){
-        $array_id['id'] = array('in',$_POST['ids']);
-        $data['is_delete'] = 1;
-        M('user_shop') -> where($array_id) -> save($data);
-        $this -> success('删除成功！');
-    }
-
     //黑名单管理
     public function black(){
 
@@ -275,7 +223,7 @@ class UserController extends AdminController
 
         $search_value = i('search');
         if(!empty($search_value)){
-            $where["d_mobile|d_name|d_name"] = array("like","%".$search_value."%");
+            $where["d_mobile|d_name|d_address"] = array("like","%".$search_value."%");
         }
         $count = M('dangeruser') -> where($where) -> count();
         $res = M('dangeruser') -> where($where) -> limit($offset,$limit) -> select();
@@ -288,22 +236,22 @@ class UserController extends AdminController
         echo json_encode($list_array);
     }
 
-    //移除拉黑会员
-    public function delBlack(){
-        $array_id['id'] = array('in',$_POST['ids']);
-
-        $result = M('dangeruser') -> where($array_id) -> find();
-        $res = M('dangeruser') -> where($array_id) -> delete();
-        if($res){
-            foreach($result as $v){
-                unlink(ROOT_PATH.$v['pic']);
-            }
+    //显示出凭证
+    public function pingzhen(){
+        $id         = i('id');
+        $info = M('dangeruser')->find($id);
+        if(!empty($info['pic'])){
+            $info['pic'] = explode(',',$info['pic']);
+        }else{
+            $info['pic'] = array();
         }
-        $this -> success('移除成功！');
+        $this->assign('info',$info);
+        $this->display();
+
     }
 
 
-    //权限管理 用户组管理
+    //用户组管理
     public function userGroup(){
         $this->display();
     }

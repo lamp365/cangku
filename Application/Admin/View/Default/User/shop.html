@@ -2,7 +2,7 @@
 <block name="body">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>会员店铺管理</h5>
+            <h5>用户店铺管理</h5>
             <div class="ibox-tools" style="display:none;">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up"></i>
@@ -25,22 +25,9 @@
             <div class="row row-lg">
                 <div class="col-sm-12">
                     <div id="toolbar">
-
-                            <a class="btn btn-success" data-toggle="modal" data-target="#addCustomer" data-remote="/index.php/admin/user/addShop" >
-                                新增
-                            </a>
-
-                            <button id="edit" class="btn btn-primary" disabled>
-                                编辑
+                            <button id="seeinfo" class="btn btn-primary" disabled>
+                                查看备注
                             </button>
-
-                            <button id="remove" class="btn btn-danger" disabled>
-                                <i class="glyphicon glyphicon-remove"></i> 删除
-                            </button>
-
-                            <!--<button id="EditAuth" class="btn btn-primary" disabled>-->
-                                <!--权限管理-->
-                            <!--</button>-->
 
                     </div>
                     <table id="table"
@@ -72,7 +59,7 @@
 </block>
 <block name="modal">
     <div class="modal fade" id="addCustomer" role="dialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lt">
             <div class="modal-content">
 
             </div>
@@ -81,7 +68,7 @@
 </block>
 <block name="script">
     <script type="text/javascript">
-        var $table = $('#table'), $edit=$('#edit');$remove = $('#remove'), selections = [];
+        var $table = $('#table'), $seeinfo=$('#seeinfo');selections = [];
         var $EditAuth = $('#EditAuth');
         function initTable() {
             $table.bootstrapTable({
@@ -102,12 +89,13 @@
                         //{field: 'Number', title: 'Number', formatter: function (value, row, index) {return index + 1;}},
                         {checkbox: true, align: 'center', valign: 'middle'},
                         //{field: 'Sort',title: '排序', align: 'center', valign: 'middle', sortable: true,},
-                        {field: 'id',title: '店铺id', align: 'center'},
-                        {field: 'user_name',title: '会员名称', align: 'center'},
-                        {field: 'group_name',title: '小组名称', align: 'center'},
-                        {field: 'shop_name', title: '店铺名称', align: 'center'},
+                        //{field: 'id',title: '店铺id', align: 'center'},
+                        {field: 'user_name',title: '用户名', align: 'center'},
+                        {field: 'mobile',title: '手机号', align: 'center'},
+                        {field: 'group_name',title: '属组', align: 'center'},
+                        {field: 'shop_name', title: '店铺名', align: 'center'},
                         {field: 'shop_zg', title: '店铺掌柜', align: 'center'},
-                        {field: 'is_forbid', title: '状态', align: 'center'},
+                        {field: 'forbid', title: '状态', align: 'center'},
                         {field: 'c_date', title: '创建时间', align: 'center'},
                     ]
                 ]
@@ -118,27 +106,23 @@
             }, 200);
             $table.on('check.bs.table uncheck.bs.table ' +
                     'check-all.bs.table uncheck-all.bs.table', function () {
-                $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+                $seeinfo.prop('disabled', !$table.bootstrapTable('getSelections').length);
                 var checkLen = $table.bootstrapTable('getSelections').length;
                 if(checkLen == 1){
                     //$edit.attr("data-remote",""+getIdSelections()+'&t=' + Math.random(1000) );
 
-                    $edit.prop('disabled',false);
+                    $seeinfo.prop('disabled',false);
                 }else{
                     //$edit.attr("data-remote","javascript:void(0);");
 
-                    $edit.prop('disabled',true);
+                    $seeinfo.prop('disabled',true);
                 }
                 selections = getIdSelections();
             });
-            $remove.click(function () {
-                var ids = getIdSelections();
-                var param = {ids:ids};
-                confirmDelete("/index.php/admin/user/delShop",param,$table,$remove,"id",ids);
-            });
-            $edit.click(function(){
+
+            $seeinfo.click(function(){
                 $("#addCustomer").modal({
-                    remote: "/index.php/admin/user/editShop?id=" + getIdSelections()+'&t=' + Math.random(1000)
+                    remote: "/index.php/admin/user/seeinfo?id=" + getIdSelections()+'&t=' + Math.random(1000)
                 });
             });
 

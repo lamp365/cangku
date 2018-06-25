@@ -2,7 +2,7 @@
 <block name="body">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>黑名单管理</h5>
+            <h5>恶意买家</h5>
             <div class="ibox-tools" style="display:none;">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up"></i>
@@ -26,14 +26,9 @@
                 <div class="col-sm-12">
                     <div id="toolbar">
 
-
-                            <button id="remove" class="btn btn-danger" disabled>
-                                <i class="glyphicon glyphicon-remove"></i> 移除
+                            <button id="pingzhen" class="btn btn-primary">
+                                查看凭证
                             </button>
-
-                            <!--<button id="EditAuth" class="btn btn-primary" disabled>-->
-                                <!--权限管理-->
-                            <!--</button>-->
 
                     </div>
                     <table id="table"
@@ -74,8 +69,8 @@
 </block>
 <block name="script">
     <script type="text/javascript">
-        var $table = $('#table'), $edit=$('#edit');$remove = $('#remove'), selections = [];
-        var $EditAuth = $('#EditAuth');
+        var $table = $('#table');selections = [];
+        var $pingzhen = $('#pingzhen');
         function initTable() {
             $table.bootstrapTable({
                 height: getHeight(),
@@ -95,10 +90,10 @@
                         //{field: 'Number', title: 'Number', formatter: function (value, row, index) {return index + 1;}},
                         {checkbox: true, align: 'center', valign: 'middle'},
                         //{field: 'Sort',title: '排序', align: 'center', valign: 'middle', sortable: true,},
-                        {field: 'uid',title: '举报会员名称', align: 'center'},
-                        {field: 'd_name',title: '拉黑名称', align: 'center'},
-                        {field: 'd_mobile', title: '拉黑手机', align: 'center'},
-                        {field: 'd_address', title: '拉黑地址', align: 'center'},
+                        {field: 'uid',title: '举报用户', align: 'center'},
+                        {field: 'd_name',title: '恶意买家', align: 'center'},
+                        {field: 'd_mobile', title: '买家手机', align: 'center'},
+                        {field: 'd_address', title: '买家地址', align: 'center'},
                         {field: 'info', title: '拉黑备注', align: 'center'},
                         {field: 'c_date', title: '拉黑时间', align: 'center'},
                     ]
@@ -110,26 +105,25 @@
             }, 200);
             $table.on('check.bs.table uncheck.bs.table ' +
                     'check-all.bs.table uncheck-all.bs.table', function () {
-                $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+                $pingzhen.prop('disabled', !$table.bootstrapTable('getSelections').length);
                 var checkLen = $table.bootstrapTable('getSelections').length;
                 if(checkLen == 1){
                     //$edit.attr("data-remote",""+getIdSelections()+'&t=' + Math.random(1000) );
 
-                    $edit.prop('disabled',false);
+                    $pingzhen.prop('disabled',false);
                 }else{
                     //$edit.attr("data-remote","javascript:void(0);");
 
-                    $edit.prop('disabled',true);
+                    $pingzhen.prop('disabled',true);
                 }
                 selections = getIdSelections();
             });
-            $remove.click(function () {
-                var ids = getIdSelections();
-                var param = {ids:ids};
-                confirmDelete("/index.php/admin/user/delBlack",param,$table,$remove,"id",ids);
+
+            $pingzhen.click(function () {
+                $("#addCustomer").modal({
+                    remote: "/index.php/admin/user/pingzhen?id=" + getIdSelections()+'&t=' + Math.random(1000)
+                }) ;
             });
-
-
             $(window).resize(function () {
                 $table.bootstrapTable('resetView', {
                     height: getHeight()

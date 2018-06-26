@@ -20,13 +20,27 @@ class BillController extends AdminController
     //等待审核
     public function torecord(){
         $recordM = M('recharge');
-        $where   = array();
+        $pwhere   = array();
+        $where    = '';
         if(!empty(i('gid'))){
-            $where['gid'] = i('gid');
+            $pwhere['gid'] = i('gid');
+            $where .= " gid=".i('gid');
         }
-        $where['state']   = 0;
+        $pwhere['state']   = 0;
+        if(empty($where)){
+            $where .= " state=0";
+        }else{
+            $where .= " and state=0";
+        }
+
+
         $count = $recordM->where($where)->count();
-        $p     = new \Think\Page($count,5,$where);
+        //计算出总和
+        $sql = "select sum(chon_price) as chon_price from recharge where {$where}";
+        $price_info = $recordM->query($sql);
+
+
+        $p     = new \Think\Page($count,5,$pwhere);
         $page  = $p->show();
         $data  = $recordM->where($where)->limit($p->firstRow.','.$p->listRows)->select();
         $userM  = M('user');
@@ -44,6 +58,7 @@ class BillController extends AdminController
         }
         $this->assign('page', $page);
         $this->assign('data', $data);
+        $this->assign('chon_price', $price_info[0]['chon_price']);
         $this->display();
     }
 

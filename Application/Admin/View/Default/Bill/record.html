@@ -21,7 +21,10 @@
                                 </select>
                             </div>
                             <div style="width: 180px;float: left;padding-right: 15px;">
-                                留一块时间
+                                <input class="form-control" id="startTime" name="startTime"  value="1530022716" type="text" />
+                            </div>
+                            <div style="width: 180px;float: left;padding-right: 15px;">
+                                <input class="form-control" id="endTime" name="endTime"  value="1530022716" type="text" />
                             </div>
                             <div style="width: 180px;float: left;padding-right: 15px;">
                                 <button class="btn btn-primary btn-lt">确定</button>
@@ -74,6 +77,17 @@
 </block>
 <block name="script">
     <script type="text/javascript">
-
+        $(function () {
+            laydate({
+                elem: '#startTime',
+                format: 'YYYY-MM-DD', //日期格式
+                event: 'focus'
+            });
+            laydate({
+                elem: '#endTime',
+                format: 'YYYY-MM-DD', //日期格式
+                event: 'focus'
+            });
+        });
     </script>
 </block>

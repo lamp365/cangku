@@ -54,7 +54,7 @@ function catTree(&$list,$pid=0,$level=0,$html='--'){
  * @param int $subType      1为 日划分  2为月划分
  * @return array   array(errno => ,message=>)   errno为200则成功 不为200 把错误信息提示出来
  */
-function uploadpic($rootPath = 'picture',$autoSub = 1 ,$subType = 1){
+function uploadpic($rootPath = 'picture',$autoSub = 1 ,$subType = 2){
     //图片上传设置
     if(empty($rootPath)){
         return array('errno'=>0,'message'=>'系统错误,请设置保存目录');

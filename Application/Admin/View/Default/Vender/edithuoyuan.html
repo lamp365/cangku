@@ -33,7 +33,7 @@
                     <select class="form-control" id="cat_id1" name="cat_id1">
                         <option value="0">选择一级分类</option>
                         <foreach name="cate" item="onecate">
-                            <option value="{$onecate.id}">{$onecate.cat_name}</option>
+                            <option value="{$onecate.id}" <?php if($onecate['id'] == $hide_id) echo 'selected'; ?> >{$onecate.cat_name}</option>
                         </foreach>
                     </select>
 

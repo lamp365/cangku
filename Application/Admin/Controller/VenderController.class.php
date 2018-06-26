@@ -306,22 +306,22 @@ class VenderController extends AdminController
         foreach ($res as &$v) {
 
         }
-        ppd(M('huoyuan')->getLastSql());
         $list_array= array("total"=>$count,"rows"=>$res?$res:array());
         echo json_encode($list_array);
 
     }
     //添加货源
     public function addHuoyuan(){
-
+        $id = i('id');
+        $id = intval($id);
         if(IS_POST){
             $data = i('post.');
             $data['c_date'] = time();
             if(empty($data['h_name'])){
                 $this->error('名称不能为空');
             }
-            if(empty($data['jin_price']) || empty($data['da_price'])){
-                $this->error('进价和费用不为空');
+            if(empty($data['jin_price']) || empty($data['da_price']) || !is_numeric($data['jin_price']) || !is_numeric($data['da_price'])){
+                $this->error('进价和费用不为空,且为数字');
             }
             if(empty($data['cat_id1']) || empty($data['cat_id2'])){
                 $this->error('请选择好分类');
@@ -329,14 +329,25 @@ class VenderController extends AdminController
             if (empty($data['pic'])) {
                 $this->error('请上传主图');
             }
-            M('user_group') -> add($data);
-            $this->success('增加成功！');
-        }else{
 
+            if($id!=0){
+                M('huoyuan') ->where(array('id'=>$id))-> save($data);
+                $this->success('修改成功！');
+            }else{
+                M('huoyuan') -> add($data);
+                $this->success('增加成功！');
+            }
+
+        }else{
+            $info = array();
+            if($id != 0){
+                $info = M('huoyuan')->find($id);
+            }
             //查询出顶级分类
             $cate = M('category') -> where(array('is_delete' => 0, 'pid' => 0)) -> select();
+            $this->assign('hide_id', $id);
             $this->assign('cate', $cate);
-            $this->assign('info',array());
+            $this->assign('info',$info);
             $this->display('edithuoyuan');
         }
 
@@ -346,23 +357,7 @@ class VenderController extends AdminController
         $cate = M('category')->where(array('pid'=>$cat_id))->select();
         $this->ajaxReturn($cate);
     }
-    //修改用户组
-    public function editGroup(){
-        $id = i('id');
-        $where['id'] = $id;
-        if(IS_POST){
-            $data = i('post.');
-            M('user_group') -> where($where) -> save($data);
-            $this->success('修改成功！');
-        }else{
-            //查询出顶级分类
-            $cate = M('category') -> where(array('is_delete' => 0, 'pid' => 0)) -> select();
-            $res  = M('user_group') -> where($where)-> find();
-            $this->assign('info',$res);
-            $this->assign('cate', $cate);
-            $this-> display();
-        }
-    }
+
     //删除用户组
     public function delGroup(){
         $array_id['id'] = array('in',$_POST['ids']);

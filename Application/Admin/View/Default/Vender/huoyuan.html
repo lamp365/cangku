@@ -1,5 +1,29 @@
 <extend name="Public/common" />
 <block name="body">
+    <style>
+        .the_pic{
+            background: #ffffff;
+            padding: 1px;
+            width: 45px;
+            height: 45px;
+            border: 1px solid #C6C6C6;
+            cursor: pointer;
+        }
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -300px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+    </style>
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>货源管理</h5>
@@ -60,7 +84,9 @@
                            data-url="/index.php/Admin/Vender/loadHuoyuan"
                            data-response-handler="responseHandler">
                     </table>
-
+                    <div class="big-img-show">
+                        <img src="">
+                    </div>
                 </div>
             </div>
         </div>
@@ -77,6 +103,17 @@
 </block>
 <block name="script">
     <script type="text/javascript">
+        $(function(){
+            $(".the_pic").click(function(){
+                var bigImg = $(this).attr("src");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").click(function(){
+                $(this).fadeOut();
+            });
+        });
+
         var $table = $('#table'), $edit=$('#edit');$remove = $('#remove'), selections = [];
         var $add = $('#addform');
 
@@ -101,7 +138,7 @@
                         //{field: 'Sort',title: '排序', align: 'center', valign: 'middle', sortable: true,},
                         {field: 'h_name',title: '名称', align: 'center'},
                         {field: 'cate', title: '分类', align: 'center'},
-                        {field: 'pic', title: '主图', align: 'center'},
+                        {field: 'pic_html', title: '主图', align: 'center'},
                         {field: 'jin_price', title: '进价', align: 'center'},
                         {field: 'da_price', title: '打包费', align: 'center'},
                         {field: 'info', title: '备注', align: 'center'},

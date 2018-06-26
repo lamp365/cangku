@@ -302,9 +302,13 @@ class VenderController extends AdminController
             $where["h_name"] = array("like","%".$search_value."%");
         }
         $count = M('huoyuan') -> where($where) -> count();
-        $res = M('huoyuan') -> where($where) -> limit($offset,$limit) -> select();
+        $res   = M('huoyuan') -> where($where) -> limit($offset,$limit) -> select();
+        $catM  = M('category');
         foreach ($res as &$v) {
-
+            $cat_name1 = $catM->where(array('id'=>$v['cat_id1']))->getField('cat_name');
+            $cat_name2 = $catM->where(array('id'=>$v['cat_id2']))->getField('cat_name');
+            $v['cate'] = $cat_name1.'-'.$cat_name2;
+            $v['pic_html'] = '<img src="'.$v['pic'].'" class="the_pic"/>';
         }
         $list_array= array("total"=>$count,"rows"=>$res?$res:array());
         echo json_encode($list_array);

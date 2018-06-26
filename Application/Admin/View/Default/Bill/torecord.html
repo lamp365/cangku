@@ -1,0 +1,80 @@
+<extend name="Public/common" />
+<block name="body">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs">
+                        <li style="width:100px" class="active"><a href="{:U('bill/torecord')}">等待审核</a></li>
+                        <li style="width:100px"><a href="{:U('bill/record')}">已经审核</a></li>
+                    </ul>
+
+                    <form action="">
+                        <div id="toolbar" style="margin-top: 15px;">
+                            <div style="width: 180px;float: left;padding-right: 15px;">
+                                <select class="form-control" name="group_id">
+                                    <option value="0">小组选择</option>
+                                    <option value="1">2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                            <div style="width: 180px;float: left;padding-right: 15px;">
+                                留一块时间
+                            </div>
+                            <div style="width: 180px;float: left;padding-right: 15px;">
+                                <button class="btn btn-primary btn-lt">确定</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <table class="table table-bordered table-hover" style="margin-top: 44px;">
+                        <tr>
+                            <th style="text-align: center">用户名</th>
+                            <th style="text-align: center">属组</th>
+                            <th style="text-align: center">充值金额</th>
+                            <th style="text-align: center">剩余金额</th>
+                            <th style="text-align: center">图片凭证</th>
+                            <th style="text-align: center">时间</th>
+                            <th style="text-align: center">操作</th>
+                            <th style="text-align: center">备注</th>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center">小月月</td>
+                            <td style="text-align: center">霹雳组</td>
+                            <td style="text-align: center">1</td>
+                            <td style="text-align: center">10</td>
+                            <td style="text-align: center">图片</td>
+                            <td style="text-align: center">2017.05.16</td>
+                            <td style="text-align: center">
+                                <span class="btn btn-primary btn-sm">通过</span>
+                                <span class="btn btn-danger btn-sm">失败</span>
+                            </td>
+                            <td style="text-align: center">
+                                备注
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+<block name="modal">
+    <div class="modal fade" id="addCustomer" role="dialog">
+        <div class="modal-dialog modal-lt" id="showbox">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+
+    </script>
+</block>

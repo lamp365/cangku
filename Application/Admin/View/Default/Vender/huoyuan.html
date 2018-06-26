@@ -57,7 +57,7 @@
                            data-page-list="[10,20,50,100,ALL]"
                            data-show-footer="false"
                            data-side-pagination="server"
-                           data-url="/index.php/Admin/Vender/loadVender"
+                           data-url="/index.php/Admin/Vender/loadHuoyuan"
                            data-response-handler="responseHandler">
                     </table>
 
@@ -68,7 +68,7 @@
 </block>
 <block name="modal">
     <div class="modal fade" id="addCustomer" role="dialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lt">
             <div class="modal-content">
 
             </div>
@@ -101,6 +101,7 @@
                         //{field: 'Sort',title: '排序', align: 'center', valign: 'middle', sortable: true,},
                         {field: 'h_name',title: '名称', align: 'center'},
                         {field: 'cate', title: '分类', align: 'center'},
+                        {field: 'pic', title: '主图', align: 'center'},
                         {field: 'jin_price', title: '进价', align: 'center'},
                         {field: 'da_price', title: '打包费', align: 'center'},
                         {field: 'info', title: '备注', align: 'center'},
@@ -136,14 +137,14 @@
             });
             $add.click(function(){
                 $("#addCustomer").modal({
-                    remote: "/index.php/admin/Vender/addVender"
+                    remote: "/index.php/admin/Vender/addHuoyuan"
                     ,backdrop: 'static'
                     ,keyboard: false
                 });
             });
             $edit.click(function(){
                 $("#addCustomer").modal({
-                    remote: "/index.php/admin/Vender/editVender?id=" + getIdSelections()+'&t=' + Math.random(1000)
+                    remote: "/index.php/admin/Vender/editHuoyuan?id=" + getIdSelections()+'&t=' + Math.random(1000)
                     ,backdrop: 'static'
                     ,keyboard: false
                 });

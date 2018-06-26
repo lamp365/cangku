@@ -306,7 +306,7 @@ class VenderController extends AdminController
         foreach ($res as &$v) {
 
         }
-
+        ppd(M('huoyuan')->getLastSql());
         $list_array= array("total"=>$count,"rows"=>$res?$res:array());
         echo json_encode($list_array);
 
@@ -317,17 +317,34 @@ class VenderController extends AdminController
         if(IS_POST){
             $data = i('post.');
             $data['c_date'] = time();
+            if(empty($data['h_name'])){
+                $this->error('名称不能为空');
+            }
+            if(empty($data['jin_price']) || empty($data['da_price'])){
+                $this->error('进价和费用不为空');
+            }
+            if(empty($data['cat_id1']) || empty($data['cat_id2'])){
+                $this->error('请选择好分类');
+            }
+            if (empty($data['pic'])) {
+                $this->error('请上传主图');
+            }
             M('user_group') -> add($data);
             $this->success('增加成功！');
         }else{
 
             //查询出顶级分类
             $cate = M('category') -> where(array('is_delete' => 0, 'pid' => 0)) -> select();
-
             $this->assign('cate', $cate);
+            $this->assign('info',array());
             $this->display('edithuoyuan');
         }
 
+    }
+    public function getCate(){
+        $cat_id = i('post.cat_id1');
+        $cate = M('category')->where(array('pid'=>$cat_id))->select();
+        $this->ajaxReturn($cate);
     }
     //修改用户组
     public function editGroup(){
@@ -338,8 +355,11 @@ class VenderController extends AdminController
             M('user_group') -> where($where) -> save($data);
             $this->success('修改成功！');
         }else{
-            $res = M('user_group') -> where($where)-> find();
+            //查询出顶级分类
+            $cate = M('category') -> where(array('is_delete' => 0, 'pid' => 0)) -> select();
+            $res  = M('user_group') -> where($where)-> find();
             $this->assign('info',$res);
+            $this->assign('cate', $cate);
             $this-> display();
         }
     }

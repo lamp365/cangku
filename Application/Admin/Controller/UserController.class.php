@@ -241,11 +241,12 @@ class UserController extends AdminController
         $id         = i('id');
         $info = M('dangeruser')->find($id);
         if(!empty($info['pic'])){
-            $info['pic'] = explode(',',$info['pic']);
+            $piclist = $info['pic'] = explode(',',$info['pic']);
         }else{
-            $info['pic'] = array();
+            $piclist = $info['pic'] = array();
         }
         $this->assign('info',$info);
+        $this->assign('piclist',$piclist);
         $this->display();
 
     }

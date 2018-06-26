@@ -173,9 +173,15 @@ class VenderController extends AdminController
 
     //删除尺码
     public function delSizes(){
-        $array_id['id'] = array('in',$_POST['ids']);
-        $data['is_delete'] = 1;
-        M('cm_size') -> where($array_id) -> save($data);
+        $ids = $_POST['ids'];
+        foreach ($ids as $id){
+            //如果是一级,把二级全部删除
+            $res = M('category')->find($id);
+            if($res['pid'] == 0){
+                M('cm_size')->where(array('pid'=>$id))->save(array('is_delete'=>1));
+            }
+            M('cm_size')->where(array('id'=>$id))->save(array('is_delete'=>1));
+        }
         $this -> success('删除成功！');
     }
 
@@ -269,9 +275,15 @@ class VenderController extends AdminController
 
     //删除分类
     public function delCate(){
-        $array_id['id'] = array('in',$_POST['ids']);
-        $data['is_delete'] = 1;
-        M('category') -> where($array_id) -> save($data);
+        $ids = $_POST['ids'];
+        foreach ($ids as $id){
+            //如果是一级,把二级全部删除
+            $res = M('category')->find($id);
+            if($res['pid'] == 0){
+                M('category')->where(array('pid'=>$id))->save(array('is_delete'=>1));
+            }
+            M('category')->where(array('id'=>$id))->save(array('is_delete'=>1));
+        }
         $this -> success('删除成功！');
     }
 

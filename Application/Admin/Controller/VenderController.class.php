@@ -35,7 +35,9 @@ class VenderController extends AdminController
     public function addVender(){
         if(IS_POST){
             $data = i('post.');
-
+            if(empty($data['ch_name']) || empty($data['cname'])){
+                $this -> error('名字或者别名不能为空！');
+            }
             $result = M('changjia') -> add($data);
             if($result){
                 //添加成功要给初始化密码
@@ -58,6 +60,9 @@ class VenderController extends AdminController
         $where['id'] = $id;
         if(IS_POST){
             $data = i('post.');
+            if(empty($data['ch_name']) || empty($data['cname'])){
+                $this -> error('名字或者别名不能为空！');
+            }
             M('changjia') -> where($where) -> save($data);
             $this->success('修改成功！');
         }else{
@@ -94,16 +99,18 @@ class VenderController extends AdminController
         }
         $count = M('cm_size') -> where($where) -> count();
         $res = M('cm_size') -> where($where) -> limit($offset,$limit) -> select();
-        foreach ($res as &$v) {
+        $data = catTree($res);
+        foreach ($data as &$v) {
            if (0 == $v['pid']) {
                $v['p_name'] = '父级尺码';
            } else {
-               $v['p_name'] = M('cm_size') -> where(['id' => $v['pid']]) ->getField('cm_name');
+               $v['cm_name'] = "|".$v['html'].$v['cm_name'];
+               $v['p_name']  = '二级尺码';
            }
 
         }
 
-        $list_array= array("total"=>$count,"rows"=>$res?$res:array());
+        $list_array= array("total"=>$count,"rows"=>$data?$data:array());
         echo json_encode($list_array);
 
     }
@@ -112,7 +119,12 @@ class VenderController extends AdminController
     public function addSizes(){
         if(IS_POST){
             $data = i('post.');
-
+            if(empty($data['cm_name'])){
+                $this -> error('尺码名字不为空！');
+            }
+            if(empty($data['pid'])){
+                $data['pid'] = 0;
+            }
             $result = M('cm_size') -> add($data);
             if($result){
                 $this -> success('添加成功');
@@ -136,7 +148,14 @@ class VenderController extends AdminController
         $where['id'] = $id;
         if(IS_POST){
             $data = i('post.');
-
+            if(empty($data['cm_name'])){
+                $this -> error('尺码名字不为空！');
+            }
+            //获取一次 看该尺码如果是父急,不能移动为二级
+            $res = M('cm_size') -> where($where)-> find();
+            if($res['pid'] == 0 && $data['pid'] != 0){
+                $this -> error('一级不能为修改为二级！');
+            }
             M('cm_size') -> where($where) -> save($data);
             $this->success('修改成功！');
         }else{
@@ -178,15 +197,17 @@ class VenderController extends AdminController
         }
         $count = M('category') -> where($where) -> count();
         $res = M('category') -> where($where) -> limit($offset,$limit) -> select();
-        foreach ($res as &$v) {
+        $data = catTree($res);
+        foreach ($data as &$v) {
             if (0 == $v['pid']) {
                 $v['p_name'] = '父级分类';
             } else {
-                $v['p_name'] = M('category') -> where(['id' => $v['pid']]) ->getField('cat_name');
+                $v['cat_name'] = "|".$v['html'].$v['cat_name'];
+                $v['p_name']  = '二级分类';
             }
         }
 
-        $list_array= array("total"=>$count,"rows"=>$res?$res:array());
+        $list_array= array("total"=>$count,"rows"=>$data?$data:array());
         echo json_encode($list_array);
     }
 
@@ -194,7 +215,12 @@ class VenderController extends AdminController
     public function addCate(){
         if(IS_POST){
             $data = i('post.');
-
+            if(empty($data['cat_name'])){
+                $this -> error('分类名字不为空！');
+            }
+            if(empty($data['pid'])){
+                $data['pid'] = 0;
+            }
             $result = M('category') -> add($data);
             if($result){
                 $this -> success('添加成功');
@@ -218,7 +244,14 @@ class VenderController extends AdminController
         $where['id'] = $id;
         if(IS_POST){
             $data = i('post.');
-
+            if(empty($data['cat_name'])){
+                $this -> error('分类名字不为空！');
+            }
+            //获取一次 看该尺码如果是父急,不能移动为二级
+            $res = M('category') -> where($where)-> find();
+            if($res['pid'] == 0 && $data['pid'] != 0){
+                $this -> error('一级不能为修改为二级！');
+            }
             M('category') -> where($where) -> save($data);
             $this->success('修改成功！');
         }else{

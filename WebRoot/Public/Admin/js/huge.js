@@ -125,5 +125,59 @@ function confirmDelete(url,param,tableObj,delObj,field,ids){
         });
     });
 }
-function getcustomer(){
+function confirmDelete2(url,param,type,delObj){
+    swal({
+        title: "您确定要删除这些信息吗？",
+        text: "删除后将无法恢复，请谨慎操作！",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonText:"让我再考虑一下…",
+        confirmButtonColor: "#1ab394",
+        confirmButtonText: "删除",
+        closeOnConfirm: false
+    }, function () {
+        $.ajax({
+            url: url,
+            data:param,
+            dataType:"json",
+            type: type,
+            async:false
+        }).done(function(data) {
+            if(data.status==1){
+                swal({
+                    title:"删除成功！",
+                    text:"您已经永久删除了这些信息。",
+                    type:"success",
+                    showConfirmButton:false,
+                    timer:1000,
+                });
+               $(delObj).closest('tr').remove();
+            }
+        }).error(function(data) {
+            swal("删除失败！", "删除操作失败了!", "error");
+        });
+    });
+}
+function postData(url,param,type,delObj){
+    $.ajax({
+        url: url,
+        data:param,
+        dataType:"json",
+        type: type,
+        async:false
+    }).done(function(data) {
+        if(data.status==1){
+            swal({
+                title:"成功！",
+                text:data.info,
+                type:"success",
+                showConfirmButton:false,
+                timer:1000,
+            });
+            if(delObj)
+                $(delObj).closest('tr').remove();
+        }
+    }).error(function(data) {
+        swal("操作失败！", data.info, "error");
+    });
 }

@@ -17,7 +17,7 @@ class BillController extends AdminController
         $this->display();
     }
 
-    //等待审核
+    //充值余额管理
     public function torecord(){
         $state    = intval(i('state'));
         $timeInfo = getTimestapFromTimeJS();
@@ -46,7 +46,7 @@ class BillController extends AdminController
         $price_info = $recordM->query($sql);
 
 
-        $p     = new \Think\Page($count,5);
+        $p     = new \Think\Page($count,30);
         $page  = $p->show();
         $data  = $recordM->where($where)->limit($p->firstRow.','.$p->listRows)->select();
         $userM  = M('user');
@@ -79,11 +79,26 @@ class BillController extends AdminController
         $this->display();
     }
 
-    public function record(){
-        $this->display();
+    public function delBill(){
+        $id = intval(i('id'));
+        M('recharge')->where("id={$id}")->delete();
+        $this->success('删除成功');
     }
 
+    public function okBill(){
+        $id = intval(i('id'));
+        M('recharge')->where("id={$id}")->save(array('state'=>1));
+        $this->success('已经审核成功');
+    }
 
-
+    public function eidtBill(){
+        $id    = intval(i('id'));
+        $price = i('price');
+        if(!is_numeric($price)){
+            $this->error('请设置金额为数字');
+        }
+        M('recharge')->where("id={$id}")->save(array('chon_price'=>$price));
+        $this->success('修改成功');
+    }
 
 }

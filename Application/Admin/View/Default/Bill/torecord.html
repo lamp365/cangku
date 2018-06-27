@@ -35,7 +35,7 @@
                         <li style="width:100px" <if condition="$state eq 1">class="active" </if>  ><a href="{:U('bill/torecord',array('state'=>1))}">已经审核</a></li>
                     </ul>
 
-                    <form action="{$self}" method="get" onsubmit="return checkForm(this)">
+                    <form action="__CONTROLLER__/torecord/state/{$state}" method="get" onsubmit="return checkForm(this)">
                         <div id="toolbar" style="margin-top: 15px;">
                             <div style="width: 180px;float: left;padding-right: 15px;">
                                 <select class="form-control" name="gid">
@@ -70,9 +70,9 @@
                         </tr>
                         <foreach name="data" item="onerow">
                             <tr>
-                                <td style="text-align: center" title="{$onerow.mobile}">{$onerow.id}{$onerow.user_name}</td>
+                                <td style="text-align: center" title="{$onerow.mobile}">{$onerow.user_name}</td>
                                 <td style="text-align: center">{$onerow.group_name}</td>
-                                <td style="text-align: center">{$onerow.chon_price}</td>
+                                <td style="text-align: center" class="chon_price" price="{$onerow.chon_price}">{$onerow.chon_price}</td>
                                 <td style="text-align: center">{$onerow.shen_price}</td>
                                 <td style="text-align: center">
                                     <div class="piclist">
@@ -86,9 +86,9 @@
                                 <td style="text-align: center">{$onerow.c_date|date='Y-m-d H:i:s',###}</td>
                                 <td style="text-align: center">
                                     <if condition="$state eq 0">
-                                    <button class="btn btn-warning btn-sm" url="{:U('bill/editBill',array('id'=>$onerow['id']))}">修改</button>
-                                    <button class="btn btn-primary btn-sm" url="{:U('bill/okBill',array('id'=>$onerow['id'],'state'=>1))}">通过</button>
-                                    <button class="btn btn-danger btn-sm" url="{:U('bill/delBill',array('id'=>$onerow['id'],'state'=>1))}">删除</button>
+                                    <button class="btn btn-warning btn-sm gaione" type="gai" onclick="modifyPrice(this)" id="{$onerow.id}">修改</button>
+                                    <button class="btn btn-primary btn-sm shenone" url="{:U('bill/okBill',array('id'=>$onerow['id'],'state'=>1))}">通过</button>
+                                    <button class="btn btn-danger btn-sm delone" url="{:U('bill/delBill',array('id'=>$onerow['id']))}">删除</button>
                                     <else/>
                                     已审核
                                     </if>
@@ -148,7 +148,53 @@
             $(".big-img-show").on("click",function(){
                 $(this).fadeOut();
             });
+
+            $(".delone").click(function () {
+               var url = $(this).attr('url');
+                confirmDelete2(url,{},'get',this);
+            });
+            $(".shenone").click(function () {
+               var url = $(this).attr('url');
+                postData(url,{},'get',this);
+            });
+
         });
+
+        function modifyPrice(obj) {
+            var type = $(obj).attr('type');
+            if(type == 'gai'){
+                var price = $(obj).closest('tr').find('.chon_price').text();
+                var html  = "<input type='number' value='"+price+"' class='form-control' onblur='setPrice(this)' style='max-width:90px;text-align: center'/>" ;
+                $(obj).closest('tr').find('.chon_price').html(html);
+                $(obj).attr('type','quxiao');
+                $(obj).text('返回');
+            }else if(type == 'quxiao'){
+                var price = $(obj).closest('tr').find('.chon_price input').val();
+                $(obj).closest('tr').find('.chon_price').html(parseFloat(price).toFixed(2));
+                $(obj).attr('type','gai');
+                $(obj).text('修改');
+            }
+        }
+
+        function setPrice(obj) {
+            var yuan_price = $(obj).closest('.chon_price').attr('price');
+            var new_price  = $(obj).val();
+            new_price = parseFloat(new_price).toFixed(2);
+            if(yuan_price == new_price){
+                return;
+            }
+            var id  = $(obj).closest('tr').find(".gaione").attr('id');
+            var url = "__CONTROLLER__/eidtBill";
+            $.post(url,{id:id,price:new_price},function (data) {
+                if(data.status == 1){
+                    toastr.success(data.info);
+                    $(obj).closest('tr').find(".gaione").click();
+                } else{
+                    toastr.warning(data.info);
+                }
+            });
+            $(obj).closest('.chon_price').attr('price',new_price)
+        }
         function checkForm(obj) {
             var s_time = $("#startTime").val();
             var e_time = $("#endTime").val();

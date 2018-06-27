@@ -46,7 +46,7 @@ class BillController extends AdminController
         $price_info = $recordM->query($sql);
 
 
-        $p     = new \Think\Page($count,5,$pwhere);
+        $p     = new \Think\Page($count,5);
         $page  = $p->show();
         $data  = $recordM->where($where)->limit($p->firstRow.','.$p->listRows)->select();
         $userM  = M('user');

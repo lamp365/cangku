@@ -142,3 +142,20 @@ function getTimestapFromTimeJS(){
     }
     return  array('s_time'=>$s_time,'e_time'=>$e_time);
 }
+//魔板时间控件时间处理
+function tplhtmlTime($type,$time){
+    if($type == 'start'){
+        $mes = '开始时间';
+        $qu  = 0;
+    }else if($type == 'end'){
+        $mes = '结束时间';
+        $qu  = 3600*24;
+    }else{
+        $mes = '参数有误';
+        $qu  = 0;
+    }
+    if(!empty($time)){
+        $mes = date("Y-m-d",$time-$qu);
+    }
+    return  $mes;
+}

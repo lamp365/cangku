@@ -35,7 +35,7 @@
                         <li style="width:100px" <if condition="$state eq 1">class="active" </if>  ><a href="{:U('bill/torecord',array('state'=>1))}">已经审核</a></li>
                     </ul>
 
-                    <form action="{$self}" method="post" onsubmit="return checkForm(this)">
+                    <form action="{$self}" method="get" onsubmit="return checkForm(this)">
                         <div id="toolbar" style="margin-top: 15px;">
                             <div style="width: 180px;float: left;padding-right: 15px;">
                                 <select class="form-control" name="gid">
@@ -46,10 +46,10 @@
                                 </select>
                             </div>
                             <div style="width: 180px;float: left;padding-right: 15px;">
-                                <input class="form-control" id="startTime" name="s_time"  value="{$s_time|default='开始时间'}" type="text" />
+                                <input class="form-control" id="startTime" name="s_time"  value="{$s_time|tplhtmlTime='start',###}" type="text" />
                             </div>
                             <div style="width: 180px;float: left;padding-right: 15px;">
-                                <input class="form-control" id="endTime" name="e_time"  value="{$e_time|default='结束时间'}" type="text" />
+                                <input class="form-control" id="endTime" name="e_time"  value="{$e_time|tplhtmlTime='end',###}" type="text" />
                             </div>
                             <div style="width: 180px;float: left;padding-right: 15px;">
                                 <button type="submit" class="btn btn-primary btn-lt">确定</button>

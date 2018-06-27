@@ -88,6 +88,14 @@ class BillController extends AdminController
     public function okBill(){
         $id = intval(i('id'));
         M('recharge')->where("id={$id}")->save(array('state'=>1));
+        $priceInfo = M('recharge')->where("id={$id}")->find();
+        //加到小组资金中
+        $price = $priceInfo['chon_price'];
+        $gid   = $priceInfo['gid'];
+        $data = array(
+            'money'   => array('exp', "`money`+{$price}"),
+        );
+        M('user_group')->where("id={$gid}")->save($data);
         $this->success('已经审核成功');
     }
 

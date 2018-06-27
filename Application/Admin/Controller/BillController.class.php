@@ -9,6 +9,66 @@ class BillController extends AdminController
         parent::_initialize();
     }
     public function index(){
+        $is_check    = intval(i('is_check'));
+        $timeInfo = getTimestapFromTimeJS();
+        $s_time   = $timeInfo['s_time'];
+        $e_time   = $timeInfo['e_time'];
+        $gid      = intval(i('gid'));
+        $shop_id  = intval(i('shop_id'));
+
+        $where    = '';
+        $pwhere   = array();
+        $where    = " is_check={$is_check} ";
+        $pwhere['is_check'] = $is_check;
+        if(!empty($gid)){
+            $pwhere['gid'] = $gid;
+            $where .= " and gid={$gid} ";
+        }
+        if(!empty($shop_id)){
+            $pwhere['shop_id'] = $shop_id;
+            $where .= " and shop_id={$shop_id} ";
+        }
+        if(!empty($s_time) && !empty($e_time)){
+            $where .= "and c_date > {$s_time} and c_date < {$e_time} ";
+            $pwhere['c_date'] = array(array('gt',$s_time),array('lt',$e_time));
+        }
+
+        $billM    = M('bill');
+
+        $count = $billM->where($where)->count();
+        $p     = new \Think\Page($count,4);
+        $page  = $p->show();
+        $data  = $billM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+        $userM  = M('user');
+        $usergM = M('user_group');
+        $userShop = M('user_shop');
+
+        foreach ($data as &$item){
+            $user_info  = $userM->where(array('id'=>$item['uid']))->find();
+            $group_name = $usergM->where(array('id'=>$item['gid']))->getField('group_name');
+            $shop_info  = $userShop->where(array('id'=>$item['shop_id']))->find();
+            $item['user_name']  = $user_info['user_name'];
+            $item['mobile']     = $user_info['mobile'];
+            $item['group_name'] = $group_name;
+            $item['shop_name']  = $shop_info['shop_name'];
+            $item['shop_zg']  = $shop_info['shop_zg'];
+        }
+
+        //获取小组
+        $all_group = $usergM->field('id,group_name')->select();
+        //获取店铺
+        $all_shop  = $userShop->field('id,shop_name')->select();
+
+        $this->assign('page', $page);
+        $this->assign('data', $data);
+        $this->assign('is_check', $is_check);
+        $this->assign('all_group', $all_group);
+        $this->assign('all_shop', $all_shop);
+
+        $this->assign('s_time',$s_time);
+        $this->assign('e_time',$e_time);
+        $this->assign('gid',$gid);
+        $this->assign('shop_id',$shop_id);
 
         $this->display();
     }
@@ -48,18 +108,18 @@ class BillController extends AdminController
 
         $p     = new \Think\Page($count,30);
         $page  = $p->show();
-        $data  = $recordM->where($where)->limit($p->firstRow.','.$p->listRows)->select();
+        $data  = $recordM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
         $userM  = M('user');
         $usergM = M('user_group');
         foreach ($data as &$item){
-            $user_info  = $userM->where(array('id'=>$item['uid']))->getField('id,user_name,mobile');
+            $user_info  = $userM->where(array('id'=>$item['uid']))->find();
             $group_name = $usergM->where(array('id'=>$item['gid']))->getField('group_name');
             $pic        = array();
             if(!empty($item['pic'])){
                 $pic = explode(',',$item['pic']);
             }
-            $item['user_name']  = $user_info[1]['user_name'];
-            $item['mobile']     = $user_info[1]['mobile'];
+            $item['user_name']  = $user_info['user_name'];
+            $item['mobile']     = $user_info['mobile'];
             $item['group_name'] = $group_name;
             $item['pic_list']   = $pic;
         }

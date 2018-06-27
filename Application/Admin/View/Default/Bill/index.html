@@ -6,41 +6,39 @@
                 <div class="col-sm-12">
 
                     <ul class="nav nav-tabs">
-                        <li style="width:100px" class="active"><a href="{:U('bill/index')}">账单记录</a></li>
-                        <li style="width:100px" ><a href="{:U('bill/tocheck')}">等待审核</a></li>
+                        <li style="width:100px" <if condition="$is_check eq 0">class="active" </if> ><a href="{:U('bill/index')}">等待审核</a></li>
+                        <li style="width:100px" <if condition="$is_check eq 1">class="active" </if> ><a href="{:U('bill/index',array('is_check'=>1))}">账单记录</a></li>
                     </ul>
 
-                    <form action="">
+                    <form action="__CONTROLLER__/index/is_check/{$is_check}" method="get" onsubmit="return checkForm(this)">
                     <div id="toolbar" style="margin-top: 15px;">
                         <div style="width: 180px;float: left;padding-right: 15px;">
                             <select class="form-control" name="shop_id">
                                 <option value="0">店铺选择</option>
-                                <option value="1">2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                <foreach name="all_shop" item="one_shop">
+                                    <option value="{$one_shop.id}" <if condition="$one_shop['id'] eq $shop_id"> selected</if> >{$one_shop.shop_name}</option>
+                                </foreach>
                             </select>
                         </div>
                         <div style="width: 180px;float: left;padding-right: 15px;">
-                            <select class="form-control" name="group_id">
+                            <select class="form-control" name="gid">
                                 <option value="0">小组选择</option>
-                                <option value="1">2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                <foreach name="all_group" item="one_group">
+                                    <option value="{$one_group.id}" <if condition="$one_group['id'] eq $gid"> selected</if> >{$one_group.group_name}</option>
+                                </foreach>
                             </select>
                         </div>
                         <div style="width: 180px;float: left;padding-right: 15px;">
                             <input type="text" class="form-control" name="user_name" placeholder="请输入用户名">
                         </div>
                         <div style="width: 180px;float: left;padding-right: 15px;">
-                            <input class="form-control" id="startTime" name="startTime"  value="1530022716" type="text" />
+                            <input class="form-control" id="startTime" name="s_time"  value="{$s_time|tplhtmlTime='start',###}" type="text" />
                         </div>
                         <div style="width: 180px;float: left;padding-right: 15px;">
-                            <input class="form-control" id="endTime" name="endTime"  value="1530022716" type="text" />
+                            <input class="form-control" id="endTime" name="e_time"  value="{$e_time|tplhtmlTime='end',###}" type="text" />
                         </div>
                         <div style="width: 180px;float: left;padding-right: 15px;">
-                            <button class="btn btn-primary btn-lt">确定</button>
+                            <button type="submit" class="btn btn-primary btn-lt">确定</button>
                         </div>
                     </div>
                     </form>
@@ -55,21 +53,34 @@
                             <th style="text-align: center">打包费</th>
                             <th style="text-align: center">卖出价</th>
                             <th style="text-align: center">账单状态</th>
-                            <th style="text-align: center">备注</th>
+                            <th style="text-align: center"><if condition="$is_check eq 0">操作<else/>备注</if></th>
                         </tr>
+                        <foreach name="data" item="onerow">
                         <tr>
-                            <td style="text-align: center">3</td>
-                            <td style="text-align: center">小月月[掌柜]</td>
-                            <td style="text-align: center">小李[霹雳组]</td>
-                            <td style="text-align: center">1</td>
-                            <td style="text-align: center">10</td>
-                            <td style="text-align: center">14</td>
-                            <td style="text-align: center">140</td>
-                            <td style="text-align: center">发货</td>
+                            <td style="text-align: center">{$onerow.id}</td>
+                            <td style="text-align: center" title="{$onerow.shop_zg}">{$onerow.shop_name}</td>
+                            <td style="text-align: center">{$onerow.user_name}[{$onerow.group_name}]</td>
+                            <td style="text-align: center"><img src="{$onerow.pic}" style="width: 45px;height: 45px;"></td>
+                            <td style="text-align: center">{$onerow.jin_price}</td>
+                            <td style="text-align: center">{$onerow.da_price}</td>
+                            <td style="text-align: center">{$onerow.mai_price}</td>
                             <td style="text-align: center">
-                                <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="123ds3543"></span>
+                                <if condition="$onerow['state'] eq 0">
+                                    <span class="btn btn-primary btn-lt">调货</span>
+                                <else/>
+                                    <span class="btn btn-success btn-lt">发货</span>
+                                </if>
+                            </td>
+                            <td style="text-align: center">
+                                <if condition="$is_check eq 0">
+                                    操作
+                                <else/>
+                                    <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$onerow.info}"></span>
+                                </if>
+
                             </td>
                         </tr>
+                        </foreach>
                     </table>
 
                 </div>

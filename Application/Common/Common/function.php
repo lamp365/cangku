@@ -125,3 +125,20 @@ function mkdirs($dir){
     }
     return true;
 }
+
+//获取时间插件的时间戳
+function getTimestapFromTimeJS(){
+    $s_time = i('s_time');
+    $e_time = i('e_time');
+    if($s_time == '开始时间' || empty($s_time)){
+        $s_time = '';
+    }else{
+        $s_time = strtotime($s_time);
+    }
+    if($e_time == '结束时间' || empty($e_time)){
+        $e_time = '';
+    }else{
+        $e_time = strtotime($e_time)+3600*24;
+    }
+    return  array('s_time'=>$s_time,'e_time'=>$e_time);
+}

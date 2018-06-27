@@ -19,21 +19,27 @@ class BillController extends AdminController
 
     //等待审核
     public function torecord(){
+        $state    = intval(i('state'));
+        $timeInfo = getTimestapFromTimeJS();
+        $s_time  = $timeInfo['s_time'];
+        $e_time  = $timeInfo['e_time'];
+        $gid     = intval(i('gid'));
         $recordM = M('recharge');
         $pwhere   = array();
         $where    = '';
-        if(!empty(i('gid'))){
-            $pwhere['gid'] = i('gid');
-            $where .= " gid=".i('gid');
+        if(!empty($gid)){
+            $pwhere['gid'] = $gid;
+            $where .= " gid={$gid} ";
         }
-        $pwhere['state']   = 0;
-        if(empty($where)){
-            $where .= " state=0";
-        }else{
-            $where .= " and state=0";
+        $pwhere['state']   = $state;
+        $where .= "and state={$state} ";
+
+        if(!empty($s_time) && !empty($e_time)){
+            $where .= "and c_date > {$s_time} and c_date < {$e_time} ";
+            $pwhere['c_date'] = array(array('gt',$s_time),array('lt',$e_time));
         }
 
-
+        $where = ltrim($where,'and');
         $count = $recordM->where($where)->count();
         //计算出总和
         $sql = "select sum(chon_price) as chon_price from recharge where {$where}";
@@ -46,19 +52,30 @@ class BillController extends AdminController
         $userM  = M('user');
         $usergM = M('user_group');
         foreach ($data as &$item){
-            $user_name  = $userM->where(array('id'=>$item['uid']))->getField('user_name');
+            $user_info  = $userM->where(array('id'=>$item['uid']))->getField('id,user_name,mobile');
             $group_name = $usergM->where(array('id'=>$item['gid']))->getField('group_name');
             $pic        = array();
             if(!empty($item['pic'])){
                 $pic = explode(',',$item['pic']);
             }
-            $item['user_name']  = $user_name;
+            $item['user_name']  = $user_info[1]['user_name'];
+            $item['mobile']     = $user_info[1]['mobile'];
             $item['group_name'] = $group_name;
             $item['pic_list']   = $pic;
         }
+
+        //获取小组
+        $all_group = $usergM->field('id,group_name')->select();
+
         $this->assign('page', $page);
         $this->assign('data', $data);
+        $this->assign('state', $state);
+        $this->assign('all_group', $all_group);
         $this->assign('chon_price', $price_info[0]['chon_price']);
+
+        $this->assign('s_time',$s_time);
+        $this->assign('e_time',$e_time);
+        $this->assign('gid',$gid);
         $this->display();
     }
 

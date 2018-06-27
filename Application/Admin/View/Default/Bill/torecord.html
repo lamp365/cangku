@@ -31,29 +31,28 @@
             <div class="row row-lg">
                 <div class="col-sm-12">
                     <ul class="nav nav-tabs">
-                        <li style="width:100px" class="active"><a href="{:U('bill/torecord')}">等待审核</a></li>
-                        <li style="width:100px"><a href="{:U('bill/record')}">已经审核</a></li>
+                        <li style="width:100px" <if condition="$state eq 0">class="active" </if> ><a href="{:U('bill/torecord')}">等待审核</a></li>
+                        <li style="width:100px" <if condition="$state eq 1">class="active" </if>  ><a href="{:U('bill/torecord',array('state'=>1))}">已经审核</a></li>
                     </ul>
 
-                    <form action="">
+                    <form action="{$self}" method="post" onsubmit="return checkForm(this)">
                         <div id="toolbar" style="margin-top: 15px;">
                             <div style="width: 180px;float: left;padding-right: 15px;">
                                 <select class="form-control" name="gid">
                                     <option value="0">小组选择</option>
-                                    <option value="1">2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
+                                    <foreach name="all_group" item="one_group">
+                                        <option value="{$one_group.id}" <if condition="$one_group['id'] eq $gid"> selected</if> >{$one_group.group_name}</option>
+                                    </foreach>
                                 </select>
                             </div>
                             <div style="width: 180px;float: left;padding-right: 15px;">
-                                <input class="form-control" id="startTime" name="startTime"  value="1530022716" type="text" />
+                                <input class="form-control" id="startTime" name="s_time"  value="{$s_time|default='开始时间'}" type="text" />
                             </div>
                             <div style="width: 180px;float: left;padding-right: 15px;">
-                                <input class="form-control" id="endTime" name="endTime"  value="1530022716" type="text" />
+                                <input class="form-control" id="endTime" name="e_time"  value="{$e_time|default='结束时间'}" type="text" />
                             </div>
                             <div style="width: 180px;float: left;padding-right: 15px;">
-                                <button class="btn btn-primary btn-lt">确定</button>
+                                <button type="submit" class="btn btn-primary btn-lt">确定</button>
                             </div>
                         </div>
                     </form>
@@ -66,12 +65,12 @@
                             <th style="text-align: center">剩余金额</th>
                             <th style="text-align: center">图片凭证</th>
                             <th style="text-align: center">时间</th>
-                            <th style="text-align: center">操作</th>
+                            <th style="text-align: center"><if condition="$state eq 0">操作<else/>状态</if></th>
                             <th style="text-align: center">备注</th>
                         </tr>
                         <foreach name="data" item="onerow">
                             <tr>
-                                <td style="text-align: center">{$onerow.id}{$onerow.user_name}</td>
+                                <td style="text-align: center" title="{$onerow.mobile}">{$onerow.id}{$onerow.user_name}</td>
                                 <td style="text-align: center">{$onerow.group_name}</td>
                                 <td style="text-align: center">{$onerow.chon_price}</td>
                                 <td style="text-align: center">{$onerow.shen_price}</td>
@@ -86,11 +85,19 @@
                                 </td>
                                 <td style="text-align: center">{$onerow.c_date|date='Y-m-d H:i:s',###}</td>
                                 <td style="text-align: center">
-                                    <button class="btn btn-primary btn-sm" url="{:U('bill/billok',array('id'=>$onerow['id'],'state'=>1))}">通过</button>
-                                    <button class="btn btn-danger btn-sm" url="{:U('bill/billok',array('id'=>$onerow['id'],'state'=>1))}">失败</button>
+                                    <if condition="$state eq 0">
+                                    <button class="btn btn-warning btn-sm" url="{:U('bill/editBill',array('id'=>$onerow['id']))}">修改</button>
+                                    <button class="btn btn-primary btn-sm" url="{:U('bill/okBill',array('id'=>$onerow['id'],'state'=>1))}">通过</button>
+                                    <button class="btn btn-danger btn-sm" url="{:U('bill/delBill',array('id'=>$onerow['id'],'state'=>1))}">删除</button>
+                                    <else/>
+                                    已审核
+                                    </if>
                                 </td>
                                 <td style="text-align: center">
-                                    {$onerow.info}
+                                    <empty name="onerow['info']">
+                                    <else/>
+                                        <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$onerow.info}"></span>
+                                    </empty>
                                 </td>
                             </tr>
                         </foreach>
@@ -142,5 +149,39 @@
                 $(this).fadeOut();
             });
         });
+        function checkForm(obj) {
+            var s_time = $("#startTime").val();
+            var e_time = $("#endTime").val();
+
+            var time1 = new Date(s_time);
+            s_time = time1.getTime()/1000;
+
+            var time2 = new Date(e_time);
+            e_time = time2.getTime()/1000;
+            console.log(s_time);
+            console.log(e_time);
+            if(isNaN(s_time) && !isNaN(e_time) ){
+                toastr.warning('请设置好时间!');
+                return false;
+            }
+
+            if(!isNaN(s_time) && isNaN(e_time) ){
+                toastr.warning('请设置好时间!');
+                return false;
+            }
+            if(s_time > e_time){
+                toastr.warning('开始时间要小于结束时间!');
+                return false;
+            }
+            return true;
+        }
+        /*swal({
+            title:"操作成功！",
+            text:'222222',
+            type:"success"
+        },function(){
+        });*/
+//        toastr.warning(result.info);
+//        swal("OMG","失败了","error");
     </script>
 </block>

@@ -15,7 +15,8 @@ class BillController extends AdminController
         $e_time   = $timeInfo['e_time'];
         $gid      = intval(i('gid'));
         $shop_id  = intval(i('shop_id'));
-
+        $user_name= i('user_name');
+        $uid      = getUidFromName($user_name);
         $where    = '';
         $pwhere   = array();
         $where    = " is_check={$is_check} ";
@@ -23,6 +24,10 @@ class BillController extends AdminController
         if(!empty($gid)){
             $pwhere['gid'] = $gid;
             $where .= " and gid={$gid} ";
+        }
+        if(!empty($gid)){
+            $pwhere['uid'] = $uid;
+            $where .= " and uid={$uid} ";
         }
         if(!empty($shop_id)){
             $pwhere['shop_id'] = $shop_id;
@@ -34,6 +39,11 @@ class BillController extends AdminController
         }
 
         $billM    = M('bill');
+
+        //计算出总和
+        $sql = "select sum(jin_price) as jin_price, sum(da_price) as da_price,sum(shua_price) as shua_price,sum(mai_price) as mai_price from bill where {$where}";
+        $price_info = $billM->query($sql);
+        $total_lirun = $price_info[0]['mai_price']-$price_info[0]['shua_price']-$price_info[0]['da_price']-$price_info[0]['jin_price'];
 
         $count = $billM->where($where)->count();
         $p     = new \Think\Page($count,4);
@@ -69,6 +79,9 @@ class BillController extends AdminController
         $this->assign('e_time',$e_time);
         $this->assign('gid',$gid);
         $this->assign('shop_id',$shop_id);
+        $this->assign('user_name',$user_name);
+        $this->assign('price_info',$price_info);
+        $this->assign('total_lirun',number_format($total_lirun,2,'.',''));
 
         $this->display();
     }
@@ -144,7 +157,7 @@ class BillController extends AdminController
         M('recharge')->where("id={$id}")->delete();
         $this->success('删除成功');
     }
-
+    //审核充值的
     public function okBill(){
         $id = intval(i('id'));
         M('recharge')->where("id={$id}")->save(array('state'=>1));
@@ -168,5 +181,30 @@ class BillController extends AdminController
         M('recharge')->where("id={$id}")->save(array('chon_price'=>$price));
         $this->success('修改成功');
     }
+    //审核账单的
+    public function checkBill(){
+        $id = intval(i('id'));
+        M('bill')->where("id={$id}")->save(array('is_check'=>1,'x_date'=>time()));
+        $this->success('已经审核成功');
+    }
 
+    public function updateBill(){
+        $id = intval(i('id'));
+        if(IS_POST){
+
+        }else{
+            $billInfo = M('bill')->find($id);
+            $user_info  = M('user')->where(array('id'=>$billInfo['uid']))->find();
+            $group_name = M('user_group')->where(array('id'=>$billInfo['gid']))->getField('group_name');
+            $shop_info  = M('user_shop')->where(array('id'=>$billInfo['shop_id']))->find();
+            $billInfo['user_name']  = $user_info['user_name'];
+            $billInfo['mobile']     = $user_info['mobile'];
+            $billInfo['group_name'] = $group_name;
+            $billInfo['shop_name']  = $shop_info['shop_name'];
+            $billInfo['shop_zg']  = $shop_info['shop_zg'];
+            $this->assign('billInfo',$billInfo);
+            $this->display();
+        }
+
+    }
 }

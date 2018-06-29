@@ -43,7 +43,7 @@
                     </div>
                     </form>
 
-                    <table class="table table-bordered table-hover" style="margin-top: 44px;">
+                    <table class="table table-bordered table-hover" style="margin-top: 44px;" id="table">
                         <tr>
                             <th style="text-align: center">报货号</th>
                             <th style="text-align: center">店铺名</th>
@@ -57,15 +57,15 @@
                             <th style="text-align: center"><if condition="$is_check eq 0">操作<else/>备注</if></th>
                         </tr>
                         <foreach name="data" item="onerow">
-                        <tr>
+                        <tr class="row{$onerow.id}">
                             <td style="text-align: center">{$onerow.bao_id}</td>
                             <td style="text-align: center" title="{$onerow.shop_zg}">{$onerow.shop_name}</td>
                             <td style="text-align: center">{$onerow.user_name}[{$onerow.group_name}]</td>
                             <td style="text-align: center"><img src="{$onerow.pic}" style="width: 45px;height: 45px;"></td>
-                            <td style="text-align: center">{$onerow.jin_price}</td>
-                            <td style="text-align: center">{$onerow.da_price}</td>
-                            <td style="text-align: center">{$onerow.shua_price}</td>
-                            <td style="text-align: center">{$onerow.mai_price}</td>
+                            <td class="jin_price" style="text-align: center">{$onerow.jin_price}</td>
+                            <td class="da_price"  style="text-align: center">{$onerow.da_price}</td>
+                            <td class="shua_price" style="text-align: center">{$onerow.shua_price}</td>
+                            <td class="mai_price" style="text-align: center">{$onerow.mai_price}</td>
                             <td style="text-align: center">
                                 <if condition="$onerow['state'] eq 0">
                                     调货
@@ -111,6 +111,7 @@
 </block>
 <block name="script">
     <script type="text/javascript">
+        var $table = $('#table');
         $(function () {
             laydate({
                 elem: '#startTime',
@@ -165,5 +166,12 @@
             }
             return true;
         }
+
+        $(function () {
+            $("#addCustomer").on("hidden.bs.modal", function() {
+                $(this).removeData("bs.modal");
+                $table.bootstrapTable('refresh', {silent: true});
+            });
+        });
     </script>
 </block>

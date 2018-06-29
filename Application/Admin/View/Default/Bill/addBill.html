@@ -1,0 +1,84 @@
+<extend name="Public/common" />
+<block name="body">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>添加账单</h5>
+            <div class="ibox-tools" style="display:none;">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-wrench"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#">选项1</a>
+                    </li>
+                    <li><a href="#">选项2</a>
+                    </li>
+                </ul>
+                <a class="close-link">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+
+                    <table class="table table-bordered table-hover">
+                        <tr>
+                            <th style="text-align: center">报货ID</th>
+                            <th style="text-align: center">店铺名</th>
+                            <th style="text-align: center">用户</th>
+                            <th style="text-align: center">主图</th>
+                            <th style="text-align: center">进价</th>
+                            <th style="text-align: center">打包费</th>
+                            <th style="text-align: center">卖出价</th>
+                            <th style="text-align: center">账单状态</th>
+                            <th style="text-align: center">操作</th>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center">3</td>
+                            <td style="text-align: center">小月月[掌柜]</td>
+                            <td style="text-align: center">小李[霹雳组]</td>
+                            <td style="text-align: center">1</td>
+                            <td style="text-align: center">10</td>
+                            <td style="text-align: center">14</td>
+                            <td style="text-align: center">140</td>
+                            <td style="text-align: center">发货</td>
+                            <td style="text-align: center">
+                                审核完毕
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="modal">
+    <div class="modal fade" id="addCustomer" role="dialog">
+        <div class="modal-dialog modal-lt" id="showbox">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+    $(function () {
+        laydate({
+            elem: '#startTime',
+            format: 'YYYY-MM-DD', //日期格式
+            event: 'focus'
+        });
+        laydate({
+            elem: '#endTime',
+            format: 'YYYY-MM-DD', //日期格式
+            event: 'focus'
+        });
+    });
+    </script>
+</block>

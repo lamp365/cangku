@@ -191,7 +191,14 @@ class BillController extends AdminController
     public function updateBill(){
         $id = intval(i('id'));
         if(IS_POST){
-
+            $data = i('post.');
+            $data['jin_price']  = number_format($data['jin_price'],2,'.','');
+            $data['da_price']   = number_format($data['da_price'],2,'.','');
+            $data['shua_price'] = number_format($data['shua_price'],2,'.','');
+            $data['mai_price']  = number_format($data['mai_price'],2,'.','');
+            unset($data['id']);
+            M('bill')->where("id={$id}")->save($data);
+            $this->success('已经修改成功');
         }else{
             $billInfo = M('bill')->find($id);
             $user_info  = M('user')->where(array('id'=>$billInfo['uid']))->find();
@@ -203,8 +210,13 @@ class BillController extends AdminController
             $billInfo['shop_name']  = $shop_info['shop_name'];
             $billInfo['shop_zg']  = $shop_info['shop_zg'];
             $this->assign('billInfo',$billInfo);
+            $this->assign('id',$id);
             $this->display();
         }
 
+    }
+
+    public function addBill(){
+        $this->display();
     }
 }

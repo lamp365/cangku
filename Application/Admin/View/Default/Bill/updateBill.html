@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body">
     <form class="form-horizontal" role="form" id="defaultForm" method="post" action="{$self}">
-        <input type="hidden" name="id" value="{$Think.get.id}" />
+        <input type="hidden" name="id" value="{$id}" id="hid_id" />
         <fieldset>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="pass">用户名</label>
@@ -38,13 +38,13 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="mai_price">卖出价</label>
                 <div class="col-sm-6">
-                    <input class="form-control" id="mai_price" name="da_price" type="number" value="{$billInfo.mai_price}"/>
+                    <input class="form-control" id="mai_price" name="mai_price" type="number" value="{$billInfo.mai_price}"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="shua_price">刷单价</label>
                 <div class="col-sm-6">
-                    <input class="form-control" id="shua_price" name="da_price" type="number" value="{$billInfo.shua_price}"/>
+                    <input class="form-control" id="shua_price" name="shua_price" type="number" value="{$billInfo.shua_price}"/>
                 </div>
             </div>
         </fieldset>
@@ -56,5 +56,31 @@
     <button type="button" class="btn btn-primary" id="submit">修改</button>
 </div>
 <script type="text/javascript">
+    $("#submit").click(function () {
+        var the_data = $("#defaultForm").serialize();
+        $.post($("#defaultForm").attr('action'), the_data, function(result) {
+            if(result.status==1){
+                swal({
+                    title:"修改成功",
+                    text:result.info,
+                    type:"success"
+                },function(){
+                    var id = $("#hid_id").val();
+                    var classId = ".row"+id;
+                    var jin_price = parseFloat($("#jin_price").val()).toFixed(2);
+                    var shua_price = parseFloat($("#shua_price").val()).toFixed(2);
+                    var mai_price = parseFloat($("#mai_price").val()).toFixed(2);
+                    var da_price = parseFloat($("#da_price").val()).toFixed(2);
+                    $(classId).find('.jin_price').html(jin_price);
+                    $(classId).find('.da_price').html(da_price);
+                    $(classId).find('.mai_price').html(mai_price);
+                    $(classId).find('.shua_price').html(shua_price);
+                    $('#addCustomer').modal('hide');
+                });
+            }else{
+                toastr.warning(result.info);return false;
+            }
+        }, 'json');
+    });
 
 </script>

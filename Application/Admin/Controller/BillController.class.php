@@ -10,6 +10,7 @@ class BillController extends AdminController
     }
     public function index(){
         $is_check    = intval(i('is_check'));
+        $state    = intval(i('state'));
         $timeInfo = getTimestapFromTimeJS();
         $s_time   = $timeInfo['s_time'];
         $e_time   = $timeInfo['e_time'];
@@ -24,6 +25,10 @@ class BillController extends AdminController
         if(!empty($gid)){
             $pwhere['gid'] = $gid;
             $where .= " and gid={$gid} ";
+        }
+        if(!empty($state)){
+            $pwhere['state'] = $state;
+            $where .= " and state={$state} ";
         }
         if(!empty($gid)){
             $pwhere['uid'] = $uid;
@@ -78,6 +83,7 @@ class BillController extends AdminController
         $this->assign('s_time',$s_time);
         $this->assign('e_time',$e_time);
         $this->assign('gid',$gid);
+        $this->assign('state',$state);
         $this->assign('shop_id',$shop_id);
         $this->assign('user_name',$user_name);
         $this->assign('price_info',$price_info);
@@ -217,6 +223,46 @@ class BillController extends AdminController
     }
 
     public function addBill(){
-        $this->display();
+        if(IS_POST){
+            $data = i('post.');
+            if(empty($data['gid'])){
+                $this->error('请选择分组');
+            }
+            if(empty($data['uid'])){
+                $this->error('请选择用户');
+            }
+            if(empty($data['shop_id'])){
+                $this->error('请选择店铺');
+            }
+            if(empty($data['shua_price']) || !is_numeric($data['shua_price'])){
+                $this->error('请填写金额,并且是数字');
+            }
+            $data['pic']    = "/Public/no_photo.png";
+            $data['kind']   = 2;
+            $data['c_date'] = time();
+            $data['state']  = 3;
+            $data['is_check'] = 1;
+            $data['cat_id1'] = 0;
+            $data['cat_id2'] = 0;
+            $data['cm_id'] = 0;
+            M('bill')->add($data);
+            $this->success('账单添加成功');
+        }else{
+            $user_group = M('user_group')->where('is_delete=0')->select();
+            $this->assign('user_group',$user_group);
+            $this->display();
+        }
+    }
+
+    public function ajaxUser(){
+        $gid = i('gid');
+        if(empty($gid)){
+            $this->error('系统错误,参数有误');
+        }
+        $users = M('user')->where("gid={$gid}")->select();
+        $shops = M('user_shop')->where("gid={$gid}")->select();
+        $data['users'] = $users;
+        $data['shops'] = $shops;
+        $this->success($data);
     }
 }

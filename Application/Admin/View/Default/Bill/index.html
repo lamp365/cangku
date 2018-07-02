@@ -12,7 +12,7 @@
 
                     <form action="__CONTROLLER__/index/is_check/{$is_check}" method="get" onsubmit="return checkForm(this)">
                     <div id="toolbar" style="margin-top: 15px;">
-                        <div style="width: 180px;float: left;padding-right: 15px;">
+                        <div style="width: 170px;float: left;padding-right: 15px;">
                             <select class="form-control" name="shop_id">
                                 <option value="0">店铺选择</option>
                                 <foreach name="all_shop" item="one_shop">
@@ -20,7 +20,7 @@
                                 </foreach>
                             </select>
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
+                        <div style="width: 170px;float: left;padding-right: 15px;">
                             <select class="form-control" name="gid">
                                 <option value="0">小组选择</option>
                                 <foreach name="all_group" item="one_group">
@@ -28,16 +28,26 @@
                                 </foreach>
                             </select>
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
+                        <div style="width: 170px;float: left;padding-right: 15px;">
+                            <select class="form-control" name="state">
+                                <option value="0">账单状态</option>
+
+                                <option value="1" <if condition="$state eq 1"> selected</if> >调货</option>
+                                <option value="2" <if condition="$state eq 2"> selected</if> >发货</option>
+                                <option value="3" <if condition="$state eq 3"> selected</if> >刷单</option>
+
+                            </select>
+                        </div>
+                        <div style="width: 170px;float: left;padding-right: 15px;">
                             <input type="text" class="form-control" name="user_name" placeholder="请输入用户名" value="{$user_name}">
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
+                        <div style="width: 170px;float: left;padding-right: 15px;">
                             <input class="form-control" id="startTime" name="s_time"  value="{$s_time|tplhtmlTime='start',###}" type="text" />
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
+                        <div style="width: 170px;float: left;padding-right: 15px;">
                             <input class="form-control" id="endTime" name="e_time"  value="{$e_time|tplhtmlTime='end',###}" type="text" />
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
+                        <div style="width: 80px;float: left;">
                             <button type="submit" class="btn btn-primary btn-lt">确定</button>
                         </div>
                     </div>
@@ -67,10 +77,12 @@
                             <td class="shua_price" style="text-align: center">{$onerow.shua_price}</td>
                             <td class="mai_price" style="text-align: center">{$onerow.mai_price}</td>
                             <td style="text-align: center">
-                                <if condition="$onerow['state'] eq 0">
+                                <if condition="$onerow['state'] eq 1">
                                     调货
-                                <else/>
+                                <elseif condition="$onerow['state'] eq 2"/>
                                     发货
+                                <else/>
+                                    刷单
                                 </if>
                             </td>
                             <td style="text-align: center">

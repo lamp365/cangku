@@ -6,72 +6,107 @@
                 <div class="col-sm-12">
 
                     <ul class="nav nav-tabs">
-                        <li style="width:100px" class="active"><a href="{:U('bill/index')}">账单记录</a></li>
-                        <li style="width:100px" ><a href="{:U('bill/tocheck')}">等待审核</a></li>
+                        <li style="width:100px" <if condition="$is_check eq 0">class="active" </if> ><a href="{:U('bill/index')}">等待审核</a></li>
+                        <li style="width:100px" <if condition="$is_check eq 1">class="active" </if> ><a href="{:U('bill/index',array('is_check'=>1))}">账单记录</a></li>
                     </ul>
 
-                    <form action="">
+                    <form action="__CONTROLLER__/index/is_check/{$is_check}" method="get" onsubmit="return checkForm(this)">
                     <div id="toolbar" style="margin-top: 15px;">
-                        <div style="width: 180px;float: left;padding-right: 15px;">
+                        <div style="width: 170px;float: left;padding-right: 15px;">
                             <select class="form-control" name="shop_id">
                                 <option value="0">店铺选择</option>
-                                <option value="1">2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                <foreach name="all_shop" item="one_shop">
+                                    <option value="{$one_shop.id}" <if condition="$one_shop['id'] eq $shop_id"> selected</if> >{$one_shop.shop_name}</option>
+                                </foreach>
                             </select>
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
-                            <select class="form-control" name="group_id">
+                        <div style="width: 170px;float: left;padding-right: 15px;">
+                            <select class="form-control" name="gid">
                                 <option value="0">小组选择</option>
-                                <option value="1">2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                <foreach name="all_group" item="one_group">
+                                    <option value="{$one_group.id}" <if condition="$one_group['id'] eq $gid"> selected</if> >{$one_group.group_name}</option>
+                                </foreach>
                             </select>
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
-                            <input type="text" class="form-control" name="user_name" placeholder="请输入用户名">
+                        <div style="width: 170px;float: left;padding-right: 15px;">
+                            <select class="form-control" name="state">
+                                <option value="0">账单状态</option>
+
+                                <option value="1" <if condition="$state eq 1"> selected</if> >调货</option>
+                                <option value="2" <if condition="$state eq 2"> selected</if> >发货</option>
+                                <option value="3" <if condition="$state eq 3"> selected</if> >刷单</option>
+
+                            </select>
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
-                            <input class="form-control" id="startTime" name="startTime"  value="1530022716" type="text" />
+                        <div style="width: 170px;float: left;padding-right: 15px;">
+                            <input type="text" class="form-control" name="user_name" placeholder="请输入用户名" value="{$user_name}">
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
-                            <input class="form-control" id="endTime" name="endTime"  value="1530022716" type="text" />
+                        <div style="width: 170px;float: left;padding-right: 15px;">
+                            <input class="form-control" id="startTime" name="s_time"  value="{$s_time|tplhtmlTime='start',###}" type="text" />
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
-                            <button class="btn btn-primary btn-lt">确定</button>
+                        <div style="width: 170px;float: left;padding-right: 15px;">
+                            <input class="form-control" id="endTime" name="e_time"  value="{$e_time|tplhtmlTime='end',###}" type="text" />
+                        </div>
+                        <div style="width: 80px;float: left;">
+                            <button type="submit" class="btn btn-primary btn-lt">确定</button>
                         </div>
                     </div>
                     </form>
 
-                    <table class="table table-bordered table-hover" style="margin-top: 44px;">
+                    <table class="table table-bordered table-hover" style="margin-top: 44px;" id="table">
                         <tr>
-                            <th style="text-align: center">报货ID</th>
+                            <th style="text-align: center">报货号</th>
                             <th style="text-align: center">店铺名</th>
                             <th style="text-align: center">用户</th>
                             <th style="text-align: center">主图</th>
-                            <th style="text-align: center">进价</th>
-                            <th style="text-align: center">打包费</th>
+                            <th style="text-align: center">拿货价</th>
+                            <th style="text-align: center">打包价</th>
+                            <th style="text-align: center">刷单价</th>
                             <th style="text-align: center">卖出价</th>
                             <th style="text-align: center">账单状态</th>
-                            <th style="text-align: center">备注</th>
+                            <th style="text-align: center"><if condition="$is_check eq 0">操作<else/>备注</if></th>
                         </tr>
-                        <tr>
-                            <td style="text-align: center">3</td>
-                            <td style="text-align: center">小月月[掌柜]</td>
-                            <td style="text-align: center">小李[霹雳组]</td>
-                            <td style="text-align: center">1</td>
-                            <td style="text-align: center">10</td>
-                            <td style="text-align: center">14</td>
-                            <td style="text-align: center">140</td>
-                            <td style="text-align: center">发货</td>
+                        <foreach name="data" item="onerow">
+                        <tr class="row{$onerow.id}">
+                            <td style="text-align: center">{$onerow.bao_id}</td>
+                            <td style="text-align: center" title="{$onerow.shop_zg}">{$onerow.shop_name}</td>
+                            <td style="text-align: center">{$onerow.user_name}[{$onerow.group_name}]</td>
+                            <td style="text-align: center"><img src="{$onerow.pic}" style="width: 45px;height: 45px;"></td>
+                            <td class="jin_price" style="text-align: center">{$onerow.jin_price}</td>
+                            <td class="da_price"  style="text-align: center">{$onerow.da_price}</td>
+                            <td class="shua_price" style="text-align: center">{$onerow.shua_price}</td>
+                            <td class="mai_price" style="text-align: center">{$onerow.mai_price}</td>
                             <td style="text-align: center">
-                                <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="123ds3543"></span>
+                                <if condition="$onerow['state'] eq 1">
+                                    调货
+                                <elseif condition="$onerow['state'] eq 2"/>
+                                    发货
+                                <else/>
+                                    刷单
+                                </if>
+                            </td>
+                            <td style="text-align: center">
+                                <if condition="$is_check eq 0">
+                                    <span class="btn btn-warning btn-lt gaiOne" url="{:U('bill/updateBill',array('id'=>$onerow['id']))}">修改</span>
+                                    <span class="btn btn-success btn-lt checkOne" ids="{$onerow.id}" url="__CONTROLLER__/checkBill">审核</span>
+                                <else/>
+                                    <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$onerow.info}"></span>
+                                </if>
+
                             </td>
                         </tr>
+                        </foreach>
                     </table>
-
+                    <div class="show_other">
+                        <span>&nbsp;总卖出:{$price_info['0']['mai_price']}</span>
+                        <span>总拿货:{$price_info['0']['jin_price']}</span>
+                        <span>总打包:{$price_info['0']['da_price']}</span>
+                        <span>总刷单:{$price_info['0']['shua_price']}</span>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;总共利润:{$total_lirun}</span>
+                    </div>
+                    <div class="show_page">
+                        {$page}
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,6 +123,7 @@
 </block>
 <block name="script">
     <script type="text/javascript">
+        var $table = $('#table');
         $(function () {
             laydate({
                 elem: '#startTime',
@@ -98,6 +134,55 @@
                 elem: '#endTime',
                 format: 'YYYY-MM-DD', //日期格式
                 event: 'focus'
+            });
+            $(".checkOne").click(function () {
+                var id = $(this).attr('ids');
+                var url = $(this).attr('url');
+                postData(url,{id:id},'post',this);
+            });
+
+            $(".gaiOne").click(function () {
+                var url = $(this).attr('url');
+                var url = url+'&t='+ Math.random(1000);
+                $("#addCustomer").modal({
+                    remote: url
+                    , backdrop: 'static'
+                    , keyboard: false
+                });
+            });
+        });
+
+        function checkForm(obj) {
+            var s_time = $("#startTime").val();
+            var e_time = $("#endTime").val();
+
+            var time1 = new Date(s_time);
+            s_time = time1.getTime()/1000;
+
+            var time2 = new Date(e_time);
+            e_time = time2.getTime()/1000;
+            console.log(s_time);
+            console.log(e_time);
+            if(isNaN(s_time) && !isNaN(e_time) ){
+                toastr.warning('请设置好时间!');
+                return false;
+            }
+
+            if(!isNaN(s_time) && isNaN(e_time) ){
+                toastr.warning('请设置好时间!');
+                return false;
+            }
+            if(s_time > e_time){
+                toastr.warning('开始时间要小于结束时间!');
+                return false;
+            }
+            return true;
+        }
+
+        $(function () {
+            $("#addCustomer").on("hidden.bs.modal", function() {
+                $(this).removeData("bs.modal");
+                $table.bootstrapTable('refresh', {silent: true});
             });
         });
     </script>

@@ -159,3 +159,9 @@ function tplhtmlTime($type,$time){
     }
     return  $mes;
 }
+
+function getUidFromName($userName){
+    if(empty($userName)) return 0;
+    $uid = M('user')->where('user_name='.$userName)->getField('id');
+    return $uid;
+}

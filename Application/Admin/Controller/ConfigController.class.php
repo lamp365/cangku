@@ -13,7 +13,6 @@ class ConfigController extends AdminController
         $res = $conf->select();
         if(IS_POST){
             $data = i('post.');
-            $data['about'] = htmlspecialchars_decode($data['about'],ENT_NOQUOTES);
             if(empty($res)){
                 unset($data['id']);
                 $conf->add($data);
@@ -26,6 +25,7 @@ class ConfigController extends AdminController
 
             $this->success('网站信息操作成功!');
         }
+        $res[0]['about'] =  htmlspecialchars_decode(html_entity_decode($res[0]['about']));
         $this->assign('res',$res[0]);
         $this->display();
     }

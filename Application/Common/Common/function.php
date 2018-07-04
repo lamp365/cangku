@@ -169,3 +169,49 @@ function getUidFromName($userName){
     $uid = M('user')->where('user_name='.$userName)->getField('id');
     return $uid;
 }
+
+
+/**
+ * 将HTML转为实体
+ * @param string $str     需要处理的字符串
+ * @param string $charset 编码，默认为gb2312
+ * @return string
+ */
+function html_to_entities($str, $charset = "utf8")
+{
+    // 参数判断
+    if(empty($str)) return "";
+
+    // 1.将常用的预定义字符转为实体
+    $new_str = htmlspecialchars($str, ENT_QUOTES, $charset);
+
+    // 2.替换反斜杠
+    $new_str = preg_replace("/\\\/", "&#092;", $new_str);
+
+    // 3.替换斜杠
+    $new_str = preg_replace("/\//", "&#47;", $new_str);
+
+    return $new_str;
+}
+
+/**
+ * 将实体转为HTML
+ * @param string $str     需要处理的字符串
+ * @return string
+ */
+function entities_to_html($str)
+{
+    // 参数判断
+    if(empty($str)) return "";
+
+    // 1.将实体转为预定义字符
+    $new_str = htmlspecialchars_decode($str, ENT_QUOTES);
+
+    // 2.替换反斜杠实体
+    $new_str = str_replace("&#092;", "\\", $new_str);
+
+    // 3.替换斜杠实体
+    $new_str = str_replace("&#47;", "/", $new_str);
+
+    return $new_str;
+}

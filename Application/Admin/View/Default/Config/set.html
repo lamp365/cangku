@@ -78,8 +78,8 @@
                 </div><br/>
                 <div style="clear: both">
                     <div class="col-sm-2 control-label" style="line-height: 26px;">关于我们</div>
-                    <div class="col-sm-7">
-                        <div class="summernote" name="about" placeholder="请对项目进行详细的描述，使更多的人了解你的" action="">{$res.about}</div>
+                    <div class="col-sm-9">
+                        <div class="summernote" name="about" placeholder="请写下关于公司的信息" action="">{$res.about}</div>
                     </div>
                 </div><br/>
                     <div style="overflow: hidden;clear: both">
@@ -154,7 +154,7 @@
         var formData = new FormData();
         formData.append("file", file);
         $.ajax({
-            url: "{:U('File/uploadPicture',array('dir'=>'news'))}",//路径是你控制器中上传图片的方法，下面controller里面我会写到
+            url: "{:U('File/uploadPicture',array('dir'=>'default'))}",//路径是你控制器中上传图片的方法，下面controller里面我会写到
             data: formData,
             cache: false,
             contentType: false,
@@ -177,7 +177,7 @@
        var parmes = {};
        parmes.id = $("#hid_id").val();
        parmes.site_name = $("#site_name").val();
-       parmes.site_pic = $("#site_pic").val();
+       parmes.site_pic = $("#pic").val();
        parmes.beian = $("#beian").val();
        parmes.keyword = $("#keyword").val();
        parmes.description = $("#description").val();
@@ -192,8 +192,9 @@
                    title:"成功！",
                    text:data.info,
                    type:"success",
-                   showConfirmButton:false,
-                   timer:1000,
+                   timer:1500,
+               },function () {
+                   window.location.href = "__CONTROLLER__/set";
                });
            }else{
                swal("操作失败！", data.info, "error");return '';

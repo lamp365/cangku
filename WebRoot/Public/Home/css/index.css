@@ -1,0 +1,265 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+html,body{width: 100%;height:100%;font-size: 16px;color: #000;background: url(../img/bg.jpg) no-repeat bottom; background-size:cover ;}
+img {max-width: 100%;}
+.contain {
+	width: 100%;
+	height: auto;
+	text-align: center;
+}
+.header{
+	width: 100%;
+	height: 80px;
+	background: white;
+	text-align: center;
+}
+.new-head {
+	width: 100%;
+	max-width: 75em;
+	height: 100%;
+	display: inline-block;
+}
+.logo{
+	width: auto;
+	float: left;
+	height: 100%;
+}
+.head_men {
+	height: 100%;
+	float: right;
+}
+.men {
+	float: left;
+	height: 100%;
+		margin-right: 60px;
+}
+.men ul {
+	list-style: none;
+	width: 100%;
+	height: 100%;	
+}
+.men ul li {
+	margin: 0 15px;
+	float: left;
+	line-height: 80px;
+	height: 100%;
+}
+.men ul li:last-child {margin-right: 0;}
+.men ul li a {
+	width: 100%;
+	height: 100%;
+	display: block;
+	text-decoration: none;
+	color: #000000;
+}
+.men ul li a:hover{color: #aec5f7;}
+.men ul li.action a {color: #aec5f7;border-bottom: 3px solid #AEC5F7;}
+.head_right {
+	height: 100%;
+	float: right;
+	text-align: center;
+}
+.head_right .ShippingCenter{
+	width: 140px;
+	height: 40px;
+	border: 1px solid #AEC5F7;
+	float: left;
+	border-radius:30px ;
+	margin-top: 20px;
+	margin-right: 20px;
+	cursor: pointer;
+}
+.head_right .ShippingCenter:last-child{margin-right: 0;}
+.icon-regin {
+	display: inline-block;
+	vertical-align: -webkit-baseline-middle;
+	background: url(../img/regin.png) no-repeat center;
+	background-size:contain ;
+	width: 15px;
+	height: 14px;
+}
+.icon-ShippingCenter {
+	display: inline-block;
+	vertical-align: -webkit-baseline-middle;
+	background: url(../img/sho.png) no-repeat center;
+	background-size:contain ;
+	width: 16px;
+	height: 16px;
+}
+.head_right .ShippingCenter .text {
+	display: inline-block;
+	vertical-align: -webkit-baseline-middle;
+}
+.head_right .ShippingCenter.action {background: #0acefe;}
+.head_right .ShippingCenter.action .text {color: white;}
+.section {
+	width: 100%;
+	max-width: 75em;
+	min-height: 588px;
+	display: inline-block;
+	box-shadow:0px -5px 35px 5px #c3c3c3;
+	margin-top: 35px;
+	border-radius:5px ;
+	position: relative;
+}
+.section-title {width: 100%;height: 45px;border-bottom: 1px solid #e1e0de;padding-left: 10px; line-height: 45px; text-align: left;}
+.icon-title {width:20px;height: 100%; background: url(../img/title.png) no-repeat center;background-size:contain ;float: left;}
+.section-title h2 {float: left;font-size: 16px;margin-left: 10px;}
+.row {width: 100%;float: left;min-height:543px;position: relative;}
+.row_men {
+	width: 200px;
+	height: 100%;
+	float: left;
+	border-right:1px solid #e0e0de ;
+	padding: 10px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.row_right {
+	width: 999px;
+	height: 100%;
+	position: relative;
+	float: right;
+}
+.row_regin {width: 100%;height: auto;}
+.logo_rgi {width: 68px;border: 1px solid #c6cbcf;display: inline-block; vertical-align: middle;}
+.text_row {
+	display: inline-block;
+	vertical-align: middle;
+	width: 105px;
+    text-align: left;
+}
+.text_row h3{
+	width: 100%;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	color: #dc2f65;
+	font-size:16px ;
+}
+.text_row .phone{
+	width: 100%;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	font-size:14px ;
+}
+.text_row .text_suz{
+	width: 100%;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	font-size:14px ;
+}
+
+
+#main_box{
+	padding:0px 0px 30px 0px;
+	width:1200px;
+	margin: 15px auto;
+    box-shadow: 0 0 60px #999;
+    border-radius: 5px;
+}
+
+.row_regin_men {
+	width: 100%;
+	margin-top: 35px;
+}
+.row_regin_men ul {list-style: none;width: 100%;height: 100%;}
+.row_regin_men ul li {width: 100%;height: 40px;border-bottom:1px solid white; text-align: left;padding-left: 10px;}
+.row_regin_men ul li a {width: 100%;height: 100%;display: block;text-decoration: none;color: #000000;}
+.row_regin_men ul li a:hover {color: red;}
+.row_regin_men ul li.action a {color: red;} 
+
+/*菜单上那个小图标**/
+.center_menu .one {
+    background: url(../img/small_icon.png) -134px 0px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    margin-top: 10px;
+}
+.center_menu .two {
+    background: url(../img/small_icon.png) -242px 0px;
+     display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    margin-top: 10px;
+}
+.center_menu .three {
+    background: url(../img/small_icon.png) -1px -60px;
+     display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    margin-top: 10px;
+}
+.center_menu .four {
+    background: url(../img/small_icon.png) -220px 0px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    margin-top: 10px;
+}
+.center_menu .five {
+    background: url(../img/small_icon.png) -134px 0px;
+     display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    margin-top: 10px;
+}
+.center_menu .six {
+    background: url(../img/small_icon.png) -24px -66px;
+     display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    margin-top: 10px;
+}
+.center_menu .senve {
+    background: url(../img/small_icon.png) -41px -0px;
+     display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    margin-top: 10px;
+}
+.center_menu .text{display: inline-block;vertical-align: -webkit-baseline-middle;}
+
+.input_row {width: 433px;height: 343px;margin-top:140px;margin-left: 80px;}
+.label_text {width: 100%;float: left;margin-bottom: 18px;line-height: 34px;text-align: left;}
+.input_text {width: 349px;height: 32px;float: right;border: 1px solid #cecece; border-radius:5px ;line-height: 32px;font-size: 14px;text-align: left; text-indent: 10px;background: none;}
+.btn {
+	width: 80px;
+	height: 35px;
+	background: #59c1da;
+	border-radius:5px;
+	line-height: 35px;
+	color: white;
+	text-align: center;
+	float: left;
+	margin-left: 78px;
+}
+.footer {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	font-size: 14px;
+	margin-top: 55px;
+}

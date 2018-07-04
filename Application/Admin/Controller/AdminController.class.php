@@ -16,4 +16,19 @@ class AdminController extends Controller {
 		$this->assign("self", __SELF__);
 
 	}
+
+	public function editPass(){
+        if(IS_POST){
+
+        }
+	    $this->display();
+    }
+
+    public function editInfo(){
+        if(IS_POST){
+
+        }
+        $this->display('editInfo');
+
+    }
 }

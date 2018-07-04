@@ -5,22 +5,26 @@
         <ul class="nav" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element">
-                    <span><a href="/admin/timeline/index" class="J_menuItem"><img alt="image" class="img-circle" width="65" height="65" src="{:get_user_pic()}"></a></span>
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <span class="clear">
-                               <span class="block m-t-xs"><strong class="font-bold">{:get_user_trueName()}</strong></span>
-                                <span class="text-muted text-xs block">{:get_user_typeName()}<b class="caret"></b></span>
-                                </span>
+
+                    <span style="float: left;display: inline" href="" class="J_menuItem"><img alt="image" class="img-circle" width="65" height="65" src="{:get_user_pic()}"></span>
+
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="float: left;margin-left: 10px;margin-top: 10px">
+                        <span class="clear">
+                            <span class="block m-t-xs"><strong class="font-bold">{:get_user_mobile()}</strong></span>
+                            <span class="text-muted text-xs block">{:get_user_trueName()}<b class="caret"></b></span>
+                        </span>
                     </a>
+
+                    <div style="overflow: hidden;height: 50px;"></div>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
                         <li>
-                            <a class="" data-toggle="modal" data-target="#addCustomer" data-remote="/admin/Common/editPass">
+                            <a class="" data-toggle="modal" data-target="#addCustomer" data-remote="/admin/admin/editPass">
                                 修改密码
                             </a>
                         </li>
 
                         <li>
-                            <a class="" data-toggle="modal" data-target="#addCustomer" data-remote="/admin/Common/editInfo{:get_user_type()}">
+                            <a class="" data-toggle="modal" data-target="#addCustomer" data-remote="/admin/admin/editInfo">
                                  个人资料
                             </a>
                         </li>
@@ -208,7 +212,7 @@
     </div><div class="slimScrollBar" style="width: 4px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 213.293943870015px; background: rgb(0, 0, 0);"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.9; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div></div>
 </nav>
 <div class="modal fade" id="addCustomer" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lt">
         <div class="modal-content">
 
         </div>

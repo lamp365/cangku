@@ -55,6 +55,7 @@ class AccountController extends AdminController {
                         $current_user['position'] = $user['position'];
                         $current_user['pic'] = $user['pic'];
                         $current_user['employeeID'] = $user[$typeID];
+                        $current_user['Mobile'] = $user['Mobile'];
                         session("current_user" , $current_user);//写入Session 登录成功
 
                         $url = U('index/index');

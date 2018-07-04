@@ -22,7 +22,7 @@ function get_user () {
  * @return int
  */
 function get_user_pic(){
-    $user = session("CurrentUser");
+    $user = session("current_user");
     $pic = M("employee")->where(array("EmployeeID"=>$user["EmployeeID"]))->getField("Pic");
     if(!empty($pic)){
         $pic = thumbImage($pic,64,64,100,3);
@@ -32,7 +32,7 @@ function get_user_pic(){
     return $pic;
 }
 function get_user_type () {
-    $user = session("CurrentUser");
+    $user = session("current_user");
     if (empty($user)){
         $user = 1;
     }
@@ -40,11 +40,11 @@ function get_user_type () {
 }
 //返回登陆者的名字
 function get_user_trueName () {
-    $user = session("CurrentUser");
+    $user = session("current_user");
     if (empty($user)){
         $user = 1;
     }
-    return $user['Name'];
+    return $user['name'];
 }
 //返回登陆者的名字
 function get_user_typeName () {
@@ -59,7 +59,7 @@ function get_user_typeName () {
 }
 //判断是否是超级管理员admin
 function get_user_name(){
-    $user = session("CurrentUser");
+    $user = session("current_user");
     $type = get_user_type();
     if($type == 1){
         if($user['EmployeeNum'] == 'admin'){
@@ -68,11 +68,20 @@ function get_user_name(){
     }
 }
 function get_user_id(){
-    $usr = session("CurrentUser");
-    if(empty($usr["EmployeeID"])){
+    $usr = session("current_user");
+    if(empty($usr["employeeID"])){
         $user = 0;
     }else{
-        $user = $usr["EmployeeID"];
+        $user = $usr["employeeID"];
+    }
+    return $user;
+}
+function get_user_mobile(){
+    $usr = session("current_user");
+    if(empty($usr["Mobile"])){
+        $user = 0;
+    }else{
+        $user = $usr["Mobile"];
     }
     return $user;
 }

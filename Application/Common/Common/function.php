@@ -102,7 +102,11 @@ function uploadpic($rootPath = 'picture',$autoSub = 1 ,$subType = 2){
     $images = $upload->upload();
     //判断是否有图
     if($images){
-        $pic_url = '/'.$path.$images['Filedata']['savepath'].$images['Filedata']['savename'];
+        $data = array();
+        foreach ($images as $items){
+            $data = $items;
+        }
+        $pic_url = '/'.$path.$data['savepath'].$data['savename'];
         return array('errno'=>200,'message'=>$pic_url);
         //返回文件地址和名给JS作回调用
     }else{

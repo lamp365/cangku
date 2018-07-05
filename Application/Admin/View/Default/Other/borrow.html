@@ -2,7 +2,7 @@
 <block name="body">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新闻资讯</h5>
+            <h5>借出记录</h5>
             <div class="ibox-tools" style="display:none;">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up"></i>
@@ -32,21 +32,39 @@
 
                     <table class="table table-bordered table-hover"  id="table">
                         <tr>
-                            <th style="text-align: center">ID</th>
-                            <th style="text-align: center">新闻标题</th>
-                            <th style="text-align: center">缩略图</th>
-                            <th style="text-align: center">时间</th>
-                            <th style="text-align: center">操作</th>
+                            <th style="text-align: center">所借用户</th>
+                            <th style="text-align: center">用户手机</th>
+                            <th style="text-align: center">主图</th>
+                            <th style="text-align: center">物品属组</th>
+                            <th style="text-align: center">借出时间</th>
+                            <th style="text-align: center">归还时间</th>
+                            <th style="text-align: center">状态</th>
+                            <th style="text-align: center">备注</th>
                         </tr>
                         <foreach name="data" item="onerow">
                         <tr class="row{$onerow.id}">
-                            <td style="text-align: center">{$onerow.id}</td>
-                            <td style="text-align: center">{$onerow.title}</td>
+                            <td style="text-align: center">{$onerow.b_username}</td>
+                            <td style="text-align: center">{$onerow.b_mobile}</td>
                             <td style="text-align: center"><img src="{$onerow.pic}" style="width: 45px;height: 45px;"></td>
-                            <td class="jin_price" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i:s",###}</td>
-                            <td class="da_price"  style="text-align: center">
-                                <a class="btn btn-warning btn-lt gaiOne" target="iframe0" href="__CONTROLLER__/editNews/id/{$onerow.id}">修 改</a>
-                                <span class="btn btn-danger btn-lt delOne" ids="{$onerow.id}">删 除</span>
+                            <td class="" style="text-align: center">
+                                {$onerow.username}--[{$onerow.groupname}]
+                            </td>
+                            <td class="" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i:s",###}</td>
+                            <td class="" style="text-align: center">{$onerow.h_date|date="Y-m-d H:i:s",###}</td>
+                            <td class="" style="text-align: center">
+                                <if condition="$onerow.states eq 1">
+                                    借出中
+                                <else/>
+                                    <font color="green">已归还</font>
+                                </if>
+                            </td>
+
+                            <td class=""  style="text-align: center">
+                                <empty name="onerow['info']">
+                                    暂无备注
+                                    <else/>
+                                    <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$onerow.info}"></span>
+                                </empty>
                             </td>
                         </tr>
                         </foreach>

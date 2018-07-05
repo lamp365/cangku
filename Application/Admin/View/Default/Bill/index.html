@@ -90,7 +90,11 @@
                                     <span class="btn btn-warning btn-lt gaiOne" url="{:U('bill/updateBill',array('id'=>$onerow['id']))}">修改</span>
                                     <span class="btn btn-success btn-lt checkOne" ids="{$onerow.id}" url="__CONTROLLER__/checkBill">审核</span>
                                 <else/>
-                                    <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$onerow.info}"></span>
+                                    <empty name="onerow['info']">
+                                        暂无备注
+                                        <else/>
+                                        <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$onerow.info}"></span>
+                                    </empty>
                                 </if>
 
                             </td>

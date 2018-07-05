@@ -23,7 +23,7 @@ function get_user () {
  */
 function get_user_pic(){
     $user = session("current_user");
-    $pic = M("employee")->where(array("EmployeeID"=>$user["EmployeeID"]))->getField("Pic");
+    $pic = M("employee")->where(array("employeeID"=>$user["employeeID"]))->getField("Pic");
     if(!empty($pic)){
         $pic = thumbImage($pic,64,64,100,3);
     }else{
@@ -62,7 +62,7 @@ function get_user_name(){
     $user = session("current_user");
     $type = get_user_type();
     if($type == 1){
-        if($user['EmployeeNum'] == 'admin'){
+        if($user['employee_num'] == 'admin'){
             return true;
         }
     }

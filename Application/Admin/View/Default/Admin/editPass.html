@@ -3,7 +3,7 @@
     <h4 class="modal-title" id="myModalLabel">修改密码</h4>
 </div>
 <div class="modal-body">
-        <input type="hidden" name="id" value="{$Think.get.id}" />
+    <div class="form-horizontal">
         <fieldset>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="oldPass">旧的密码</label>
@@ -25,7 +25,7 @@
                 </div>
             </div>
         </fieldset>
-
+    </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal" id="close">关闭</button>
@@ -33,7 +33,21 @@
 </div>
 <script type="text/javascript">
     $("#submit").click(function(){
+        var parme = {};
+        parme.oldPass = $("#oldPass").val();
+        parme.pass = $("#pass").val();
+        parme.repass = $("#repass").val();
+        var url = "__CONTROLLER__/editPass";
+        $.post(url,parme,function (data) {
+            if(data.status == 1){
+                alert(data.info);
+                setTimeout(function () {
+                    $("#addCustomer").modal('hide');
+                },1500);
+            }else{
+                alert(data.info);
+            }
+        });
 
     });
-
 </script>

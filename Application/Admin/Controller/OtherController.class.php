@@ -48,4 +48,23 @@ class OtherController extends AdminController
         M('news')->where("id={$id}")->delete();
         $this->success('文章删除成功!');
     }
+
+    public function borrow(){
+        $newsM = M('borrow');
+
+        $count = $newsM->count();
+        $p     = new \Think\Page($count,20);
+        $page  = $p->show();
+        $data  = $newsM->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+        $userM  = M('user');
+        $usergM = M('user_group');
+        foreach($data as &$itmes){
+            $itmes['b_username']  = $userM->where("id={$itmes['b_uid']}")->getField('user_name');
+            $itmes['username']    = $userM->where("id={$itmes['uid']}")->getField('user_name');
+            $itmes['groupname']    = $usergM->where("id={$itmes['gid']}")->getField('group_name');
+        }
+        $this->assign('data',$data);
+        $this->assign('page',$page);
+        $this->display();
+    }
 }

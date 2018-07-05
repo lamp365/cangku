@@ -19,7 +19,24 @@ class AdminController extends Controller {
 
 	public function editPass(){
         if(IS_POST){
-
+            $data = i('post.');
+            if($data['repass'] != $data['pass']){
+                $this->error('确认密码有误!');
+            }
+            if(empty($data['repass']) || empty($data['pass'])){
+                $this->error('密码不能为空!');
+            }
+            $empoloyeeID = get_user_id();
+            $user_info = M("employee")->where(array("employeeID"=>$empoloyeeID))->find();
+            $the_pass  = $user_info['password'];
+            $the_rand  = $user_info['random'];
+            if($the_pass!= get_guoyuanPWD($data['oldPass'],$the_rand)){
+                $this->error('旧的密码输入有误!');
+            }
+            $new_rand = rand(10000,99999);
+            $new_pass =  get_guoyuanPWD($data['pass'],$new_rand);
+            M("employee")->where(array("employeeID"=>$empoloyeeID))->save(array('password'=>$new_pass,'random'=>$new_rand));
+            $this->success('密码已经修改,请牢记!');
         }
 	    $this->display();
     }

@@ -51,20 +51,42 @@ class OtherController extends AdminController
 
     public function borrow(){
         $newsM = M('borrow');
-
-        $count = $newsM->count();
-        $p     = new \Think\Page($count,20);
+        $where = array();
+        $states = intval(i('states'));
+        if(empty($states)){
+            $states = 1;
+            $_GET['states'] = 1;
+        }
+        $where['states'] = $states;
+        if(!empty(i('user_name'))){
+            $b_uid = M('user')->where(array('user_name'=>i('user_name')))->getField('id');
+            if($b_uid){
+                $where['b_uid'] = $b_uid;
+            }else{
+                $where['b_uid'] = 0;
+            }
+        }
+        $count = $newsM->where($where)->count();
+        $p     = new \Think\Page($count,25);
         $page  = $p->show();
-        $data  = $newsM->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+        $data  = $newsM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
         $userM  = M('user');
         $usergM = M('user_group');
         foreach($data as &$itmes){
             $itmes['b_username']  = $userM->where("id={$itmes['b_uid']}")->getField('user_name');
             $itmes['username']    = $userM->where("id={$itmes['uid']}")->getField('user_name');
-            $itmes['groupname']    = $usergM->where("id={$itmes['gid']}")->getField('group_name');
+            $itmes['groupname']   = $usergM->where("id={$itmes['gid']}")->getField('group_name');
         }
         $this->assign('data',$data);
         $this->assign('page',$page);
+        $this->assign('states',$states);
         $this->display();
+    }
+
+    public function sureBack(){
+        $id = intval(i('id'));
+        $newsM = M('borrow');
+        $newsM->where("id={$id}")->save(array('states'=>2));
+        $this->success('已经确认归还');
     }
 }

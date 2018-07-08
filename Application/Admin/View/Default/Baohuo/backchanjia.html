@@ -46,6 +46,7 @@
                             <th style="text-align: center">厂家</th>
                             <th style="text-align: center">时间</th>
                             <th style="text-align: center">备注</th>
+                            <th style="text-align: center">操作</th>
                         </tr>
                         <foreach name="data" item="onerow">
                         <tr class="row{$onerow.id}">
@@ -63,6 +64,9 @@
                                     <else/>
                                     <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$onerow.info}"></span>
                                 </empty>
+                            </td>
+                            <td class="" style="text-align: center">
+                                <span class="delOne btn btn-danger btn-lt">删 除</span>
                             </td>
                         </tr>
                         </foreach>
@@ -92,8 +96,8 @@
 
             $(".delOne").click(function () {
                 var id = $(this).attr('ids');
-                var url = "__CONTROLLER__/delNews";
-                postData(url,{id:id},'post',this);
+                var url = "__CONTROLLER__/delChan";
+                confirmDelete2(url,{id:id},'post',this);
             });
 
         });

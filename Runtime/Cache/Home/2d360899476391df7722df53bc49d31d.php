@@ -52,13 +52,15 @@
                     </div>
                     <nav class="row_regin_men">
                         <ul>
-    <li class="center_menu action"><a href="#"><i class="one"></i><span class="text">账户信息</span></a></li>
-    <li class="center_menu "><a href="#"><i class="two"></i><span class="text">密码修改</span></a></li>
-    <li class="center_menu "><a href="#"><i class="three"></i><span class="text">余额充值</span></a></li>
-    <li class="center_menu "><a href="#"><i class="four"></i><span class="text">发货地址</span></a></li>
-    <li class="center_menu "><a href="#"><i class="five"></i><span class="text">成员查看</span></a></li>
-    <li class="center_menu "><a href="#"><i class="six"></i><span class="text">消费记录</span></a></li>
-    <li class="center_menu "><a href="#"><i class="senve"></i><span class="text">退出登陆</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'Center'): ?>action<?php endif; ?>"><a href="<?php echo U('Center/index');?>"><i class="zeone"></i><span class="text">账户信息</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'Member'): ?>action<?php endif; ?>"><a href="<?php echo U('Member/index');?>"><i class="one"></i><span class="text">成员查看</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'Shop'): ?>action<?php endif; ?>"><a href="<?php echo U('Shop/index');?>"><i class="two"></i><span class="text">小组店铺</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'Baohuo'): ?>action<?php endif; ?>"><a href="<?php echo U('Baohuo/index');?>"><i class="four"></i><span class="text">小组报货</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'Kucun'): ?>action<?php endif; ?>"><a href="<?php echo U('Kucun/index');?>"><i class="four"></i><span class="text">小组库存</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'Money'): ?>action<?php endif; ?>"><a href="<?php echo U('Money/index');?>"><i class="three"></i><span class="text">资金记录</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'Borrow'): ?>action<?php endif; ?>"><a href="<?php echo U('Borrow/index');?>"><i class="five"></i><span class="text">借出记录</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'BackChan'): ?>action<?php endif; ?>"><a href="<?php echo U('BackChan/index');?>"><i class="five2"></i><span class="text">退回厂家</span></a></li>
+    <li class="center_menu <?php if($cont_name == 'Black'): ?>action<?php endif; ?>"><a href="<?php echo U('Black/index');?>"><i class="senve"></i><span class="text">黑名榜单</span></a></li>
 </ul>
                     </nav>
                 </div>

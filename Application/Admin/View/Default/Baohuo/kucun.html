@@ -2,7 +2,7 @@
 <block name="body">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新闻资讯</h5>
+            <h5>库存列表</h5>
             <div class="ibox-tools" style="display:none;">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up"></i>
@@ -24,30 +24,48 @@
         <div class="ibox-content">
             <div class="row row-lg">
                 <div class="col-sm-12">
-                    <div id="toolbar" style="">
+                    <form action="__CONTROLLER__/kucun" method="get">
+                    <div id="toolbar" style="margin-top: 15px;">
                         <div style="width: 180px;float: left;padding-right: 15px;">
-                            <a href="__CONTROLLER__/editNews" target="iframe0" class="btn btn-primary btn-lt">添加资讯</a>
+                            <input type="text" name="user_name" class="form-control" placeholder="请输入用户全名" value="{$Think.get.user_name}">
+                        </div>
+                        <div style="width: 90px;float: left;padding-right: 15px;">
+                            <button type="submit" class="btn btn-primary btn-lt">确定</button>
+                        </div>
+                        <div style="width: 180px;float: left;padding-right: 15px;">
+                            <a href="__CONTROLLER__/addKucun" class="btn btn-success btn-lt" target="iframe0">添加库存</a>
                         </div>
                     </div>
-
+                    </form>
                     <table class="table table-bordered table-hover"  id="table">
                         <tr>
-                            <th style="text-align: center">ID</th>
-                            <th style="text-align: center">新闻标题</th>
-                            <th style="text-align: center">缩略图</th>
+                            <th style="text-align: center">货源编号</th>
+                            <th style="text-align: center">宝贝主图</th>
+                            <th style="text-align: center">用户</th>
+                            <th style="text-align: center">厂家</th>
+                            <th style="text-align: center">分类1</th>
+                            <th style="text-align: center">分类2</th>
+                            <th style="text-align: center">尺码大小</th>
+                            <th style="text-align: center">库存</th>
+                            <th style="text-align: center">拿货价格</th>
+                            <th style="text-align: center">打包价格</th>
                             <th style="text-align: center">时间</th>
-                            <th style="text-align: center">操作</th>
                         </tr>
                         <foreach name="data" item="onerow">
                         <tr class="row{$onerow.id}">
-                            <td style="text-align: center">{$onerow.id}</td>
-                            <td style="text-align: center">{$onerow.title}</td>
+                            <td style="text-align: center">{$onerow.huo_id}</td>
                             <td style="text-align: center"><img src="{$onerow.pic}" style="width: 45px;height: 45px;"></td>
-                            <td class="jin_price" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i:s",###}</td>
-                            <td class="da_price"  style="text-align: center">
-                                <a class="btn btn-warning btn-lt gaiOne" target="iframe0" href="__CONTROLLER__/editNews/id/{$onerow.id}">修 改</a>
-                                <span class="btn btn-danger btn-lt delOne" ids="{$onerow.id}">删 除</span>
+                            <td class="" style="text-align: center">
+                                {$onerow.username}--[{$onerow.groupname}]
                             </td>
+                            <td style="text-align: center">ooo</td>
+                            <td style="text-align: center">{$onerow.catname1}</td>
+                            <td style="text-align: center">{$onerow.cm_name}</td>
+                            <td style="text-align: center">{$onerow.num}</td>
+                            <td style="text-align: center">{$onerow.jin_price}</td>
+                            <td style="text-align: center">{$onerow.da_price}</td>
+
+                            <td class="" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i:s",###}</td>
                         </tr>
                         </foreach>
                     </table>
@@ -72,16 +90,7 @@
 <block name="script">
     <script type="text/javascript">
         var $table = $('#table');
-        $(function () {
-
-            $(".delOne").click(function () {
-                var id = $(this).attr('ids');
-                var url = "__CONTROLLER__/delNews";
-                confirmDelete2(url,{id:id},'post',this);
-            });
-
-        });
-
+        
 
         $(function () {
             $("#addCustomer").on("hidden.bs.modal", function() {

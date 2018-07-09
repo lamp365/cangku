@@ -1,16 +1,16 @@
-<!doctype html>
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="__PUBLIC__/Static/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="__PUBLIC__/Static/bootstrap/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="/public/Static/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/public/Static/bootstrap/css/bootstrap-theme.min.css" />
     <title>Document</title>
     <style>
         body{
-            background: url('__PUBLIC__/Home/img/login_bg.jpg') no-repeat;
+            background: url('/public/Home/img/login_bg.jpg') no-repeat;
             background-size: 100%;
             height: 100%;
         }
@@ -26,7 +26,7 @@
             position: relative;
         }
         .title{
-            background: url('__PUBLIC__/Home/img/login_head.jpg') no-repeat;
+            background: url('/public/Home/img/login_head.jpg') no-repeat;
             background-size: 100%;
             /*background: red;*/
             height: 78px;
@@ -118,7 +118,7 @@
         </div>
     </div>
 </body>
-<script type="text/javascript" src='__PUBLIC__/Static/jquery-1.11.2.min.js'></script>
+<script type="text/javascript" src='/public/Static/jquery-1.11.2.min.js'></script>
 <script>
     //ajax 登录
     $('#sub').click(function(){

@@ -14,5 +14,6 @@ return array(
 //        '/^new\/(\d{4})\/(\d{2})$/' => 'News/achive?year=:1&month=:2',
         'login'  => 'Login/index',
         'signin' => 'Login/dologin',
+        'center' => 'Center/index',
     )
 );

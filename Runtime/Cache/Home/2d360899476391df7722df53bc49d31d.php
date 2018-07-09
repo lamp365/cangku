@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" href="/Public/Home/css/index.css" />
+    <link rel="stylesheet" href="/public/Home/css/index.css" />
     
 </head>
 <body>
 <div class="contain">
     <header class="header">
         <div class="new-head">
-            <div class="logo"><img src="/Public/Home/img/logo.png"/></div>
+            <div class="logo"><img src="/public/Home/img/logo.png"/></div>
             <div class="head_men">
                 <nav class="men">
                     <ul>
@@ -43,7 +43,7 @@
         <div class="row">
             <div class="row_men">
                 <div class="row_regin">
-                    <div class="logo_rgi"><img src="/Public/Home/img/logo_rgi.png"/></div>
+                    <div class="logo_rgi"><img src="/public/Home/img/logo_rgi.png"/></div>
                     <div class="text_row">
                         <h3>kevin[<span>组员</span>]</h3>
                         <div class="phone">13960947857</div>
@@ -69,7 +69,7 @@
                 <div class="input_row">
                     <label class="label_text">用户账号：<input class="input_text" type="text" name="" value="13980829676" placeholder="" readonly="readonly"/></label>
                     <label class="label_text">用户名稱：<input class="input_text" type="text" name="" value="" placeholder=""/></label>
-                    <label class="label_text">用戶頭像：<div class="logo_rgi"><img src="/Public/Home/img/logo_rgi.png"/></div>
+                    <label class="label_text">用戶頭像：<div class="logo_rgi"><img src="/public/Home/img/logo_rgi.png"/></div>
                         <input class="input_file" type="file" name="" value=""/></label>
                     <button type="button" class="btn">保存信息</button>
                 </div>

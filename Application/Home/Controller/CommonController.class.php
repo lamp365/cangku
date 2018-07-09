@@ -4,7 +4,7 @@ use Think\Controller;
 class CommonController extends Controller {
 
     public function _initialize(){
-       
+
         $user = session("web_user");
         if (empty($user)) {
             redirect("/index.php/login");

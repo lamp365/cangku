@@ -2,8 +2,6 @@
 namespace Home\Controller;
 use Think\Controller;
 class CommonController extends Controller {
-    public function index(){
-        echo 1234;
-	}
+
 
 }

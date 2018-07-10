@@ -3,32 +3,43 @@
 
 <block name="content">
 
-    <section class="section">
-        <div class="section-title">
-            <i class="icon-title"></i>
-            <h2>平台公告：</h2>
-            欢迎有您，我们将竭力为您服务！
-        </div>
-        <div class="row">
-            <div class="row_men">
-                <div class="row_regin">
-                    <div class="logo_rgi"><img src="__PUBLIC__/Home/img/logo_rgi.png"/></div>
-                    <div class="text_row">
-                        <h3>kevin[<span>组员</span>]</h3>
-                        <div class="phone">13960947857</div>
-                        <div class="text_suz">属组：<span>12312请问请问请问请问3</span></div>
-                        <div class="text_suz">余额：￥<span>123123</span></div>
-                    </div>
-                    <nav class="row_regin_men">
-                        <include file="Public/meun"/>
-                    </nav>
-                </div>
-            </div><!--left菜单-->
-            <div class="row_right">
-                今日报货|历史报货
-                <p>左右两项</p>
-            </div>
-        </div>
-    </section>
+    <div style="text-align: left;margin-bottom: 13px;">
+        <a class="btn btn-info btn-lt" href="__CONTROLLER__/addStep1">添加报货</a>
+    </div>
+    <ul class="nav nav-tabs">
+        <li style="width:100px" <if condition="$order_state eq 0">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>0))}">正申请中</a></li>
+        <li style="width:100px" <if condition="$order_state eq 1">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>1))}">正处理中</a></li>
+        <li style="width:100px" <if condition="$order_state eq '2'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>2))}">调货完成</a></li>
+        <li style="width:100px" <if condition="$order_state eq '3'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>3))}">发货完成</a></li>
+        <li style="width:100px" <if condition="$order_state eq '-1'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>-1))}">已经关闭</a></li>
+    </ul>
+    <table class="table table-bordered table-hover"  id="table">
+        <thead>
+        <tr>
+            <th style="text-align: center">编号</th>
+            <th style="text-align: center">用户名</th>
+            <th style="text-align: center">主图</th>
+            <th style="text-align: center">尺码</th>
+            <th style="text-align: center">拿货价</th>
+            <th style="text-align: center">打包价</th>
+            <th style="text-align: center">目的</th>
+            <th style="text-align: center">调货状态</th>
+            <th style="text-align: center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+        </tbody>
+    </table>
 
 </block>

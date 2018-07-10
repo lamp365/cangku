@@ -338,6 +338,7 @@ class VenderController extends AdminController
                 M('huoyuan') ->where(array('id'=>$id))-> save($data);
                 $this->success('修改成功！');
             }else{
+                unset($data['id']);
                 M('huoyuan') -> add($data);
                 $this->success('增加成功！');
             }

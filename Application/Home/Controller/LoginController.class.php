@@ -31,6 +31,8 @@ class LoginController extends Controller {
             'user_id' => $result['id'],
             'mobile' => $result['mobile'],
             'user_name' => $result['user_name'],
+            'gid' => $result['gid'],
+            'level' => $result['level'],
         ];
         session('web_user',$info);
 

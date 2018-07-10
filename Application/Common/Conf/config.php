@@ -6,9 +6,9 @@ return array(
     'MODULE_DENY_LIST'   => array('Common'),
     'MODULE_ALLOW_LIST'   => array('Admin','Home' ), //公司的配置
     //'MODULE_ALLOW_LIST'   => array('Park'),//产业园配置
-
+    'LOAD_EXT_CONFIG'     => 'route',
     //'TMPL_EXCEPTION_FILE' => __ROOT__ . '500.html',
-    'WEB_TITLE' => '青火科技',
+    'WEB_TITLE' => '青青之火贸易有限公司',
 
 
     'SHOW_PAGE_TRACE' => false,
@@ -17,15 +17,15 @@ return array(
     /* URL配置 */
     'VAR_URL_PARAMS'       => '', // PATHINFO URL参数变量
     'URL_PATHINFO_DEPR'    => '/', //PATHINFO URL分割符
-    'LOAD_EXT_CONFIG'     => 'route',
+
 
     /* 数据库配置 */
     'DB_DEPLOY_TYPE' => 1,
-    'DB_TYPE'   => 'mysql', // 数据库类型
+    'DB_TYPE'   => 'mysqli', // 数据库类型
     'DB_HOST'   => '127.0.0.1', // 服务器地址
     'DB_NAME'   => 'cangku', // 数据库名
     'DB_USER'   => 'root', // 用户名
-    'DB_PWD'    => 'admin@gxar.com',  // 密码
+    'DB_PWD'    => '123456',  // 密码
     'DB_PORT'   => '3306', // 端口
     //'DB_PREFIX' => 'park_', // 数据库表前缀
 
@@ -38,7 +38,7 @@ return array(
         'exts'     => 'jpg,gif,png,jpeg', //允许上传的文件后缀
         'autoSub'  => true, //自动子目录保存文件
         'subName'  => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
-        'rootPath' => './uploads/picture/', //保存根路径
+        'rootPath' => './upload/picture/', //保存根路径
         'savePath' => '', //保存路径
         'saveName' => array('uniqid', ''), //上传文件命名规则，[0]-函数名，[1]-参数，多个参数使用数组
         'saveExt'  => '', //文件保存后缀，空则使用原后缀
@@ -51,7 +51,7 @@ return array(
 
     /* 模板相关配置 */
     'TMPL_PARSE_STRING' => array(
-        '__PUBLIC__' => __ROOT__ . '/public',
+        '__PUBLIC__' => __ROOT__ . '/Public',
     ),
     'LOG_RECORD' => true, // 开启日志记录
     'LOG_LEVEL'  =>'EMERG,ALERT,CRIT,ERR',
@@ -59,4 +59,5 @@ return array(
 
     /*Thinkphp 字段名强制转换为小写*/
     'DB_PARAMS'    =>    array(\PDO::ATTR_CASE => \PDO::CASE_NATURAL),
+
 );

@@ -5,6 +5,10 @@ use Think\Controller;
 class LoginController extends Controller {
 
     public function index(){
+        $session_user = session("web_user");
+        if (!empty($session_user)) {
+            redirect("/index.php/center");
+        }
         $this->display('public/login');
 	}
 
@@ -27,12 +31,7 @@ class LoginController extends Controller {
             $this->error('密码错误！');
         }
         //登录成功
-        $info = [
-            'user_id' => $result['id'],
-            'mobile' => $result['mobile'],
-            'user_name' => $result['user_name'],
-        ];
-        session('web_user',$info);
+        session('web_user',$result);
 
         $this->success('登录成功');
     }

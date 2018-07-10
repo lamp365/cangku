@@ -1,0 +1,56 @@
+<extend name="Public/base" />
+
+<block name="css">
+    <style>
+        .choose_cat{
+            margin-top: 20px;
+            margin-left: 100px;
+            width: 450px;
+            text-align: left;
+        }
+        .choose_cat .title{
+            font-weight: bolder;
+            font-size: 22px;
+            margin-bottom:65px;
+        }
+    </style>
+</block>
+<block name="content">
+   <div class="choose_cat form-horizonta">
+       <p class="title">Step1:选择分类</p>
+       <div class="form-group">
+           <label for="cat_id1" class="col-sm-3 control-label">选择分类1</label>
+           <div class="col-sm-9">
+               <select name="cat_id1" id="cat_id1" class="form-control">
+                   <option value="0">选择一级分类</option>
+               </select>
+           </div>
+       </div>
+       <hr class="hr15"/>
+       <div class="form-group">
+           <label for="cat_id2" class="col-sm-3 control-label">选择分类2</label>
+           <div class="col-sm-9">
+           <select name="cat_id2" id="cat_id2" class="form-control">
+               <option value="0">选择二级分类</option>
+           </select>
+           </div>
+       </div>
+       <hr class="hr15"/>
+       <div class="form-group">
+           <label for="" class="col-sm-3 control-label">&nbsp;</label>
+           <div class="col-sm-9">
+              <span class="btn btn-info btn-lt" onclick="checkForm()">下一步</span>
+           </div>
+       </div>
+   </div>
+</block>
+
+<block name="js">
+    <script>
+        function checkForm() {
+            //检验所选的参数
+
+            window.location.href='__CONTROLLER__/addStep2';
+        }
+    </script>
+</block>

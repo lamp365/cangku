@@ -12,6 +12,17 @@
 
     <script type="text/javascript" src='__PUBLIC__/Static/jquery-1.11.2.min.js'></script>
     <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.js"></script>
+    <script>
+        // 现在window.$和window.jQuery是1.11版本:
+        console.log($().jquery); // => '1.11.0'
+        var $jq = jQuery.noConflict(true);
+        // 现在window.$和window.jQuery被恢复成1.5版本:
+        console.log($().jquery); // => '1.5.0'
+        // 可以通过$jq访问1.11版本的jQuery了
+    </script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.bgiframe.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.ajaxQueue.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.autocomplete.js"></script>
     <script src="__PUBLIC__/Static/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="__PUBLIC__/Static/assets/bootstrap-table/src/bootstrap-table.js"></script>
     <script src="__PUBLIC__/Admin/js/toastr.min.js"></script>
@@ -45,7 +56,31 @@
             </div>
         </div>
     </header>
-    <block name="content"></block>
+    <section class="section">
+        <div class="section-title">
+            <i class="icon-title"></i>
+            <h2>平台公告：</h2>
+            欢迎有您，我们将竭力为您服务！
+        </div>
+        <div class="row_box">
+            <div class="row_men">
+                <div class="row_regin">
+
+                    <include file="Public/meun"/>
+                </div>
+            </div><!--left菜单-->
+            <div class="row_right">
+
+                <block name="content">
+
+                </block>
+
+            </div>
+        </div>
+    </section>
+
+
+
     <footer class="footer">
         Copyright @ QT Network Company Ltd. All Rights Reserved. 2013-2017 青春之火
     </footer>

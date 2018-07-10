@@ -1,0 +1,158 @@
+<extend name="Public/base" />
+
+<block name="css">
+    <style>
+        .choose_cat{
+            margin-top: 20px;
+            margin-left: 100px;
+            width: 450px;
+            text-align: left;
+        }
+        .choose_cat .title{
+            font-weight: bolder;
+            font-size: 22px;
+            margin-bottom:65px;
+        }
+    </style>
+</block>
+<block name="content">
+   <div class="choose_cat form-horizonta">
+       <p class="title">添加宝贝</p>
+       <form class="form-horizontal" role="form" id="defaultForm" method="post" action="{$self}" enctype="multipart/form-data">
+           <fieldset>
+               <div class="form-group">
+                   <label class="col-sm-3 control-label" for="h_name">货源名称</label>
+                   <div class="col-sm-9">
+                       <input class="form-control" id="h_name" name="h_name" type="text" value="" />
+                   </div>
+               </div>
+
+               <div class="form-group">
+                   <label class="col-sm-3 control-label" for="pic">货源主图</label>
+                   <div class="col-sm-9">
+                       <input type="hidden" id="pic" name="pic" value="{$info.pic}" />
+                       <img src="/Public/no_photo.png" width="100" id="photo_preview" />
+                       <input class="upload-btn" type="file" id="btn-upload" style="cursor: pointer">
+                   </div>
+               </div>
+
+               <div class="form-group">
+                   <label class="col-sm-3 control-label" for="cat_id1">一级分类</label>
+                   <div class="col-sm-9">
+                       <select class="form-control" id="cat_id1" name="cat_id1">
+                           <option value="0">选择一级分类</option>
+                           <foreach name="cate" item="onecate">
+                               <option value="{$onecate.id}" >{$onecate.cat_name}</option>
+                           </foreach>
+                       </select>
+
+                   </div>
+               </div>
+               <div class="form-group">
+                   <label class="col-sm-3 control-label" for="cat_id2">二级分类</label>
+                   <div class="col-sm-9">
+                       <select class="form-control" id="cat_id2" name="cat_id2">
+                           <option value="0">选择二级分类</option>
+                       </select>
+                   </div>
+               </div>
+               <div class="form-group">
+                   <label class="col-sm-3 control-label" for="jin_price">货源进价</label>
+                   <div class="col-sm-9">
+                       <input class="form-control" id="jin_price" name="jin_price" type="number" value=""/>
+                   </div>
+               </div>
+               <div class="form-group">
+                   <label class="col-sm-3 control-label" for="da_price">打包费用</label>
+                   <div class="col-sm-9">
+                       <input class="form-control" id="da_price" name="da_price" type="number" value=""/>
+                   </div>
+               </div>
+
+               <div class="form-group">
+                   <label class="col-sm-3 control-label" for="info">备注信息</label>
+                   <div class="col-sm-9">
+                       <input class="form-control" id="info" name="info" type="text" value=""/>
+                   </div>
+                   <input type="hidden" id="cat_url" value="__CONTROLLER__/getCate">
+               </div>
+               <div class="form-group">
+                   <label class="col-sm-3 control-label" for="info"></label>
+                   <div class="col-sm-9">
+                       <span class="btn btn-info btn-lt" id="submit">确认添加</span>
+                   </div>
+               </div>
+
+           </fieldset>
+       </form>
+   </div>
+</block>
+
+<block name="js">
+    <script type="text/javascript" src='__PUBLIC__/Static/uploadifive/Sample/jquery.uploadifive.min.js'></script>
+    <script>
+        $(function () {
+            $("#btn-upload").uploadifive({
+                height: 25,
+                swf: '/Public/Static/uploadify/uploadify.swf',
+                uploadScript: "{:U('Admin/File/uploadPicture',array('dir'=>'huoyuan','session_id'=>session_id()))}",
+                width: 80,
+                buttonClass: "l-btn",
+                buttonText: '上传',
+                onUploadComplete: function (file, data) {
+                    data = $.parseJSON(data);
+                    if (data.errno == 200) {
+                        $("#photo_preview").attr("src", data.message);
+                        $("#pic").val(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);return false;
+                    }
+                }
+            });
+
+            $("#cat_id1").change(function () {
+                var cat_id1 = $(this).val();
+                if(cat_id1 == 0){
+                    var html = '<option value="0">选择二级分类</option>';
+                    $("#cat_id2").html(html);
+                }else{
+                    //异步请求
+                    var html = '';
+                    var url = $("#cat_url").val();
+                    $.post(url,{cat_id1:cat_id1},function(message){
+                        if(message.length>0){
+                            for(var i=0;i<message.length;i++){
+                                var item = message[i];
+                                html += '<option value="'+item.id+'">'+item.cat_name+'</option>';
+                            }
+                        }else{
+                            html = '<option value="0">暂无二级分类</option>';
+
+                        }
+                        $("#cat_id2").html(html);
+                    });
+                }
+            });
+
+            $("#submit").click(function(){
+                var $form = $('#defaultForm');
+                $.post($form.attr('action'), $form.serialize(), function(result) {
+                    if(result.status==1){
+                        swal({
+                            title:"操作成功！",
+                            text:result.info,
+                            type:"success"
+                        },function(){
+                            //跳转到第三部
+
+                        });
+                    }else{
+                        toastr.warning(result.info);return false;
+                    }
+                }, 'json');
+            });
+
+        });
+    </script>
+</block>

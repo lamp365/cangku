@@ -45,7 +45,7 @@
         .cont{
             clear: both;
         }
-        input[type='text']{
+        input[type='text'],input[type='password']{
             border:1px solid #DCDEE0;
             vertical-align: middle;
             border-radius: 3px;
@@ -106,7 +106,7 @@
 <body>
     <div class="main">
         <div class="title">
-            <span>{:C('WEB_TITLE)}</span>
+            <span>{:C('WEB_TITLE')}</span>
         </div>
         <div style="position: relative;height: 120px;width: 100%"></div>
         <div class="cont">
@@ -119,33 +119,33 @@
         </div>
     </div>
 </body>
-<script type="text/javascript" src='__PUBLIC__/Static/jquery-1.11.2.min.js'></script>
+<script type="text/javascript" src="__PUBLIC__/Static/jquery-1.11.2.min.js"></script>
 <script src="__PUBLIC__/Admin/js/toastr.min.js"></script>
 <script>
     //ajax 登录
-    $('#sub').click(function(){
+    $("#sub").click(function(){
 
 
-        var phone = $('#mobile').val();
-        var password = $('#password').val();
+        var phone = $("#mobile").val();
+        var password = $("#password").val();
         if(!phone || !password){
-            toastr.warning('手机号码或者密码不能为空');
+            toastr.warning("手机号码或者密码不能为空");
             return false;
         }
-        var info = {phone:phone,password:password}
+        var info = {phone:phone,password:password};
         $.post("/signin", info, function (data) {
 
             console.log(data);
             if (data.status == 1) {
-                toastr.success('登录成功');
+                toastr.success("登录成功");
                 setTimeout(function () {
-                    location.href = '/center'
+                    location.href = "/center";
                 },2000);
             } else {
                 toastr.warning(data.info);
             }
 
-        })
+        });
 
     })
 

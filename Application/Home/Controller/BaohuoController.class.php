@@ -29,13 +29,24 @@ class BaohuoController extends CommonController {
                 $this->error('请上传主图');
             }
 
-            M('huoyuan') -> add($data);
-            $this->success('增加成功！');
+            $last_id = M('huoyuan') -> add($data);
+
+            $this->success('增加成功！',U('Baohuo/addStep3',array('huo_id'=>$last_id)));
 
         }else{
-            //查询出顶级分类
-            $cate = M('category') -> where(array('is_delete' => 0, 'pid' => 0)) -> select();
-            $this->assign('cate', $cate);
+            $cat_id1 = i('cat_id1');
+            $cat_id2 = i('cat_id2');
+            if(empty($cat_id1) || empty($cat_id2)){
+                $this->error('参数有误');
+            }
+            $cat_name1 = M('category') -> where("id={$cat_id1}")->getField('cat_name');
+            $cat_name2 = M('category') -> where("id={$cat_id2}")->getField('cat_name');
+
+            $this->assign('cat_id1', $cat_id1);
+            $this->assign('cat_id2', $cat_id2);
+
+            $this->assign('cat_name1', $cat_name1);
+            $this->assign('cat_name2', $cat_name2);
             $this->display();
         }
     }
@@ -45,11 +56,39 @@ class BaohuoController extends CommonController {
         $this->ajaxReturn($cate);
     }
 	public function addStep1(){
+        //查询出顶级分类
+        $cate = M('category') -> where(array('is_delete' => 0, 'pid' => 0)) -> select();
+        $this->assign('cate', $cate);
         $this->display();
     }
 
     public function addStep2(){
+        $cat_id1 = i('cat_id1');
+        $cat_id2 = i('cat_id2');
+        if(empty($cat_id1) || empty($cat_id2)){
+            $this->error('参数有误');
+        }
+        $data = M('huoyuan')->where(array('cat_id1'=>$cat_id1,'cat_id2'=>$cat_id2))->select();
+        $this->assign('cat_id1', $cat_id1);
+        $this->assign('cat_id2', $cat_id2);
         $this->display();
     }
 
+    public function addStep3(){
+        $huo_id = i('huo_id');
+        if(empty($huo_id)){
+            $this->error('参数有误!');
+        }
+        $cm_size  = M('cm_size')->where(array('is_delete' => 0, 'pid' => 0))->select();
+        $changjia = M('changjia')->where(array('is_delete' => 0))->select();
+        $data = M('huoyuan')->find($huo_id);
+        //获取用户对应店铺
+        $session_user = session('web_user');
+        $user_shop    = M('user_shop')->where("gid={$session_user['gid']}")->select();
+        $this->assign('data', $data);
+        $this->assign('cm_size', $cm_size);
+        $this->assign('changjia', $changjia);
+        $this->assign('user_shop', $user_shop);
+        $this->display();
+    }
 }

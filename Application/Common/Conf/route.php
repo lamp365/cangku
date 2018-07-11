@@ -15,5 +15,6 @@ return array(
         'login'  => 'Login/index',
         'signin' => 'Login/dologin',
         'center' => 'Center/index',
+        'edituser' => 'Center/edituser',
     )
 );

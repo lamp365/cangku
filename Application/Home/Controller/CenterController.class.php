@@ -13,4 +13,22 @@ class CenterController extends CommonController {
         $this->display();
 	}
 
+    //ajax 修改会员信息
+    public function edituser(){
+        $session_user = session("web_user");
+        $user_id = $session_user['user_id'];
+        $data['user_name'] = I('user_name');
+
+        $result = M('user') ->where(array('id' => $user_id)) -> save($data);
+
+        if($result){
+            $session_user['user_name'] = $data['user_name'];
+            session('web_user',$session_user);
+            $this -> success('修改成功');
+        } else {
+            $this->error('修改失败');
+        }
+    }
+
+
 }

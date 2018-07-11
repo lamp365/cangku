@@ -1,0 +1,31 @@
+<extend name="Public/base" />
+
+
+<block name="content">
+
+
+    <table class="table table-bordered table-hover"  id="table">
+        <thead>
+        <tr>
+            <th style="text-align: center">编号</th>
+            <th style="text-align: center">会员手机</th>
+            <th style="text-align: center">会员名称</th>
+            <th style="text-align: center">级别</th>
+            <th style="text-align: center">状态</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="info" id="vo">
+            <tr>
+                <td>{$vo.id}</td>
+                <td>{$vo.mobile}</td>
+                <td>{$vo.user_name}</td>
+                <td><if condition="$vo['level'] eq 0">组员 <else /> 组长 </if></td>
+                <td><if condition="$vo['is_forbid'] eq 0">启用 <else /> 禁用 </if></td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+
+</block>

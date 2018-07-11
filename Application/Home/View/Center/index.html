@@ -3,8 +3,8 @@
 
 <block name="content">
     <div class="input_row">
-        <label class="label_text">用户账号：<input class="input_text" disabled="disabled" type="text" name="" value="{$user_info.mobile}" placeholder="" readonly="readonly"/></label>
-        <label class="label_text">用户名稱：<input class="input_text" type="text" name="" value="{$user_info.user_name}" placeholder=""/></label>
+        <label class="label_text">用户账号：<input class="input_text" disabled="disabled" type="text" name="" value="{$session_user['mobile']}" placeholder="" readonly="readonly"/></label>
+        <label class="label_text">用户名稱：<input class="input_text" id="user_name" type="text" name="" value="{$session_user['user_name']}" placeholder=""/></label>
         <!--<label class="label_text">用戶頭像：<div class="logo_rgi"><img src="__PUBLIC__/Home/img/logo_rgi.png"/></div>-->
             <!--<input class="input_file" type="file" name="" value=""/></label>-->
         <button type="button" class="btn btn-success btn-lt">保存信息</button>
@@ -13,11 +13,28 @@
 </block>
 
 <block name="js">
-
+    <script src="__PUBLIC__/Admin/js/toastr.min.js"></script>
     <script>
         $('.btn').click(function(){
+            var user_name = $('#user_name').val();
+            if(!user_name){
+                return false;
+            }
+            var info = {user_name:user_name}
+            $.post("/edituser", info, function (data) {
 
-            alert(1234)
+                console.log(data);
+                if (data.status == 1) {
+                    toastr.success("修改成功");
+                    setTimeout(function () {
+                        location.href = "/center";
+                    },2000);
+                } else {
+                    toastr.warning(data.info);
+                }
+
+            });
+
         })
 
 

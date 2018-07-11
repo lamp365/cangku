@@ -10,6 +10,12 @@ class ShopController extends CommonController {
 
     public function index(){
 
+        $session_user = session("web_user");
+        $gid = $session_user['gid'];
+        $where['gid'] = $gid;
+        $info = M('user_shop') -> where($where) ->select();
+
+        $this->assign('info', $info);
         $this->display();
 	}
 

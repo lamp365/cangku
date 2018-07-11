@@ -23,6 +23,9 @@
            <div class="col-sm-9">
                <select name="cat_id1" id="cat_id1" class="form-control">
                    <option value="0">选择一级分类</option>
+                   <foreach name="cate" item="onecate">
+                       <option value="{$onecate.id}" >{$onecate.cat_name}</option>
+                   </foreach>
                </select>
            </div>
        </div>
@@ -39,6 +42,7 @@
        <div class="form-group">
            <label for="" class="col-sm-3 control-label">&nbsp;</label>
            <div class="col-sm-9">
+               <input type="hidden" id="cat_url" value="__CONTROLLER__/getCate">
               <span class="btn btn-info btn-lt" onclick="checkForm()">下一步</span>
            </div>
        </div>
@@ -49,8 +53,38 @@
     <script>
         function checkForm() {
             //检验所选的参数
-
-            window.location.href='__CONTROLLER__/addStep2';
+            var cat_id1 = $("#cat_id1").val();
+            var cat_id2 = $("#cat_id2").val();
+            if(cat_id1 == 0 || cat_id2 == 0){
+                toastr.warning('请选择好分类');
+                return ;
+            }
+            window.location.href='__CONTROLLER__/addStep2/cat_id1/'+cat_id1+'/cat_id2/'+cat_id2;
         }
+        $(function () {
+            $("#cat_id1").change(function () {
+                var cat_id1 = $(this).val();
+                if(cat_id1 == 0){
+                    var html = '<option value="0">选择二级分类</option>';
+                    $("#cat_id2").html(html);
+                }else{
+                    //异步请求
+                    var html = '';
+                    var url = $("#cat_url").val();
+                    $.post(url,{cat_id1:cat_id1},function(message){
+                        if(message.length>0){
+                            for(var i=0;i<message.length;i++){
+                                var item = message[i];
+                                html += '<option value="'+item.id+'">'+item.cat_name+'</option>';
+                            }
+                        }else{
+                            html = '<option value="0">暂无二级分类</option>';
+
+                        }
+                        $("#cat_id2").html(html);
+                    });
+                }
+            });
+        });
     </script>
 </block>

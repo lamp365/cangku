@@ -1,0 +1,172 @@
+<extend name="Public/base" />
+
+<block name="css">
+    <style>
+        .choose_cat{
+            margin-top: 20px;
+            margin-left: 100px;
+            width: 450px;
+            text-align: left;
+        }
+        .choose_cat .title{
+            font-weight: bolder;
+            font-size: 22px;
+            margin-bottom:40px;
+        }
+    </style>
+</block>
+<block name="content">
+    <div class="choose_cat form-horizonta">
+        <p class="title">Step3:报货信息填写</p>
+        <div class="form-group">
+            <label for="pic" class="col-sm-3 control-label">宝贝主图</label>
+            <div class="col-sm-9">
+                <img src="{$data.pic}" alt="" style="height:60px; ">
+                <input type="hidden" value="{$data.id}" name="huo_id" id="huo_id">
+                <input type="hidden" value="{$data.cat_id1}" name="cat_id2" id="cat_id1">
+                <input type="hidden" value="{$data.cat_id2}" name="cat_id2" id="cat_id2">
+                <input type="hidden" value="{$data.pic}" name="pic" id="pic">
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="cm_size0" class="col-sm-3 control-label">选择尺码1</label>
+            <div class="col-sm-9">
+                <select  id="cm_size0" class="form-control">
+                    <option value="0">选择一级尺码</option>
+                    <foreach name="cm_size" item="onecate">
+                        <option value="{$onecate.id}" >{$onecate.cm_name}</option>
+                    </foreach>
+                </select>
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="cm_id" class="col-sm-3 control-label">选择尺码2</label>
+            <div class="col-sm-9">
+                <select name="cm_id" id="cm_id" class="form-control">
+                    <option value="0">选择二级尺码</option>
+                </select>
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="pic2" class="col-sm-3 control-label">传附加图</label>
+            <div class="col-sm-9">
+
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="chang_id" class="col-sm-3 control-label">选择厂家</label>
+            <div class="col-sm-9">
+                <select name="chang_id" id="chang_id" class="form-control">
+                    <option value="0">选择对应厂家</option>
+                    <foreach name="changjia" item="oneRow">
+                        <option value="{$oneRow.id}" >{$oneRow.cname}</option>
+                    </foreach>
+                </select>
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="shop_id" class="col-sm-3 control-label">来源店铺</label>
+            <div class="col-sm-9">
+                <select name="shop_id" id="shop_id" class="form-control">
+                    <option value="0">选择对应哪家店铺卖出</option>
+                    <foreach name="user_shop" item="Row">
+                        <option value="{$Row.id}" >{$Row.shop_name}--[{$Row.shop_zg}]</option>
+                    </foreach>
+                </select>
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="shop_id" class="col-sm-3 control-label">报货目的</label>
+            <div class="col-sm-3">
+               发货 <input type="radio" class="form-control1" value="1" name="mude" id="mude1">
+            </div>
+            <div class="col-sm-3">
+                备货 <input type="radio" class="form-control1" value="2" name="mude" id="mude2">
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="shop_id" class="col-sm-3 control-label">是否调货</label>
+            <div class="col-sm-3">
+                用库存 <input type="radio" class="form-control1" value="1" name="diaohuo" id="diao1">
+            </div>
+            <div class="col-sm-3">
+                用调货 <input type="radio" class="form-control1" value="2" name="diaohuo" id="diao2">
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="shop_id" class="col-sm-3 control-label">物品数量</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control" value="" name="num">
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group" id="danjia" style="display: none">
+            <label for="shop_id" class="col-sm-3 control-label">卖出单价</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control" value="" name="mai_price">
+            </div>
+        </div>
+        <hr class="hr15"/>
+        <div class="form-group">
+            <label for="" class="col-sm-3 control-label">&nbsp;</label>
+            <div class="col-sm-9">
+                <button class="btn btn-info btn-lt" type="submit">确认添加</button>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="js">
+    <script>
+        $("#mude2").click(function () {
+            $("#diao2").prop('checked',true);
+            $("#diao1").prop("checked",false);
+            $("#danjia").hide();
+        });
+        $("#mude1").click(function () {
+            $("#danjia").show();
+        });
+        $(function () {
+
+            /*$('#mude2').click(function(){
+                var $radio = $(this).find("input[type=radio]");
+                var $flag  = $radio.is(":checked");
+                if(!$flag){
+                    $radio.prop("checked",true);
+                }
+            });*/
+
+            $("#cat_id1").change(function () {
+                var cat_id1 = $(this).val();
+                if(cat_id1 == 0){
+                    var html = '<option value="0">选择二级分类</option>';
+                    $("#cat_id2").html(html);
+                }else{
+                    //异步请求
+                    var html = '';
+                    var url = $("#cat_url").val();
+                    $.post(url,{cat_id1:cat_id1},function(message){
+                        if(message.length>0){
+                            for(var i=0;i<message.length;i++){
+                                var item = message[i];
+                                html += '<option value="'+item.id+'">'+item.cat_name+'</option>';
+                            }
+                        }else{
+                            html = '<option value="0">暂无二级分类</option>';
+
+                        }
+                        $("#cat_id2").html(html);
+                    });
+                }
+            });
+        });
+    </script>
+</block>

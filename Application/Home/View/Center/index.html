@@ -3,11 +3,24 @@
 
 <block name="content">
     <div class="input_row">
-        <label class="label_text">用户账号：<input class="input_text" type="text" name="" value="13980829676" placeholder="" readonly="readonly"/></label>
-        <label class="label_text">用户名稱：<input class="input_text" type="text" name="" value="" placeholder=""/></label>
-        <label class="label_text">用戶頭像：<div class="logo_rgi"><img src="__PUBLIC__/Home/img/logo_rgi.png"/></div>
-            <input class="input_file" type="file" name="" value=""/></label>
+        <label class="label_text">用户账号：<input class="input_text" disabled="disabled" type="text" name="" value="{$user_info.mobile}" placeholder="" readonly="readonly"/></label>
+        <label class="label_text">用户名稱：<input class="input_text" type="text" name="" value="{$user_info.user_name}" placeholder=""/></label>
+        <!--<label class="label_text">用戶頭像：<div class="logo_rgi"><img src="__PUBLIC__/Home/img/logo_rgi.png"/></div>-->
+            <!--<input class="input_file" type="file" name="" value=""/></label>-->
         <button type="button" class="btn btn-success btn-lt">保存信息</button>
     </div>
 
+</block>
+
+<block name="js">
+
+    <script>
+        $('.btn').click(function(){
+
+            alert(1234)
+        })
+
+
+
+    </script>
 </block>

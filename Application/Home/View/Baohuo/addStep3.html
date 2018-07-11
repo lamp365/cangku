@@ -5,13 +5,16 @@
         .choose_cat{
             margin-top: 20px;
             margin-left: 100px;
-            width: 450px;
+            width: 650px;
             text-align: left;
         }
         .choose_cat .title{
             font-weight: bolder;
             font-size: 22px;
             margin-bottom:40px;
+        }
+        #uploadifive-btn-upload input{
+            cursor: pointer;
         }
     </style>
 </block>
@@ -50,12 +53,16 @@
             </div>
         </div>
         <hr class="hr15"/>
+        <form enctype="multipart/form-data">
         <div class="form-group">
             <label for="pic2" class="col-sm-3 control-label">传附加图</label>
             <div class="col-sm-9">
-
+                <input type="hidden" name="pic2[]" value="" />
+                <img src="/Public/no_photo.png" width="100" class="photo_preview" />
+                <input class="upload-btn the_btn-upload" type="file" id="btn-upload" style="cursor: pointer">
             </div>
         </div>
+        </form>
         <hr class="hr15"/>
         <div class="form-group">
             <label for="chang_id" class="col-sm-3 control-label">选择厂家</label>
@@ -125,6 +132,7 @@
 </block>
 
 <block name="js">
+    <script type="text/javascript" src='__PUBLIC__/Static/uploadifive/Sample/jquery.uploadifive.min.js'></script>
     <script>
         $("#mude2").click(function () {
             $("#diao2").prop('checked',true);
@@ -134,15 +142,29 @@
         $("#mude1").click(function () {
             $("#danjia").show();
         });
+
+
         $(function () {
 
-            /*$('#mude2').click(function(){
-                var $radio = $(this).find("input[type=radio]");
-                var $flag  = $radio.is(":checked");
-                if(!$flag){
-                    $radio.prop("checked",true);
+            $(".the_btn-upload").uploadifive({
+                height: 25,
+                swf: '/Public/Static/uploadify/uploadify.swf',
+                uploadScript: "{:U('Admin/File/uploadPicture',array('dir'=>'baohuo','session_id'=>session_id()))}",
+                width: 80,
+                buttonClass: "l-btn",
+                buttonText: '上传',
+                onUploadComplete: function (file, data) {
+                    console.log(file)
+                    data = $.parseJSON(data);
+                    if (data.errno == 200) {
+//                        $("#photo_preview").attr("src", data.message);
+//                        $("#pic").val(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);return false;
+                    }
                 }
-            });*/
+            });
 
             $("#cat_id1").change(function () {
                 var cat_id1 = $(this).val();

@@ -258,7 +258,7 @@ html,body{font-size: 16px;color: #000;background: url(../img/bg.jpg) no-repeat; 
 }
 .center_menu .text{display: inline-block;vertical-align: -webkit-baseline-middle;}
 
-.input_row {width: 433px;height: 343px;margin-top:140px;margin-left: 80px;}
+.input_row {width: 433px;height: 343px;margin-top:100px;margin-left: 80px;}
 .label_text {width: 100%;float: left;margin-bottom: 18px;line-height: 34px;text-align: left;}
 .input_text {width: 349px;height: 32px;float: right;border: 1px solid #cecece; border-radius:5px ;line-height: 32px;font-size: 14px;text-align: left; text-indent: 10px;background: none;}
 .footer {

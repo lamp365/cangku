@@ -166,7 +166,6 @@ class BaohuoController extends CommonController {
             $this->success('客户信息完善成功');
         }else{
             $uid = getUidFromSession();
-            $uid = 1;
             $address = M('address')->where("uid={$uid}")->select();
             $this->assign('huo_id',$huo_id);
             $this->assign('address',$address);

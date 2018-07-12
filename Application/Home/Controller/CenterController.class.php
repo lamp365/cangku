@@ -16,8 +16,16 @@ class CenterController extends CommonController {
     //ajax 修改会员信息
     public function edituser(){
         $session_user = session("web_user");
-        $user_id = $session_user['user_id'];
+        $user_id      = $session_user['id'];
         $data['user_name'] = I('user_name');
+        if(!empty(i('password'))){
+            if(!empty(i('newpwd')) && (i('repwd') != i('newpwd'))){
+                $this->error('新密码两次不一样');
+            }
+            if(!empty(i('newpwd'))){
+                $data['password'] = md5(md5(i('newpwd')));
+            }
+        }
 
         $result = M('user') ->where(array('id' => $user_id)) -> save($data);
 

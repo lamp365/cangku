@@ -22,21 +22,21 @@
        <div class="form-group">
            <label for="customer" class="col-sm-3 control-label">客户名字</label>
            <div class="col-sm-9">
-               <input type="text" class="form-control" name="customer">
+               <input type="text" class="form-control" name="customer" value="{$baohuo.customer}">
            </div>
        </div>
        <hr class="hr15"/>
        <div class="form-group">
            <label for="cat_id2" class="col-sm-3 control-label">客户手机</label>
            <div class="col-sm-9">
-               <input type="number" class="form-control" name="c_mobile">
+               <input type="number" class="form-control" name="c_mobile" value="{$baohuo.c_mobile}">
            </div>
        </div>
        <hr class="hr15"/>
        <div class="form-group">
            <label for="cat_id2" class="col-sm-3 control-label">收货地址</label>
            <div class="col-sm-9">
-               <input type="text" class="form-control" name="c_address">
+               <input type="text" class="form-control" name="c_address" value="{$baohuo.c_address}">
            </div>
        </div>
        <hr class="hr15"/>
@@ -46,7 +46,7 @@
                <select name="address_id" id="address_id" class="form-control">
                    <option value="0">选择发货地址</option>
                    <foreach name="address" item="onecate">
-                       <option value="{$onecate.id}" >{$onecate.send_address}</option>
+                       <option value="{$onecate.id}" <if condition="$onecate['id'] eq $baohuo['address_id']">selected</if> >{$onecate.send_address}</option>
                    </foreach>
                </select>
            </div>
@@ -55,7 +55,7 @@
        <div class="form-group">
            <label for="cat_id2" class="col-sm-3 control-label">运营备注</label>
            <div class="col-sm-9">
-               <input type="text" class="form-control" name="yun_info">
+               <input type="text" class="form-control" name="yun_info" value="{$baohuo.yun_info}">
            </div>
        </div>
 

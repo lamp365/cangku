@@ -9,7 +9,24 @@ class BaohuoController extends CommonController {
 
 
     public function index(){
+        $order_state = intval(i('order_state'));
+        $where = array();
+        $where['order_state'] = $order_state;
+        $baohuoM = M('baohuo');
+        $count = $baohuoM->where($where)->count();
+        $p     = new \Think\Page($count,4);
+        $page  = $p->show();
+        $data  = $baohuoM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
+        $user = M('user');
+        $cmM= M('cm_size');
+        foreach ($data as &$item){
+            $item['user_name'] = $user->where("id={$item['uid']}")->getField('user_name');
+            $item['cm_name'] = $cmM->where("id={$item['cm_id']}")->getField('cm_name');
+        }
+        $this->assign('order_state',$order_state);
+        $this->assign('page',$page);
+        $this->assign('data',$data);
         $this->display();
 	}
     public function addHuoyuan(){
@@ -76,19 +93,36 @@ class BaohuoController extends CommonController {
 
     public function addStep3(){
         $huo_id = i('huo_id');
+        $id     = intval(i('id'));
         if(empty($huo_id)){
             $this->error('参数有误!');
         }
-        $cm_size  = M('cm_size')->where(array('is_delete' => 0, 'pid' => 0))->select();
+
+        $cmM  = M('cm_size');
+        $baohuo   = M('baohuo')->find($id);
+        $cm_size  = $cmM->where(array('is_delete' => 0, 'pid' => 0))->select();
         $changjia = M('changjia')->where(array('is_delete' => 0))->select();
         $data = M('huoyuan')->find($huo_id);
         //获取用户对应店铺
         $session_user = session('web_user');
         $user_shop    = M('user_shop')->where("gid={$session_user['gid']}")->select();
+
+        //获取尺码
+        $parentSize   = array();
+        $sonSize   = array();
+        if(!empty($baohuo['cm_id'])){
+            //当前尺码pid
+            $selfPid    = $cmM->where("id={$baohuo['cm_id']}")->getField('pid');
+            $parentSize = $cmM->where("id={$selfPid}")->find();
+            $sonSize    = $cmM->where("pid={$selfPid}")->select();
+        }
         $this->assign('data', $data);
         $this->assign('cm_size', $cm_size);
         $this->assign('changjia', $changjia);
         $this->assign('user_shop', $user_shop);
+        $this->assign('baohuo', $baohuo);
+        $this->assign('parentSize', $parentSize);
+        $this->assign('sonSize', $sonSize);
         $this->display();
     }
 
@@ -97,6 +131,9 @@ class BaohuoController extends CommonController {
         //如果目的是1 必须设置价格
         if(!isset($data['mude'])){
             $this->error('请选择报货目的');
+        }
+        if(empty($data['num'])){
+            $this->error('请设置数量');
         }
         if(!isset($data['diaohuo'])){
             $this->error('请选择是否调货');
@@ -137,8 +174,23 @@ class BaohuoController extends CommonController {
             }
         }
         $data['mai_price'] = empty($data['mai_price']) ? 0 : $data['mai_price'];
-        $huo_id = M('baohuo')->add($data);
-        $info['message'] = '报货添加成功,你可以现在完善客户信息或者明天抽空完成';
+        //获取打包价 和 进价
+        $huoInfo = M('huoyuan')->find($data['huo_id']);
+        $data['jin_price'] = $huoInfo['jin_price'];
+        $data['da_price']  = $huoInfo['da_price'];
+
+        $id = $data['id'];
+        if(empty($id)){
+            $huo_id = M('baohuo')->add($data);
+            $msg = '报货添加成功,你可以现在完善客户信息或者明天抽空完成';
+        }else{
+            unset($data['id']);
+            M('baohuo')->where("id={$id}")->save($data);
+            $huo_id = $id;
+            $msg = "报货修改成功,你可以现在完善客户信息或者明天抽空完成";
+        }
+
+        $info['message'] = $msg;
         $info['huo_id']  = $huo_id;
         $this->success($info);
     }
@@ -167,9 +219,34 @@ class BaohuoController extends CommonController {
         }else{
             $uid = getUidFromSession();
             $address = M('address')->where("uid={$uid}")->select();
+            $baohuo  = M('baohuo')->find($huo_id);
             $this->assign('huo_id',$huo_id);
             $this->assign('address',$address);
+            $this->assign('baohuo',$baohuo);
             $this->display();
         }
+    }
+
+    public function closeBaohuo(){
+        $id = i('id');
+        if(empty($id)){
+            $this->error('参数有误!');
+        }
+        $info = M('baohuo')->find($id);
+        if($info['order_state'] != 0){
+            $this->error('订单需申请中才能关闭!');
+        }
+        M('baohuo')->where("id={$id}")->save(array('order_state'=>-1));
+        $this->success('订单已经关闭');
+    }
+
+    public function editBaohuo(){
+        $id = i('id');
+        if(empty($id)){
+            $this->error('参数有误!');
+        }
+        $info = M('baohuo')->find($id);
+        $this->assign('info',$info);
+        $this->display();
     }
 }

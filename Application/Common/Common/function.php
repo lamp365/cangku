@@ -237,3 +237,12 @@ function getUserKucunFormHuoyuan($uid,$huo_id,$cm_id,$type){
         return intval($data['num']);
     }
 }
+
+function getDiaohuoState($state){
+    switch ($state){
+        case 1: return '库存';break;
+        case 2: return '调货';break;
+        case 3: return '缺货';break;
+        case 4: return '调货完毕';break;
+    }
+}

@@ -51,7 +51,7 @@ class BillController extends AdminController
         $total_lirun = $price_info[0]['mai_price']-$price_info[0]['shua_price']-$price_info[0]['da_price']-$price_info[0]['jin_price'];
 
         $count = $billM->where($where)->count();
-        $p     = new \Think\Page($count,4);
+        $p     = new \Think\Page($count,30);
         $page  = $p->show();
         $data  = $billM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
         $userM  = M('user');

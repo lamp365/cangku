@@ -9,24 +9,9 @@
 namespace Admin\Controller;
 
 use Think\Upload;
-use Think\Log;
+use Think\Controller;
 
-class FileController extends AdminController{
-
-    protected function _initialize() {
-        parent::_initialize();
-    }
-
-    /**
-     * 登录即可
-     * @return bool
-     */
-    public function checkDynamic() {
-        if (get_user_id()) {
-            return true;
-        }
-        return false;
-    }
+class FileController extends Controller{
 
     /**
      * 上传图片

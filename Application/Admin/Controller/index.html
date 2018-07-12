@@ -22,4 +22,22 @@ return year + "/" + month + "/" + date + " &nbsp " + hour + ":" + minute + "";
    toastr.warning('sssssss');
    swal("OMG","失败了","error");
 
+
+swal({
+                        title:"报货成功",
+                        text:data.message,
+                        type:"success",
+                        showCancelButton:true,
+                        confirmButtonColor:"#DD6B55",
+                        confirmButtonText:"完善客户信息",
+                        cancelButtonText:"稍后完善信息",
+                        closeOnConfirm:false,
+                        closeOnCancle:false,
+                    },function(isConfirm){
+                        if(isConfirm){
+                            window.location.href = "__CONTROLLER__/addStep4";
+                        }else{
+                            window.location.href = "__CONTROLLER__/index";
+                        }
+                    });
 ->

@@ -21,12 +21,13 @@
 <block name="content">
     <div class="choose_cat form-horizonta">
         <p class="title">Step3:报货信息填写</p>
+        <form id="formParme">
         <div class="form-group">
             <label for="pic" class="col-sm-3 control-label">宝贝主图</label>
             <div class="col-sm-9">
                 <img src="{$data.pic}" alt="" style="height:60px; ">
                 <input type="hidden" value="{$data.id}" name="huo_id" id="huo_id">
-                <input type="hidden" value="{$data.cat_id1}" name="cat_id2" id="cat_id1">
+                <input type="hidden" value="{$data.cat_id1}" name="cat_id1" id="cat_id1">
                 <input type="hidden" value="{$data.cat_id2}" name="cat_id2" id="cat_id2">
                 <input type="hidden" value="{$data.pic}" name="pic" id="pic">
             </div>
@@ -53,16 +54,14 @@
             </div>
         </div>
         <hr class="hr15"/>
-        <form enctype="multipart/form-data">
         <div class="form-group">
             <label for="pic2" class="col-sm-3 control-label">传附加图</label>
             <div class="col-sm-9">
-                <input type="hidden" name="pic2[]" value="" />
-                <img src="/Public/no_photo.png" width="100" class="photo_preview" />
-                <input class="upload-btn the_btn-upload" type="file" id="btn-upload" style="cursor: pointer">
+                <input type="hidden" name="pic2" id="pic2" value="" />
+                <img src="/Public/no_photo.png"  id="photo_preview" style="height: 60px;"/>
+                <input class="upload-btn" type="file" id="btn-upload" style="cursor: pointer">
             </div>
         </div>
-        </form>
         <hr class="hr15"/>
         <div class="form-group">
             <label for="chang_id" class="col-sm-3 control-label">选择厂家</label>
@@ -111,7 +110,7 @@
         <div class="form-group">
             <label for="shop_id" class="col-sm-3 control-label">物品数量</label>
             <div class="col-sm-9">
-                <input type="number" class="form-control" value="" name="num">
+                <input type="number" class="form-control" value="1" name="num">
             </div>
         </div>
         <hr class="hr15"/>
@@ -125,9 +124,10 @@
         <div class="form-group">
             <label for="" class="col-sm-3 control-label">&nbsp;</label>
             <div class="col-sm-9">
-                <button class="btn btn-info btn-lt" type="submit">确认添加</button>
+                <button class="btn btn-info btn-lt" type="button" onclick="addBaohuo()">确认添加</button>
             </div>
         </div>
+        </form>
     </div>
 </block>
 
@@ -146,7 +146,7 @@
 
         $(function () {
 
-            $(".the_btn-upload").uploadifive({
+            $("#btn-upload").uploadifive({
                 height: 25,
                 swf: '/Public/Static/uploadify/uploadify.swf',
                 uploadScript: "{:U('Admin/File/uploadPicture',array('dir'=>'baohuo','session_id'=>session_id()))}",
@@ -157,8 +157,8 @@
                     console.log(file)
                     data = $.parseJSON(data);
                     if (data.errno == 200) {
-//                        $("#photo_preview").attr("src", data.message);
-//                        $("#pic").val(data.message);
+                        $("#photo_preview").attr("src", data.message);
+                        $("#pic2").val(data.message);
                     }
                     else {
                         toastr.warning(data.message);return false;
@@ -166,29 +166,58 @@
                 }
             });
 
-            $("#cat_id1").change(function () {
-                var cat_id1 = $(this).val();
-                if(cat_id1 == 0){
-                    var html = '<option value="0">选择二级分类</option>';
-                    $("#cat_id2").html(html);
+            $("#cm_size0").change(function () {
+                var cm_id1 = $(this).val();
+                if(cm_id1 == 0){
+                    var html = '<option value="0">选择二级尺码</option>';
+                    $("#cm_id").html(html);
                 }else{
                     //异步请求
                     var html = '';
-                    var url = $("#cat_url").val();
-                    $.post(url,{cat_id1:cat_id1},function(message){
+                    var url = "__CONTROLLER__/getSize";
+                    $.post(url,{cm_id1:cm_id1},function(message){
                         if(message.length>0){
                             for(var i=0;i<message.length;i++){
                                 var item = message[i];
-                                html += '<option value="'+item.id+'">'+item.cat_name+'</option>';
+                                html += '<option value="'+item.id+'">'+item.cm_name+'</option>';
                             }
                         }else{
                             html = '<option value="0">暂无二级分类</option>';
 
                         }
-                        $("#cat_id2").html(html);
+                        $("#cm_id").html(html);
                     });
                 }
             });
         });
+        
+        function addBaohuo() {
+            var parme = $("#formParme").serialize();
+            var url = "__CONTROLLER__/addBaohuo";
+            $.post(url,parme,function (data) {
+                if(data.status == 1){
+                    var info = data.info;
+                    swal({
+                        title:"报货成功",
+                        text:info.message,
+                        type:"success",
+                        showCancelButton:true,
+                        confirmButtonColor:"#DD6B55",
+                        confirmButtonText:"完善客户信息",
+                        cancelButtonText:"稍后完善信息",
+                        closeOnConfirm:false,
+                        closeOnCancle:false,
+                    },function(isConfirm){
+                        if(isConfirm){
+                            window.location.href = "__CONTROLLER__/addStep4/huo_id/"+info.huo_id;
+                        }else{
+                            window.location.href = "__CONTROLLER__/index";
+                        }
+                    });
+                }else{
+                    toastr.warning(data.info);return false;
+                }
+            });
+        }
     </script>
 </block>

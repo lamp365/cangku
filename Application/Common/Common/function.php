@@ -170,6 +170,10 @@ function getUidFromName($userName){
     return $uid;
 }
 
+function getUidFromSession(){
+    $user = session('web_user');
+    return $user['id'];
+}
 
 /**
  * 将HTML转为实体
@@ -214,4 +218,22 @@ function entities_to_html($str)
     $new_str = str_replace("&#47;", "/", $new_str);
 
     return $new_str;
+}
+
+/**
+ * @param $uid
+ * @param $huo_id
+ * @param $cm_id
+ * @param $type 1 为获取具体数据  2 为获取 数量
+ */
+function getUserKucunFormHuoyuan($uid,$huo_id,$cm_id,$type){
+    $where['uid']    = $uid;
+    $where['huo_id'] = $huo_id;
+    $where['$cm_id'] = $cm_id;
+    $data = M('kucun')->where($where)->find();
+    if($type == 1){
+        return $data;
+    }else{
+        return intval($data['num']);
+    }
 }

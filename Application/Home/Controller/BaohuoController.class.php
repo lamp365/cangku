@@ -91,4 +91,86 @@ class BaohuoController extends CommonController {
         $this->assign('user_shop', $user_shop);
         $this->display();
     }
+
+    public function addBaohuo(){
+        $data = i('post.');
+        //如果目的是1 必须设置价格
+        if(!isset($data['mude'])){
+            $this->error('请选择报货目的');
+        }
+        if(!isset($data['diaohuo'])){
+            $this->error('请选择是否调货');
+        }
+        if($data['mude'] == 1 && empty($data['shop_id'])){
+            $this->error('请选择对应店铺');
+        }
+        if($data['mude'] == 1 && empty($data['mai_price'])){
+            $this->error('请输入卖出价格');
+        }
+        if($data['mude'] == 2){
+            //如果是备货  店铺id 为0  一定是调货
+            $data['shop_id'] = 0;
+            $data['diaohuo'] = 2;
+        }
+        if(empty($data['cm_id'])){
+            $this->error('请选择尺码');
+        }
+         if(empty($data['chang_id'])){
+            $this->error('请选择厂家');
+        }
+
+        $session_user = session('web_user');
+        $uid   = $session_user['id'];
+        $gid   = $session_user['gid'];
+        $data['uid']    = $uid;
+        $data['gid']    = $gid;
+        $data['c_date'] = time();
+        if($data['mude'] == 1 && $data['diaohuo'] == 1){
+            //发货  采用库存  验证是否有库存
+            //用尺码大小  跟货源id  uid
+            $kucun = getUserKucunFormHuoyuan($uid,$data['huo_id'],$data['cm_id'],2);
+            if($kucun == 0){
+                $this->error('该货源您暂无库存');
+            }
+            if($kucun < $data['num']){
+                $this->error("该货源剩余库存{$kucun}个");
+            }
+        }
+        $data['mai_price'] = empty($data['mai_price']) ? 0 : $data['mai_price'];
+        $huo_id = M('baohuo')->add($data);
+        $info['message'] = '报货添加成功,你可以现在完善客户信息或者明天抽空完成';
+        $info['huo_id']  = $huo_id;
+        $this->success($info);
+    }
+    public function getSize(){
+        $cm_id1 = i('cm_id1');
+        $size = M('cm_size')->where(array('pid'=>$cm_id1))->select();
+        $this->ajaxReturn($size);
+    }
+
+    public function addStep4(){
+        $huo_id = i('huo_id');
+        if(empty($huo_id)){
+            $this->error('参数有误!',U('Baohuo/index'));
+        }
+        if(IS_POST){
+            $data = i('post.');
+            unset($data['huo_id']);
+            if(empty($data['customer']) || empty($data['c_mobile']) || empty($data['c_address'])){
+                $this->error('请完善客户信息');
+            }
+            if(empty($data['address_id'])){
+                $this->error('请选择发货地址');
+            }
+            M('baohuo')->where("id={$huo_id}")->save($data);
+            $this->success('客户信息完善成功');
+        }else{
+            $uid = getUidFromSession();
+            $uid = 1;
+            $address = M('address')->where("uid={$uid}")->select();
+            $this->assign('huo_id',$huo_id);
+            $this->assign('address',$address);
+            $this->display();
+        }
+    }
 }

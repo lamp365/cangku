@@ -72,6 +72,11 @@ html,body{font-size: 16px;color: #000;background: url(../img/bg.jpg) no-repeat; 
 	margin-right: 20px;
 	cursor: pointer;
 }
+.head_right .ShippingCenter a{color:#000000}
+.head_right .ShippingCenter a:hover{text-decoration: none}
+.head_right .ShippingCenter:hover{
+	background: #EEEEEE;
+}
 .head_right .ShippingCenter:last-child{margin-right: 0;}
 .icon-regin {
 	display: inline-block;
@@ -139,6 +144,8 @@ html,body{font-size: 16px;color: #000;background: url(../img/bg.jpg) no-repeat; 
 	white-space: nowrap;
 	color: #dc2f65;
 	font-size:16px ;
+	margin-top: 8px;
+	margin-bottom: 2px;
 }
 .text_row .phone{
 	width: 100%;

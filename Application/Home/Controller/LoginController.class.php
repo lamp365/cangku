@@ -35,4 +35,9 @@ class LoginController extends Controller {
         
         $this->success('登录成功');
     }
+
+    public function loginOut(){
+        session_destroy();
+        redirect("/");
+    }
 }

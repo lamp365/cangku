@@ -5,12 +5,12 @@
     <div class="input_row">
         <label class="label_text">登录账户：<input class="input_text" disabled="disabled" type="text" name="" value="{$session_user['mobile']}" placeholder="" readonly="readonly"/></label>
         <label class="label_text">用户名称：<input class="input_text" id="user_name" type="text" name="" value="{$session_user['user_name']}" placeholder=""/></label>
-        <label class="label_text">用户密码：<input class="input_text" id="password" type="text" name="" value="" placeholder=""/></label>
-        <label class="label_text">新的密码：<input class="input_text" id="newpwd" type="text" name="" value="" placeholder=""/></label>
-        <label class="label_text">确认密码：<input class="input_text" id="repwd" type="text" name="" value="" placeholder=""/></label>
+        <label class="label_text">用户密码：<input class="input_text" id="password" type="password" name="" value="" placeholder=""/></label>
+        <label class="label_text">新的密码：<input class="input_text" id="newpwd" type="password" name="" value="" placeholder=""/></label>
+        <label class="label_text">确认密码：<input class="input_text" id="repwd" type="password" name="" value="" placeholder=""/></label>
         <!--<label class="label_text">用戶頭像：<div class="logo_rgi"><img src="__PUBLIC__/Home/img/logo_rgi.png"/></div>-->
             <!--<input class="input_file" type="file" name="" value=""/></label>-->
-        <button type="button" class="btn btn-info btn-lt" style="float: left;margin-left: 88px;">保存信息</button>
+        <button type="button" id="save" class="btn btn-info btn-lt" style="float: left;margin-left: 88px;">保存信息</button>
     </div>
 
 </block>
@@ -32,6 +32,7 @@
                 console.log(data);
                 if (data.status == 1) {
                     toastr.success("修改成功");
+                    $("#save").prop('disabled',true);
                     setTimeout(function () {
                         location.href = "/center";
                     },2000);

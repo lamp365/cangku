@@ -13,6 +13,7 @@ class ShopController extends CommonController {
         $session_user = session("web_user");
         $gid = $session_user['gid'];
         $where['gid'] = $gid;
+        $where['is_delete'] = 0;
         $info = M('user_shop') -> where($where) ->select();
 
         $this->assign('info', $info);

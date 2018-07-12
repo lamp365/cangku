@@ -1,0 +1,43 @@
+<extend name="Public/base" />
+
+
+<block name="content">
+    <div style="text-align: left;margin-bottom: 13px;">
+        <a class="btn btn-info btn-lt" href="__CONTROLLER__/addAddredd">添加发货地址</a>
+    </div>
+    <ul class="nav nav-tabs">
+        <li style="width:120px"  ><a href="{:U('member/index')}">组员列表</a></li>
+        <li style="width:120px" class="active"><a href="{:U('member/address')}">发货地址</a></li>
+    </ul>
+
+    <table class="table table-bordered table-hover"  id="table">
+        <thead>
+        <tr>
+            <th style="text-align: center">编号</th>
+            <th style="text-align: center">发货人</th>
+            <th style="text-align: center">发货手机</th>
+            <th style="text-align: center">发货地址</th>
+            <th style="text-align: center">状态</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+           <td>1</td>
+           <td>234</td>
+           <td>234</td>
+           <td>234</td>
+           <td><a href="" class="btn btn-info btn-lt">设置默认</a></td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>234</td>
+            <td>234</td>
+            <td>234</td>
+            <td><a href="" class="btn btn-danger btn-lt">取消默认</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+</block>

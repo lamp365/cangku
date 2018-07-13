@@ -40,14 +40,14 @@
                     <if condition="$row['mude'] eq 1">
                         <font color="green">发货</font>
                     <else/>
-                        <font color="green">调货</font>
+                        调货
                     </if>
                 </td>
                 <td>{$row.diaohuo|getDiaohuoState=###}</td>
                 <td>
                     <a href="__CONTROLLER__/addStep3/id/{$row.id}/huo_id/{$row.huo_id}">修改</a>&nbsp;&nbsp;|
                     <a href="__CONTROLLER__/showBaohuo/id/{$row.id}">详情</a>&nbsp;&nbsp;|
-                    <a url="__CONTROLLER__/closeBaohuo/id/{$row.id}" onclick="closeOrder(this)">关闭</a>
+                    <a url="__CONTROLLER__/closeBaohuo/id/{$row.id}" onclick="closeOrder(this)" style="cursor: pointer">关闭</a>
                 </td>
             </tr>
         </foreach>

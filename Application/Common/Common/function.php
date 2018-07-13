@@ -174,7 +174,10 @@ function getUidFromSession(){
     $user = session('web_user');
     return $user['id'];
 }
-
+function getGidFromSession(){
+    $user = session('web_user');
+    return $user['gid'];
+}
 /**
  * 将HTML转为实体
  * @param string $str     需要处理的字符串

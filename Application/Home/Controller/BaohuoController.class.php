@@ -11,6 +11,8 @@ class BaohuoController extends CommonController {
     public function index(){
         $order_state = intval(i('order_state'));
         $where = array();
+        $gid   = getGidFromSession();
+        $where['gid'] = $gid;
         $where['order_state'] = $order_state;
         $baohuoM = M('baohuo');
         $count = $baohuoM->where($where)->count();
@@ -110,11 +112,17 @@ class BaohuoController extends CommonController {
         //获取尺码
         $parentSize   = array();
         $sonSize   = array();
-        if(!empty($baohuo['cm_id'])){
+        if(!empty($baohuo)){
+            //判断状态当前是否可以修改
+            $state_arr = array(2,3,-1);
+            if(in_array($baohuo['order_state'],$state_arr)){
+                $this->error('当前订单状态下已无法修改!');
+            }
             //当前尺码pid
             $selfPid    = $cmM->where("id={$baohuo['cm_id']}")->getField('pid');
             $parentSize = $cmM->where("id={$selfPid}")->find();
             $sonSize    = $cmM->where("pid={$selfPid}")->select();
+
         }
         $this->assign('data', $data);
         $this->assign('cm_size', $cm_size);
@@ -240,13 +248,44 @@ class BaohuoController extends CommonController {
         $this->success('订单已经关闭');
     }
 
-    public function editBaohuo(){
+    public function showBaohuo(){
         $id = i('id');
         if(empty($id)){
             $this->error('参数有误!');
         }
         $info = M('baohuo')->find($id);
+        $info['cm_name']   = M('cm_size')->where("id={$info['cm_id']}")->getField('cm_name');
+        $shopData = M('user_shop')->where("id={$info['shop_id']}")->find();
+        $addressData = M('address')->where("id={$info['address_id']}")->find();
+        $info['shop_name'] = $shopData['shop_name'];
+        $info['shop_zg']   = $shopData['shop_zg'];
+        $info['send_name']      = $addressData['send_name'];
+        $info['send_mobile']    = $addressData['send_mobile'];
+        $info['send_address']   = $addressData['send_address'];
+        $info['shop_zg']   = $shopData['shop_zg'];
+        $userData  = M('user')->where("id={$info['uid']}")->find();
+        $info['chang_name']  = M('changjia')->where("id={$info['chang_id']}")->getField('cname');
+        $info['is_jie_group']  = M('user_group')->where("id={$info['is_jie']}")->getField('group_name');
+        $info['user_name']   = $userData['user_name'];
+        $info['user_mobile'] = $userData['mobile'];
+
+//        http://m.kuaidi100.com/index_all.html?type=yuantong&postid=V00191980886#result
+        $info['yu_order_url'] = "http://m.kuaidi100.com/index_all.html?type={$info['yu_order_code']}&postid={$info['yu_order']}#result";
+        $info['chang_order_url'] = "http://m.kuaidi100.com/index_all.html?type={$info['chang_order_code']}&postid={$info['chang_order']}#result";
+        if(!empty($info['yu_order_code'])){
+            $info['yu_order_name']    =  M('wuliu')->where("code='{$info['yu_order_code']}'")->getField('name');
+        }
+        if(!empty($info['chang_order_code'])){
+            $info['chang_order_name'] =  M('wuliu')->where("code='{$info['chang_order_code']}'")->getField('name');
+        }
+        $wuliuData = M('wuliu')->order('sort asc')->select();
         $this->assign('info',$info);
+        $this->assign('wuliuData',$wuliuData);
         $this->display();
     }
+
+    public function afterSale(){
+        
+    }
+
 }

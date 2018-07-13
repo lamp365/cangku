@@ -1,0 +1,246 @@
+<extend name="Public/base" />
+
+<block name="css">
+    <style>
+        .choose_cat .title{
+            font-weight: bold;
+            font-size: 18px;
+            text-align: left;
+            color: #aec5f7;
+        }
+        .table{text-align: left;}
+        .table .tips{font-weight: bolder;margin-right: 4px;}
+        .table td{width: 25%;overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;}
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -250px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+        .piclist {
+            cursor: pointer;
+        }
+        .piclist img{
+            border: 1px solid #C6C6C6;background: #ffffff;padding: 1px;
+        }
+    </style>
+</block>
+<block name="content">
+   <div class="choose_cat">
+       <p class="title">基本信息 &nbsp;&nbsp;|&nbsp;<a href="JavaScript:;" onclick="goBack()">返回</a></p>
+       <table class="table">
+           <thead>
+           <tr>
+               <td><span class="tips">用户:</span>{$info.user_name}[{$info.user_mobile}]</td>
+               <td>
+                   <div class="piclist">
+                       <span class="tips">主图:</span>
+                       <span imghref="{$info.pic}" class="onepic">
+                       <img src="{$info.pic}" style="height: 50px;" alt="">
+                       </span>
+                   </div>
+               </td>
+               <td>
+                   <div class="piclist">
+                       <span class="tips">附加图:</span>
+                       <span imghref="{$info.pic2}" class="onepic">
+                       <img src="{$info.pic2}" style="height: 50px;" alt="">
+                       </span>
+                   </div>
+               </td>
+               <td><span class="tips">尺码:</span>{$info.cm_name}</td>
+           </tr>
+           </thead>
+           <tbody>
+           <tr>
+               <td><span class="tips">卖出价格:</span>{$info.mai_price}*{$info.num}</td>
+               <td><span class="tips">拿货价格:</span>{$info.jin_price}</td>
+               <td><span class="tips">打包价格:</span>{$info.da_price}</td>
+               <td><span class="tips">利润:</span>
+               <?php if($info['mude'] == 1){
+                        $lirun = $info['mai_price']-$info['jin_price']-$info['da_price'];
+                        $lirun = number_format($lirun,2);
+                        echo $lirun;
+                }else{
+                    echo '暂无利润';
+                }?>
+               </td>
+           </tr>
+           <tr>
+               <td><span class="tips">厂家:</span>{$info.chang_name}</td>
+               <td><span class="tips">店铺:</span>{$info.shop_name}</td>
+               <td><span class="tips">&nbsp;</span></td>
+               <td><span class="tips">&nbsp;</span></td>
+           </tr>
+           <tr>
+               <td><span class="tips">发货人:</span>{$info.send_name}</td>
+               <td><span class="tips">发货手机:</span>{$info.send_mobile}</td>
+               <td><span class="tips" title="{$info.send_address}">发货地址:</span>{$info.send_address}</td>
+               <td><span class="tips" title="{$info.yun_info}">运营备注:</span>{$info.yun_info}</td>
+           </tr>
+           </tbody>
+       </table>
+       <p class="title">客户信息</p>
+       <table class="table">
+           <tr>
+               <td><span class="tips">收货人:</span>{$info.customer}</td>
+               <td><span class="tips">收货手机:</span>{$info.c_mobile}</td>
+               <td><span class="tips">收货地址:</span>{$info.c_address}</td>
+           </tr>
+           <tr>
+               <td><span class="tips">预约单号:</span><?php if(empty($info['yu_order'])){ echo '暂无';}else{ echo $info['yu_order_name'];echo "[<a target='_blank' href='".$info['yu_order_url']."'>".$info['yu_order']."</a>]";} ?></td>
+               <td><span class="tips">发货单号:</span><?php if(empty($info['send_order'])){ echo '暂无';}else{ echo $info['yu_order_name'];echo "[<a target='_blank' href='".$info['yu_order_url']."'>".$info['send_order']."</a>]";} ?></td>
+               <td><span class="tips">&nbsp;</span></td>
+           </tr>
+       </table>
+       <p class="title">仓库操作</p>
+       <table class="table">
+           <tr>
+               <td><span class="tips">厂家单号:</span><?php if(empty($info['chang_order'])){ echo '暂无';}else{ echo $info['chang_order_name']; echo "[<a href='".$info['chang_order_url']."' target='_blank'>".$info['chang_order']."</a>]";} ?></td>
+               <td><span class="tips">借用其他组:</span>{$info.is_jie_group|default='暂无'}</td>
+               <td><span class="tips">&nbsp;</span></td>
+           </tr>
+           <tr>
+               <td><span class="tips" title="{$info.can_info}">仓库备注:</span>{$info.can_info}</td>
+               <td><span class="tips">&nbsp;</span></td>
+               <td><span class="tips">&nbsp;</span></td>
+           </tr>
+           <tr>
+               <td><span class="tips" style="color: red">报货目的:</span>
+                   <if condition="$info['mude'] eq 1">
+                       <font color="green">发货</font>
+                       <else/>
+                       调货
+                   </if>
+               </td>
+               <td><span class="tips" style="color: red">调货状态:</span>{$info.diaohuo|getDiaohuoState=###}</td>
+               <td><span class="tips">订单状态:</span>
+                <?php
+                    switch($info['order_state']){
+                        case 0: echo '申请中'; break;
+                        case 1: echo '处理中'; break;
+                        case 2: echo '调货完毕'; break;
+                        case 3: echo '发货完毕'; break;
+                        case -1: echo '已关闭'; break;
+                    }
+                ?>
+               </td>
+           </tr>
+       </table>
+       <p class="title">售后状态</p>
+       <form id="afterForm">
+       <table class="table">
+           <tr>
+               <td colspan="2">
+                   <div class="col-sm-2">
+                       <span class="tips">客户退换:</span>
+                   </div>
+                    <div class="col-sm-4">
+                        <select name="after_state" id="" class="form-control">
+                            <option value="0">暂无</option>
+                            <option value="1" <?php if($info['after_state'] == 1){echo 'selected';}?>>退货中</option>
+                            <option value="2" <?php if($info['after_state'] == 2){echo 'selected';}?>>换货中</option>
+                            <option value="-1" <?php if($info['after_state'] == -1){echo 'selected';}?>>退货完毕</option>
+                            <option value="-3" <?php if($info['after_state'] == -2){echo 'selected';}?>>换货完毕</option>
+                        </select>
+                    </div>
+
+               </span>
+               </td>
+               <td><span class="tips">&nbsp;</span></td>
+           </tr>
+           <tr>
+               <td>
+                   <div class="col-sm-4">
+                       <span class="tips">退回物流:</span>
+                   </div>
+                   <div class="col-sm-8">
+                       <select name="back_order_code" id="" class="form-control">
+                           <option value="0">选择物流</option>
+                           <foreach name="wuliuData" item="wuiuRow">
+                               <option value="{$wuiuRow.code}" <if condition="$wuiuRow['code'] eq $info['back_order_code']">selected</if>>{$wuiuRow.name}</option>
+                           </foreach>
+                       </select>
+                   </div>
+
+               </td>
+               <td>
+                   <div class="col-sm-4">
+                       <span class="tips">退回单号:</span>
+                   </div>
+                   <div class="col-sm-8">
+                       <input type="text" class="form-control" name="back_order" value="{$info.back_order}">
+                   </div>
+               </td>
+               <td><span class="tips">&nbsp;</span></td>
+           </tr>
+           <tr>
+               <td colspan="2">
+                   <div class="col-sm-2">
+                       <span class="tips">退回理由:</span>
+                   </div>
+                   <div class="col-sm-7">
+                       <input type="text" class="form-control" name="back_reason" value="{$info.back_reason}">
+                   </div>
+               </td>
+               <td><span class="tips">&nbsp;</span></td>
+           </tr>
+       </table>
+       <div class="">
+           <input type="hidden" name="id" value="{$info.id}">
+           <button class="btn btn-info btn-lt" style="float: left;margin-left: 135px;" onclick="sureAfter()">确认售后</button>
+       </div>
+       </form>
+       <div class="big-img-show">
+           <img src="">
+       </div>
+   </div>
+</block>
+
+<block name="js">
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        function sureAfter() {
+            var parme = $("#afterForm").serialize();
+            var url = "__CONTROLLER__/afterSale";
+            $.post(url,parme,function (data) {
+                if(data.status == 1){
+                    //保存成功
+                    swal({
+                        title:"保存成功",
+                        text:data.info,
+                        type:"success"
+                    },function(){
+                        window.location.href = "__CONTROLLER__/index";
+                    });
+                }else{
+                    toastr.warning(data.info);return false;
+                }
+            });
+        }
+
+        $(function () {
+            $(".piclist img").on("click",function(){
+                var bigImg = $(this).parent(".onepic").attr("imghref");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").on("click",function(){
+                $(this).fadeOut();
+            });
+        });
+
+    </script>
+</block>

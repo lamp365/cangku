@@ -9,7 +9,14 @@ class BlackController extends CommonController {
 
 
     public function index(){
+        //ºÚÃûµ¥
+        $session_user = session("web_user");
+        $uid = $session_user['user_id'];
+        $where['uid'] = $uid;
 
+        $info = M('dangeruser') -> where($where) -> select();
+
+        $this->assign('info', $info);
         $this->display();
 	}
 

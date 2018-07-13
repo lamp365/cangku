@@ -9,7 +9,19 @@ class BorrowController extends CommonController {
 
 
     public function index(){
+        //接触记录
+        $session_user = session("web_user");
+        $gid = $session_user['gid'];
+        $where['gid'] = $gid;
+        $info = M('borrow') -> where($where) -> select();
 
+        foreach($info as &$v){
+            $v['b_name'] =  M('user') -> where(['id' => $v['b_uid']]) ->getField('user_name');
+            $v['user_name'] =  M('user') -> where(['id' => $v['uid']]) ->getField('user_name');
+            $v['changjia'] =  M('changjia') -> where(['id' => $v['chang_id']]) ->getField('ch_name');
+        }
+
+        $this->assign('info', $info);
         $this->display();
 	}
 

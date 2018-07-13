@@ -10,6 +10,19 @@ class KucunController extends CommonController {
 
     public function index(){
 
+        $session_user = session("web_user");
+        $gid = $session_user['gid'];
+        $where['gid'] = $gid;
+        $info = M('kucun') -> where($where) ->select();
+
+        foreach($info as &$v){
+
+            $v['huoyuan_name'] =  M('huoyuan') -> where(['id' => $v['huo_id']]) ->getField('h_name');;
+
+        }
+
+        $this->assign('info', $info);
+
         $this->display();
 	}
 

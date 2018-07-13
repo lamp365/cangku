@@ -10,6 +10,47 @@ class MoneyController extends CommonController {
 
     public function index(){
 
+        $status = I('status') ? I('status') : 0;
+        //充值表
+        $session_user = session("web_user");
+        $uid = $session_user['user_id'];
+        $where['uid'] = $uid;
+
+        if(1 == $status){
+            $info = M('recharge') -> where($where) -> select();
+
+            foreach($info as &$v){
+
+                $v['c_date'] = date('Y-m-d H:i:s', $v['c_date']);
+                if ( 1 == $v['state']) {
+                    $v['status'] = '审核通过';
+                } else if (0 == $v['state']) {
+                    $v['status'] = '待审核';
+                } else {
+                    $v['status'] = '审核失败';
+                }
+            }
+
+        } else if(0 == $status) {
+            //账单表
+            $info = M('bill') -> where($where) -> select();
+
+            foreach($info as &$v){
+                $v['c_date'] = date('Y-m-d H:i:s', $v['c_date']);
+                $v['shop_name'] =  M('user_shop') -> where(['id' => $v['uid']]) ->getField('shop_name');
+                if ( 1 == $v['state']) {
+                    $v['state'] = '发货';
+                } else {
+                    $v['state'] = '调货';
+                }
+            }
+
+        } else {
+            echo '未知错误';exit;
+        }
+
+        $this->assign('status', $status);
+        $this->assign('info', $info);
         $this->display();
 	}
 

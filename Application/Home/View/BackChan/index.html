@@ -1,0 +1,30 @@
+<extend name="Public/base" />
+
+
+<block name="content">
+
+
+    <table class="table table-bordered table-hover"  id="table">
+        <thead>
+        <tr>
+            <th style="text-align: center">分类1</th>
+            <th style="text-align: center">分类2</th>
+            <th style="text-align: center">图片</th>
+            <th style="text-align: center">厂家名称</th>
+            <th style="text-align: center">备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="info" id="vo">
+            <tr>
+                <td>{$vo.cate1}</td>
+                <td>{$vo.cate2}</td>
+                <td><img  width="60" src ="{$vo.pic}"></td>
+                <td>{$vo.changjia}</td>
+                <td>{$vo.info}</td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+
+</block>

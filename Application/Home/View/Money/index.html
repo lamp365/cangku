@@ -3,24 +3,65 @@
 
 <block name="content">
 
-    <section class="section">
-        <div class="section-title">
-            <i class="icon-title"></i>
-            <h2>平台公告：</h2>
-            欢迎有您，我们将竭力为您服务！
-        </div>
-        <div class="row_box">
-            <div class="row_men">
-                <div class="row_regin">
+    <ul class="nav nav-tabs">
+        <li style="width:100px" <if condition="$status eq 0">class="active" </if> ><a href="{:U('money/index',array('status'=>0))}">账单记录</a></li>
+        <li style="width:100px" <if condition="$status eq 1">class="active" </if> ><a href="{:U('money/index',array('status'=>1))}">充值记录</a></li>
+    </ul>
+    <if condition="$status eq 0">
+        <table class="table table-bordered table-hover"  id="table">
+            <thead>
+            <tr>
+                <th style="text-align: center">账单编号</th>
+                <th style="text-align: center">店铺名称</th>
+                <th style="text-align: center">主图</th>
+                <th style="text-align: center">打包费</th>
+                <th style="text-align: center">进价费</th>
+                <th style="text-align: center">卖出费</th>
+                <th style="text-align: center">账单类型</th>
+                <th style="text-align: center">创建时间</th>
+                <th style="text-align: center">备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="info" id="vo">
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.shop_name}</td>
+                    <td><img src="{$vo.pic}" width="60" class="pic"></td>
+                    <td>{$vo.da_price}</td>
+                    <td>{$vo.jin_price}</td>
+                    <td>{$vo.mai_price}</td>
+                    <td>{$vo.state}</td>
+                    <td>{$vo.c_date}</td>
+                    <td>{$vo.info}</td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+    </if>
 
-                    <include file="Public/meun"/>
-                </div>
-            </div><!--left菜单-->
-            <div class="row_right">
-
-
-            </div>
-        </div>
-    </section>
-
+    <if condition="$status eq 1">
+        <table class="table table-bordered table-hover"  id="table">
+            <thead>
+            <tr>
+                <th style="text-align: center">充值编号</th>
+                <th style="text-align: center">充值金额</th>
+                <th style="text-align: center">充值凭证</th>
+                <th style="text-align: center">充值状态</th>
+                <th style="text-align: center">充值时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="info" id="vo">
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.chon_price}</td>
+                    <td><img src="{$vo.pic}" width="60" class="pic"></td>
+                    <td>{$vo.status}</td>
+                    <td>{$vo.c_date}</td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+    </if>
 </block>

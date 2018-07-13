@@ -3,7 +3,9 @@
 
 <block name="content">
 
-
+    <div style="text-align: left;margin-bottom: 13px;">
+        <a class="btn btn-info btn-lt" href="__CONTROLLER__/addShop">添加店铺</a>
+    </div>
     <table class="table table-bordered table-hover"  id="table">
         <thead>
         <tr>
@@ -11,6 +13,8 @@
             <th style="text-align: center">店铺掌柜</th>
             <th style="text-align: center">店铺名称</th>
             <th style="text-align: center">状态</th>
+            <th style="text-align: center">操作</th>
+            <th style="text-align: center">备注</th>
 
         </tr>
         </thead>
@@ -20,7 +24,17 @@
                 <td>{$vo.id}</td>
                 <td>{$vo.shop_zg}</td>
                 <td>{$vo.shop_name}</td>
-                <td><if condition="$vo['is_forbid'] eq 0">正常 <else /> 禁用 </if></td>
+                <td><if condition="$vo['is_forbid'] eq 0">正常可用 <else /> 无法使用 </if></td>
+                <td>
+                    <a href="__CONTROLLER__/editShop/id/{$vo.id}" class="btn btn-info btn-lt">修改</a>
+                </td>
+                <td>
+                    <empty name="vo['info']">
+                        暂无备注
+                        <else/>
+                        <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$vo.info}"></span>
+                    </empty>
+                </td>
             </tr>
         </volist>
         </tbody>

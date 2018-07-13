@@ -175,7 +175,11 @@
             $zuzhang.click(function(){
                 $("#showbox").removeClass('modal-lg').addClass("modal-lt");
                 var url = "/index.php/admin/user/zuzhang?id=" + getIdSelections();
-                window.location.href=url;
+                $.get(url,function () {
+                    var url2 = "/index.php/admin/user/index";
+                    window.location.href=url2;
+                });
+
                 /*$("#addCustomer").modal({
                     remote: "/index.php/admin/user/zuzhang?id=" + getIdSelections()+'&t=' + Math.random(1000)
                     ,backdrop: 'static'

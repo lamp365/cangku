@@ -1,0 +1,50 @@
+<extend name="Public/base" />
+
+<block name="css">
+    <style>
+        .choose_cat{
+            margin-top: 20px;
+            margin-left: 100px;
+            width: 450px;
+            text-align: left;
+        }
+        .choose_cat .title{
+            font-weight: bolder;
+            font-size: 22px;
+            margin-bottom:65px;
+        }
+    </style>
+</block>
+<block name="content">
+   <div class="choose_cat form-horizonta">
+       <div class="form-group">
+           <label for="cat_id1" class="col-sm-3 control-label">选择分类1</label>
+           <div class="col-sm-9">
+
+           </div>
+       </div>
+       <hr class="hr15"/>
+       <div class="form-group">
+           <label for="cat_id2" class="col-sm-3 control-label">选择分类2</label>
+           <div class="col-sm-9">
+
+           </div>
+       </div>
+       <hr class="hr15"/>
+       <div class="form-group">
+           <label for="" class="col-sm-3 control-label">&nbsp;</label>
+           <div class="col-sm-9">
+               <input type="hidden" id="cat_url" value="__CONTROLLER__/getCate">
+              <span class="btn btn-info btn-lt" onclick="checkForm()">添加组员</span>
+           </div>
+       </div>
+   </div>
+</block>
+
+<block name="js">
+    <script>
+        function checkForm() {
+
+        }
+    </script>
+</block>

@@ -48,7 +48,7 @@ swal("OMG","<?php  echo $error;?>","error");
 <script type="text/javascript">
 (function(){
 setTimeout(function () {
-    window.location.href = $("gourl").val();
+    window.location.href = $("#gourl").val();
 },2000);
 })();
 

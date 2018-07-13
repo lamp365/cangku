@@ -2,7 +2,15 @@
 
 
 <block name="content">
-
+    <if condition="$session_user['level'] eq 1">
+    <div style="text-align: left;margin-bottom: 13px;">
+        <a class="btn btn-info btn-lt" href="__CONTROLLER__/addMember">添加组员</a>
+    </div>
+    </if>
+    <ul class="nav nav-tabs">
+        <li style="width:120px" class="active" ><a href="{:U('member/index')}">组员列表</a></li>
+        <li style="width:120px" ><a href="{:U('member/address')}">发货地址</a></li>
+    </ul>
 
     <table class="table table-bordered table-hover"  id="table">
         <thead>
@@ -22,7 +30,7 @@
                 <td>{$vo.mobile}</td>
                 <td>{$vo.user_name}</td>
                 <td><if condition="$vo['level'] eq 0">组员 <else /> 组长 </if></td>
-                <td><if condition="$vo['is_forbid'] eq 0">启用 <else /> 禁用 </if></td>
+                <td><if condition="$vo['is_forbid'] eq 0">可用 <else /> 禁用 </if></td>
             </tr>
         </volist>
         </tbody>

@@ -107,7 +107,7 @@
     <div class="main">
         <div class="title">
 
-            <span></span>
+            <span>青青之火贸易有限公司</span>
 
             <!--<span>{:C('WEB_TITLE')}</span>-->
 
@@ -127,6 +127,13 @@
 <script src="__PUBLIC__/Admin/js/toastr.min.js"></script>
 <script>
     //ajax 登录
+
+    $(document).keyup(function (e) {//捕获文档对象的按键弹起事件
+        if (e.keyCode == 13) {//按键信息对象以参数的形式传递进来了
+            //此处编写用户敲回车后的代码
+            $("#sub").click();
+        }
+    });
     $("#sub").click(function(){
 
 
@@ -142,6 +149,7 @@
             console.log(data);
             if (data.status == 1) {
                 toastr.success("登录成功");
+                $("#sub").prop('disabled',true);
                 setTimeout(function () {
                     location.href = "/center";
                 },2000);

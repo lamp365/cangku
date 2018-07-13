@@ -9,7 +9,26 @@ class BaohuoController extends CommonController {
 
 
     public function index(){
+        $order_state = intval(i('order_state'));
+        $where = array();
+        $gid   = getGidFromSession();
+        $where['gid'] = $gid;
+        $where['order_state'] = $order_state;
+        $baohuoM = M('baohuo');
+        $count = $baohuoM->where($where)->count();
+        $p     = new \Think\Page($count,4);
+        $page  = $p->show();
+        $data  = $baohuoM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
+        $user = M('user');
+        $cmM= M('cm_size');
+        foreach ($data as &$item){
+            $item['user_name'] = $user->where("id={$item['uid']}")->getField('user_name');
+            $item['cm_name'] = $cmM->where("id={$item['cm_id']}")->getField('cm_name');
+        }
+        $this->assign('order_state',$order_state);
+        $this->assign('page',$page);
+        $this->assign('data',$data);
         $this->display();
 	}
     public function addHuoyuan(){
@@ -76,19 +95,197 @@ class BaohuoController extends CommonController {
 
     public function addStep3(){
         $huo_id = i('huo_id');
+        $id     = intval(i('id'));
         if(empty($huo_id)){
             $this->error('参数有误!');
         }
-        $cm_size  = M('cm_size')->where(array('is_delete' => 0, 'pid' => 0))->select();
+
+        $cmM  = M('cm_size');
+        $baohuo   = M('baohuo')->find($id);
+        $cm_size  = $cmM->where(array('is_delete' => 0, 'pid' => 0))->select();
         $changjia = M('changjia')->where(array('is_delete' => 0))->select();
         $data = M('huoyuan')->find($huo_id);
         //获取用户对应店铺
         $session_user = session('web_user');
         $user_shop    = M('user_shop')->where("gid={$session_user['gid']}")->select();
+
+        //获取尺码
+        $parentSize   = array();
+        $sonSize   = array();
+        if(!empty($baohuo)){
+            //判断状态当前是否可以修改
+            $state_arr = array(2,3,-1);
+            if(in_array($baohuo['order_state'],$state_arr)){
+                $this->error('当前订单状态下已无法修改!');
+            }
+            //当前尺码pid
+            $selfPid    = $cmM->where("id={$baohuo['cm_id']}")->getField('pid');
+            $parentSize = $cmM->where("id={$selfPid}")->find();
+            $sonSize    = $cmM->where("pid={$selfPid}")->select();
+
+        }
         $this->assign('data', $data);
         $this->assign('cm_size', $cm_size);
         $this->assign('changjia', $changjia);
         $this->assign('user_shop', $user_shop);
+        $this->assign('baohuo', $baohuo);
+        $this->assign('parentSize', $parentSize);
+        $this->assign('sonSize', $sonSize);
         $this->display();
     }
+
+    public function addBaohuo(){
+        $data = i('post.');
+        //如果目的是1 必须设置价格
+        if(!isset($data['mude'])){
+            $this->error('请选择报货目的');
+        }
+        if(empty($data['num'])){
+            $this->error('请设置数量');
+        }
+        if(!isset($data['diaohuo'])){
+            $this->error('请选择是否调货');
+        }
+        if($data['mude'] == 1 && empty($data['shop_id'])){
+            $this->error('请选择对应店铺');
+        }
+        if($data['mude'] == 1 && empty($data['mai_price'])){
+            $this->error('请输入卖出价格');
+        }
+        if($data['mude'] == 2){
+            //如果是备货  店铺id 为0  一定是调货
+            $data['shop_id'] = 0;
+            $data['diaohuo'] = 2;
+        }
+        if(empty($data['cm_id'])){
+            $this->error('请选择尺码');
+        }
+         if(empty($data['chang_id'])){
+            $this->error('请选择厂家');
+        }
+
+        $session_user = session('web_user');
+        $uid   = $session_user['id'];
+        $gid   = $session_user['gid'];
+        $data['uid']    = $uid;
+        $data['gid']    = $gid;
+        $data['c_date'] = time();
+        if($data['mude'] == 1 && $data['diaohuo'] == 1){
+            //发货  采用库存  验证是否有库存
+            //用尺码大小  跟货源id  uid
+            $kucun = getUserKucunFormHuoyuan($uid,$data['huo_id'],$data['cm_id'],2);
+            if($kucun == 0){
+                $this->error('该货源您暂无库存');
+            }
+            if($kucun < $data['num']){
+                $this->error("该货源剩余库存{$kucun}个");
+            }
+        }
+        $data['mai_price'] = empty($data['mai_price']) ? 0 : $data['mai_price'];
+        //获取打包价 和 进价
+        $huoInfo = M('huoyuan')->find($data['huo_id']);
+        $data['jin_price'] = $huoInfo['jin_price'];
+        $data['da_price']  = $huoInfo['da_price'];
+
+        $id = $data['id'];
+        if(empty($id)){
+            $huo_id = M('baohuo')->add($data);
+            $msg = '报货添加成功,你可以现在完善客户信息或者明天抽空完成';
+        }else{
+            unset($data['id']);
+            M('baohuo')->where("id={$id}")->save($data);
+            $huo_id = $id;
+            $msg = "报货修改成功,你可以现在完善客户信息或者明天抽空完成";
+        }
+
+        $info['message'] = $msg;
+        $info['huo_id']  = $huo_id;
+        $this->success($info);
+    }
+    public function getSize(){
+        $cm_id1 = i('cm_id1');
+        $size = M('cm_size')->where(array('pid'=>$cm_id1))->select();
+        $this->ajaxReturn($size);
+    }
+
+    public function addStep4(){
+        $huo_id = i('huo_id');
+        if(empty($huo_id)){
+            $this->error('参数有误!',U('Baohuo/index'));
+        }
+        if(IS_POST){
+            $data = i('post.');
+            unset($data['huo_id']);
+            if(empty($data['customer']) || empty($data['c_mobile']) || empty($data['c_address'])){
+                $this->error('请完善客户信息');
+            }
+            if(empty($data['address_id'])){
+                $this->error('请选择发货地址');
+            }
+            M('baohuo')->where("id={$huo_id}")->save($data);
+            $this->success('客户信息完善成功');
+        }else{
+            $uid = getUidFromSession();
+            $address = M('address')->where("uid={$uid}")->select();
+            $baohuo  = M('baohuo')->find($huo_id);
+            $this->assign('huo_id',$huo_id);
+            $this->assign('address',$address);
+            $this->assign('baohuo',$baohuo);
+            $this->display();
+        }
+    }
+
+    public function closeBaohuo(){
+        $id = i('id');
+        if(empty($id)){
+            $this->error('参数有误!');
+        }
+        $info = M('baohuo')->find($id);
+        if($info['order_state'] != 0){
+            $this->error('订单需申请中才能关闭!');
+        }
+        M('baohuo')->where("id={$id}")->save(array('order_state'=>-1));
+        $this->success('订单已经关闭');
+    }
+
+    public function showBaohuo(){
+        $id = i('id');
+        if(empty($id)){
+            $this->error('参数有误!');
+        }
+        $info = M('baohuo')->find($id);
+        $info['cm_name']   = M('cm_size')->where("id={$info['cm_id']}")->getField('cm_name');
+        $shopData = M('user_shop')->where("id={$info['shop_id']}")->find();
+        $addressData = M('address')->where("id={$info['address_id']}")->find();
+        $info['shop_name'] = $shopData['shop_name'];
+        $info['shop_zg']   = $shopData['shop_zg'];
+        $info['send_name']      = $addressData['send_name'];
+        $info['send_mobile']    = $addressData['send_mobile'];
+        $info['send_address']   = $addressData['send_address'];
+        $info['shop_zg']   = $shopData['shop_zg'];
+        $userData  = M('user')->where("id={$info['uid']}")->find();
+        $info['chang_name']  = M('changjia')->where("id={$info['chang_id']}")->getField('cname');
+        $info['is_jie_group']  = M('user_group')->where("id={$info['is_jie']}")->getField('group_name');
+        $info['user_name']   = $userData['user_name'];
+        $info['user_mobile'] = $userData['mobile'];
+
+//        http://m.kuaidi100.com/index_all.html?type=yuantong&postid=V00191980886#result
+        $info['yu_order_url'] = "http://m.kuaidi100.com/index_all.html?type={$info['yu_order_code']}&postid={$info['yu_order']}#result";
+        $info['chang_order_url'] = "http://m.kuaidi100.com/index_all.html?type={$info['chang_order_code']}&postid={$info['chang_order']}#result";
+        if(!empty($info['yu_order_code'])){
+            $info['yu_order_name']    =  M('wuliu')->where("code='{$info['yu_order_code']}'")->getField('name');
+        }
+        if(!empty($info['chang_order_code'])){
+            $info['chang_order_name'] =  M('wuliu')->where("code='{$info['chang_order_code']}'")->getField('name');
+        }
+        $wuliuData = M('wuliu')->order('sort asc')->select();
+        $this->assign('info',$info);
+        $this->assign('wuliuData',$wuliuData);
+        $this->display();
+    }
+
+    public function afterSale(){
+
+    }
+
 }

@@ -31,16 +31,13 @@ class LoginController extends Controller {
             $this->error('密码错误！');
         }
         //登录成功
-
-        $info = [
-            'user_id' => $result['id'],
-            'mobile' => $result['mobile'],
-            'user_name' => $result['user_name'],
-            'gid' => $result['gid'],
-            'level' => $result['level'],
-        ];
-        session('web_user',$info);
+        session('web_user',$result);
         
         $this->success('登录成功');
+    }
+
+    public function loginOut(){
+        session_destroy();
+        redirect("/");
     }
 }

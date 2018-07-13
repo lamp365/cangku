@@ -12,11 +12,19 @@ class MemberController extends CommonController {
         $session_user = session("web_user");
         $gid = $session_user['gid'];
         $where['gid'] = $gid;
-        $where['id'] = array('NEQ', $session_user['user_id']);
-        $info = M('user') -> where($where) ->select();
+        $info = M('user') -> where($where)->order('level desc')->select();
 
         $this->assign('info', $info);
+        $this->assign('session_user', $session_user);
         $this->display();
 	}
+
+	public function addMember(){
+        $this->display();
+    }
+
+    public function address(){
+        $this->display();
+    }
 
 }

@@ -20,6 +20,6 @@ class CommonController extends Controller {
         $this->assign('session_group_name',$session_group_name);
         $this->assign('session_group_money',$session_group_money);
 
-	}
+    }
 
 }

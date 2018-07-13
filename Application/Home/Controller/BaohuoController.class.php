@@ -285,7 +285,7 @@ class BaohuoController extends CommonController {
     }
 
     public function afterSale(){
-        
+
     }
 
 }

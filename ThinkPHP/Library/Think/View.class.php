@@ -145,7 +145,6 @@ class View {
         }
         $depr       =   C('TMPL_FILE_DEPR');
         $template   =   str_replace(':', $depr, $template);
-
         // 获取当前模块
         $module   =  MODULE_NAME;
         if(strpos($template,'@')){ // 跨模块调用模版文件
@@ -157,10 +156,24 @@ class View {
         // 分析模板文件规则
         if('' == $template) {
             // 如果模板文件名为空 按照默认规则定位
-            $template = CONTROLLER_NAME . $depr . ACTION_NAME;
+            if(MODULE_NAME == 'Home' && ismobile()){
+                $act_name = "wap_".ACTION_NAME;
+            }else{
+                $act_name = ACTION_NAME;
+            }
+//            $template = CONTROLLER_NAME . $depr . ACTION_NAME;
+            $template = CONTROLLER_NAME . $depr . $act_name;
+
         }elseif(false === strpos($template, $depr)){
-            $template = CONTROLLER_NAME . $depr . $template;
+            if(MODULE_NAME == 'Home' && ismobile()){
+                $act_name = "wap_".$template;
+            }else{
+                $act_name = $template;
+            }
+//            $template = CONTROLLER_NAME . $depr . $template;
+            $template = CONTROLLER_NAME . $depr . $act_name;
         }
+
         $file   =   THEME_PATH.$template.C('TMPL_TEMPLATE_SUFFIX');
         if(C('TMPL_LOAD_DEFAULTTHEME') && THEME_NAME != C('DEFAULT_THEME') && !is_file($file)){
             // 找不到当前主题模板的时候定位默认主题中的模板

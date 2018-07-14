@@ -9,7 +9,22 @@ class BackChanController extends CommonController {
 
 
     public function index(){
+        // ÍË»Ø³§¼Ò
+        $session_user = session("web_user");
+        $uid = $session_user['user_id'];
+        $where['uid'] = $uid;
+        $info = M('backchanjia') -> where($where) -> select();
 
+        foreach($info as &$v){
+
+            $v['cate1'] =  M('category') -> where(['id' => $v['cat_id1']]) ->getField('cat_name');
+            $v['cate2'] =  M('category') -> where(['id' => $v['cat_id2']]) ->getField('cat_name');
+            $v['changjia'] =  M('changjia') -> where(['id' => $v['chang_id']]) ->getField('ch_name');
+            $v['h_date'] = date('Y-m-d H:i:s', $v['h_date']);
+
+        }
+
+        $this->assign('info', $info);
         $this->display();
 	}
 

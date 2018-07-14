@@ -1,0 +1,34 @@
+<extend name="Public/base" />
+
+
+<block name="content">
+
+
+    <table class="table table-bordered table-hover"  id="table">
+        <thead>
+        <tr>
+            <th style="text-align: center">借出人名字</th>
+            <th style="text-align: center">借出人电话</th>
+            <th style="text-align: center">被借用户</th>
+            <th style="text-align: center">厂家名称</th>
+            <th style="text-align: center">图片</th>
+            <th style="text-align: center">大概归还时间</th>
+            <th style="text-align: center">备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="info" id="vo">
+            <tr>
+                <td>{$vo.b_name}</td>
+                <td>{$vo.b_mobile}</td>
+                <td>{$vo.user_name}</td>
+                <td>{$vo.changjia}</td>
+                <td>{$vo.pic}</td>
+                <td>{$vo.h_date}</td>
+                <td>{$vo.info}</td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+
+</block>

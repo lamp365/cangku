@@ -1,11 +1,34 @@
 <extend name="Public/base" />
-
+<block name="css">
+    <style>
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -250px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+        .piclist {
+            cursor: pointer;
+        }
+        .piclist img{
+            border: 1px solid #C6C6C6;background: #ffffff;padding: 1px;
+        }
+    </style>
+</block>
 
 <block name="content">
 
     <ul class="nav nav-tabs">
-        <li style="width:100px" <if condition="$status eq 0">class="active" </if> ><a href="{:U('money/index',array('status'=>0))}">账单记录</a></li>
-        <li style="width:100px" <if condition="$status eq 1">class="active" </if> ><a href="{:U('money/index',array('status'=>1))}">充值记录</a></li>
+        <li style="width:110px" <if condition="$status eq 0">class="active" </if> ><a href="{:U('money/index',array('status'=>0))}">账单记录</a></li>
+        <li style="width:110px" <if condition="$status eq 1">class="active" </if> ><a href="{:U('money/index',array('status'=>1))}">充值记录</a></li>
     </ul>
     <if condition="$status eq 0">
         <table class="table table-bordered table-hover"  id="table">
@@ -45,7 +68,9 @@
             <thead>
             <tr>
                 <th style="text-align: center">充值编号</th>
+                <th style="text-align: center">用户</th>
                 <th style="text-align: center">充值金额</th>
+                <th style="text-align: center">剩余金额</th>
                 <th style="text-align: center">充值凭证</th>
                 <th style="text-align: center">充值状态</th>
                 <th style="text-align: center">充值时间</th>
@@ -55,13 +80,43 @@
             <volist name="info" id="vo">
                 <tr>
                     <td>{$vo.id}</td>
+                    <td>{$vo.user_name}</td>
                     <td>{$vo.chon_price}</td>
-                    <td><img src="{$vo.pic}" width="60" class="pic"></td>
+                    <td>{$vo.shen_price}</td>
+                    <td>
+                        <div class="piclist">
+                            <volist name="vo.pic" id="pic_one">
+                            <span imghref="{$pic_one}" class="onepic">
+                            <img src="{$pic_one}" style="width: 50px;" alt="">
+                            </span>
+                            </volist>
+                        </div>
+
+                    </td>
                     <td>{$vo.status}</td>
                     <td>{$vo.c_date}</td>
                 </tr>
             </volist>
             </tbody>
         </table>
+        <div style="text-align: left">{$page}</div>
     </if>
+
+    <div class="big-img-show">
+        <img src="">
+    </div>
+</block>
+<block name="js">
+    <script>
+        $(function () {
+            $(".piclist img").on("click",function(){
+                var bigImg = $(this).parent(".onepic").attr("imghref");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").on("click",function(){
+                $(this).fadeOut();
+            });
+        });
+    </script>
 </block>

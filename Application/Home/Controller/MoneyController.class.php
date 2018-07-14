@@ -11,13 +11,13 @@ class MoneyController extends CommonController {
     public function index(){
 
         $status = I('status') ? I('status') : 0;
-        //充值表
-        $session_user = session("web_user");
-        $uid = $session_user['user_id'];
-        $where['uid'] = $uid;
+        $where['gid'] = getGidFromSession();
 
         if(1 == $status){
-            $info = M('recharge') -> where($where) -> select();
+            $count = M('recharge') ->where($where)->count();
+            $p     = new \Think\Page($count,4);
+            $page  = $p->show();
+            $info  = M('recharge') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
             foreach($info as &$v){
 
@@ -25,13 +25,18 @@ class MoneyController extends CommonController {
                 if ( 1 == $v['state']) {
                     $v['status'] = '审核通过';
                 } else if (0 == $v['state']) {
-                    $v['status'] = '待审核';
+                    $v['status'] = '<font color="green">等待审核</font>';
                 } else {
-                    $v['status'] = '审核失败';
+                    $v['status'] = '<font color="red">审核失败</font>';
                 }
+                $v['user_name'] = M('user')->where("id={$v['uid']}")->getField('user_name');
+                //凭证有多张
+                $pic  = explode(',',$v['pic']);
+                $v['pic'] = $pic;
             }
 
         } else if(0 == $status) {
+            $page = '';
             //账单表
             $info = M('bill') -> where($where) -> select();
 
@@ -51,6 +56,7 @@ class MoneyController extends CommonController {
 
         $this->assign('status', $status);
         $this->assign('info', $info);
+        $this->assign('page', $page);
         $this->display();
 	}
 

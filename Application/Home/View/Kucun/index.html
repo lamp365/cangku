@@ -1,24 +1,132 @@
 <extend name="Public/base" />
-
+<block name="css">
+    <style>
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -250px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+        .piclist {
+            cursor: pointer;
+        }
+        .piclist img{
+            border: 1px solid #C6C6C6;background: #ffffff;padding: 1px;
+        }
+    </style>
+</block>
 
 <block name="content">
 
-
+    <div style="text-align: left;margin-bottom: 10px;overflow: hidden">
+        <form method="get" action="__CONTROLLER__/index">
+        <div class="col-sm-2">
+            <select name="cat_id1" id="cat_id1" class="form-control">
+                <option value="0">选择一级分类</option>
+                <foreach name="cate" item="onecate">
+                    <option value="{$onecate.id}" <if condition="$onecate['id'] eq $cat_id1">selected</if>>{$onecate.cat_name}</option>
+                </foreach>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <select name="cat_id2" id="cat_id2" class="form-control">
+                <option value="0">选择二级分类</option>
+                <foreach name="sonCate" item="towcate">
+                    <option value="{$towcate.id}" <if condition="$towcate['id'] eq $cat_id2">selected</if>>{$towcate.cat_name}</option>
+                </foreach>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-info btn-lt" type="submit">确定</button>
+        </div>
+        </form>
+    </div>
     <table class="table table-bordered table-hover"  id="table">
         <thead>
         <tr>
+            <th style="text-align: center">用户名</th>
             <th style="text-align: center">货源名称</th>
+            <th style="text-align: center">主图</th>
+            <th style="text-align: center">尺码</th>
             <th style="text-align: center">库存数量</th>
+            <th style="text-align: center">分类</th>
+            <th style="text-align: center">拿货价</th>
+            <th style="text-align: center">打包价</th>
+
         </tr>
         </thead>
         <tbody>
         <volist name="info" id="vo">
             <tr>
+                <td>{$vo.user_name}</td>
                 <td>{$vo.huoyuan_name}</td>
+                <td>
+                    <div class="piclist">
+                        <span imghref="{$vo.pic}" class="onepic">
+                       <img src="{$vo.pic}" style="height: 50px;" alt="">
+                       </span>
+                    </div>
+                </td>
+                <td>{$vo.cm_name}</td>
                 <td>{$vo.num}</td>
+                <td>{$vo.cat_name1}--{$vo.cat_name2}</td>
+                <td>{$vo.jin_price}</td>
+                <td>{$vo.da_price}</td>
             </tr>
         </volist>
         </tbody>
     </table>
+    <div style="text-align: left">
+        {$page}
+    </div>
+    <div class="big-img-show">
+        <img src="">
+    </div>
+</block>
+<block name="js">
+    <script>
+        $(function () {
+            $(".piclist img").on("click",function(){
+                var bigImg = $(this).parent(".onepic").attr("imghref");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").on("click",function(){
+                $(this).fadeOut();
+            });
 
+
+            $("#cat_id1").change(function () {
+                var cat_id1 = $(this).val();
+                if(cat_id1 == 0){
+                    var html = '<option value="0">选择二级分类</option>';
+                    $("#cat_id2").html(html);
+                }else{
+                    //异步请求
+                    var html = '';
+                    var url = "{:U('baohuo/getCate')}";
+                    $.post(url,{cat_id1:cat_id1},function(message){
+                        if(message.length>0){
+                            for(var i=0;i<message.length;i++){
+                                var item = message[i];
+                                html += '<option value="'+item.id+'">'+item.cat_name+'</option>';
+                            }
+                        }else{
+                            html = '<option value="0">暂无二级分类</option>';
+
+                        }
+                        $("#cat_id2").html(html);
+                    });
+                }
+            });
+        });
+    </script>
 </block>

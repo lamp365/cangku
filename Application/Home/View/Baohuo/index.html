@@ -1,5 +1,28 @@
 <extend name="Public/base" />
-
+<block name="css">
+    <style>
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -250px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+        .piclist {
+            cursor: pointer;
+        }
+        .piclist img{
+            border: 1px solid #C6C6C6;background: #ffffff;padding: 1px;
+        }
+    </style>
+</block>
 
 <block name="content">
 
@@ -32,7 +55,13 @@
             <tr>
                 <td>{$row.id}</td>
                 <td>{$row.user_name}</td>
-                <td><img src="{$row.pic}" alt="" style="height: 50px;"/></td>
+                <td>
+                    <div class="piclist">
+                        <span imghref="{$row.pic}" class="onepic">
+                       <img src="{$row.pic}" style="height: 50px;" alt="">
+                       </span>
+                    </div>
+                </td>
                 <td>{$row.cm_name}*{$row.num}</td>
                 <td>{$row.jin_price}</td>
                 <td>{$row.da_price}</td>
@@ -57,6 +86,9 @@
     <div style="text-align: left">
         {$page}
     </div>
+    <div class="big-img-show">
+        <img src="">
+    </div>
 </block>
 
 <block name="js">
@@ -72,5 +104,16 @@
                }
             });
         }
+
+        $(function () {
+            $(".piclist img").on("click",function(){
+                var bigImg = $(this).parent(".onepic").attr("imghref");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").on("click",function(){
+                $(this).fadeOut();
+            });
+        });
     </script>
 </block>

@@ -9,19 +9,44 @@ class KucunController extends CommonController {
 
 
     public function index(){
-
+        $cat_id1 = intval(i('cat_id1'));
+        $cat_id2 = intval(i('cat_id2'));
         $session_user = session("web_user");
         $gid = $session_user['gid'];
         $where['gid'] = $gid;
-        $info = M('kucun') -> where($where) ->select();
+        if(!empty($cat_id1))
+            $where['cat_id1'] = $cat_id1;
 
+        if(!empty($cat_id2))
+            $where['cat_id2'] = $cat_id2;
+
+        $count = M('kucun')->where($where)->count();
+        $p     = new \Think\Page($count,4);
+        $page  = $p->show();
+        $info  = M('kucun')->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+
+        $catM = M('category');
         foreach($info as &$v){
 
             $v['huoyuan_name'] =  M('huoyuan') -> where(['id' => $v['huo_id']]) ->getField('h_name');;
+            $v['user_name'] =  M('user') -> where(['id' => $v['uid']]) ->getField('user_name');;
+            $v['cm_name'] =  M('cm_size') -> where(['id' => $v['cm_id']]) ->getField('cm_name');;
+            $v['cat_name1'] =  $catM -> where(['id' => $v['cat_id1']]) ->getField('cat_name');;
+            $v['cat_name2'] =  $catM -> where(['id' => $v['cat_id2']]) ->getField('cat_name');;
 
         }
+        //查询出顶级分类
+        $cate    = $catM -> where(array('is_delete' => 0, 'pid' => 0)) -> select();
+        $sonCate = array();
+        if(!empty($cat_id1))
+            $sonCate = $catM->where(array('pid'=>$cat_id1,'is_delete'=>0))->select();
 
+        $this->assign('cate', $cate);
         $this->assign('info', $info);
+        $this->assign('page', $page);
+        $this->assign('sonCate', $sonCate);
+        $this->assign('cat_id1', $cat_id1);
+        $this->assign('cat_id2', $cat_id2);
 
         $this->display();
 	}

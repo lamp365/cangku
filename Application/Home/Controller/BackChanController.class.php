@@ -21,7 +21,7 @@ class BackChanController extends CommonController {
 
             $v['cate1'] =  M('category') -> where(['id' => $v['cat_id1']]) ->getField('cat_name');
             $v['cate2'] =  M('category') -> where(['id' => $v['cat_id2']]) ->getField('cat_name');
-            $v['changjia'] =  M('changjia') -> where(['id' => $v['chang_id']]) ->getField('ch_name');
+            $v['changjia'] =  M('changjia') -> where(['id' => $v['chang_id']]) ->getField('cname');
             $v['user_name'] =  M('user') -> where(['id' => $v['uid']]) ->getField('user_name');
             $v['h_date'] = date('Y-m-d H:i:s', $v['c_date']);
 

@@ -166,11 +166,15 @@ class BillController extends AdminController
     //审核充值的
     public function okBill(){
         $id = intval(i('id'));
-        M('recharge')->where("id={$id}")->save(array('state'=>1));
         $priceInfo = M('recharge')->where("id={$id}")->find();
         //加到小组资金中
         $price = $priceInfo['chon_price'];
         $gid   = $priceInfo['gid'];
+        $group = M('user_group')->find($gid);
+        $shen_price = $price+$group['money'];
+
+        M('recharge')->where("id={$id}")->save(array('state'=>1,'shen_price'=>$shen_price));
+
         $data = array(
             'money'   => array('exp', "`money`+{$price}"),
         );

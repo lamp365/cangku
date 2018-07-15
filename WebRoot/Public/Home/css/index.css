@@ -130,6 +130,9 @@ html,body{font-size: 16px;color: #000;background: url(../img/bg.jpg) no-repeat; 
 	border-left:1px solid #e0e0de ;
 	min-height: 530px;
 }
+.row_right table{
+	font-size: 15px;
+}
 .row_regin {width: 100%;height: auto;}
 .logo_rgi {width: 68px;border: 1px solid #c6cbcf;display: inline-block; vertical-align: middle;}
 .text_row {
@@ -278,3 +281,6 @@ html,body{font-size: 16px;color: #000;background: url(../img/bg.jpg) no-repeat; 
 	margin-top: 55px;
 }
 .hr15{padding: 0px;margin: 0px;clear: both;height: 15px;border: 0px;}
+.data_table{
+	font-size: 15px;
+}

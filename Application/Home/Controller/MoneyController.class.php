@@ -10,15 +10,19 @@ class MoneyController extends CommonController {
 
     public function index(){
 
-        $status = I('status') ? I('status') : 0;
+        $show = I('show') ? I('show') : 0;
         $where['gid'] = getGidFromSession();
+        $gid           = getGidFromSession();
+        $uwhere['gid'] = getGidFromSession();
+        $gwhere['gid'] = getGidFromSession();
 
-        if(1 == $status){
+        if(1 == $show){
+            //充值记录
             $count = M('recharge') ->where($where)->count();
             $p     = new \Think\Page($count,4);
             $page  = $p->show();
             $info  = M('recharge') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
-
+            $userM = M('user');
             foreach($info as &$v){
 
                 $v['c_date'] = date('Y-m-d H:i:s', $v['c_date']);
@@ -29,32 +33,92 @@ class MoneyController extends CommonController {
                 } else {
                     $v['status'] = '<font color="red">审核失败</font>';
                 }
-                $v['user_name'] = M('user')->where("id={$v['uid']}")->getField('user_name');
+                $v['user_name'] = $userM->where("id={$v['uid']}")->getField('user_name');
                 //凭证有多张
                 $pic  = explode(',',$v['pic']);
                 $v['pic'] = $pic;
             }
 
-        } else if(0 == $status) {
-            $page = '';
-            //账单表
-            $info = M('bill') -> where($where) -> select();
+        } else if(0 == $show) {
+            //账单记录
+            $uwhere['is_forbid'] = 0;
+            $gwhere['is_forbid'] = 0;
+            $mem_user = M('user')->where($uwhere)->select();
+            $mem_shop = M('user_shop')->where($gwhere)->select();
+            $state   = I('state');
+            $shop_id = I('shop_id');
+            $uid     = I('uid');
 
+            $timeInfo = getTimestapFromTimeJS();
+            $s_time   = $timeInfo['s_time'];
+            $e_time   = $timeInfo['e_time'];
+
+            $where2 = " gid={$gid}";
+            $pwhere2['gid'] = $gid;
+            if(!empty($shop_id)){
+                $where2 .= ' and shop_id='.$shop_id;
+                $pwhere['shop_id']  = $shop_id;
+            }
+            if(!empty($uid)){
+                $where2 .= ' and uid='.$uid;
+                $pwhere['uid']  = $uid;
+            }
+            if(!empty($state)){
+                $where2 .= ' and state='.$state;
+                $pwhere['state']  = $state;
+            }
+
+            if(!empty($s_time) && !empty($e_time)){
+                $where2 .= " and c_date > {$s_time} and c_date < {$e_time} ";
+                $pwhere['c_date'] = array(array('gt',$s_time),array('lt',$e_time));
+            }
+
+            $billM = M('bill');
+            //计算出总和
+            $sql = "select sum(jin_price) as jin_price, sum(da_price) as da_price,sum(shua_price) as shua_price,sum(mai_price) as mai_price from bill where {$where2}";
+            $price_info  = $billM->query($sql);
+            $total_lirun = $price_info[0]['mai_price']-$price_info[0]['shua_price']-$price_info[0]['da_price']-$price_info[0]['jin_price'];
+
+
+            $count = $billM ->where($where2)->count();
+            $p     = new \Think\Page($count,4);
+            $page  = $p->show();
+            $info  = $billM ->where($where2)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+
+            $usershopM = M('user_shop');
+            $userM = M('user');
+            $cmM = M('cm_size');
             foreach($info as &$v){
-                $v['c_date'] = date('Y-m-d H:i:s', $v['c_date']);
-                $v['shop_name'] =  M('user_shop') -> where(['id' => $v['uid']]) ->getField('shop_name');
+                $v['c_date'] = date('m-d H:i:s', $v['c_date']);
+                $shopData =  $usershopM -> where(['id' => $v['shop_id']]) ->find();
+                $v['shop_name'] = $shopData['shop_name'];
+                $v['shop_zg']   = $shopData['shop_zg'];
+                $v['cm_name']   =   $cmM -> where(['id' => $v['cm_id_id']]) ->getField('cm_name');
+                $v['user_name'] =  $userM->where("id={$v['uid']}")->getField('user_name');
                 if ( 1 == $v['state']) {
                     $v['state'] = '发货';
-                } else {
-                    $v['state'] = '调货';
+                } else if($v['state'] == 2){
+                    $v['state'] = '发货';
+                }else{
+                    $v['state'] = '刷单';
                 }
             }
 
+            $this->assign('state',$state);
+            $this->assign('shop_id',$shop_id);
+            $this->assign('uid',$uid);
+            $this->assign('mem_user',$mem_user);
+            $this->assign('mem_shop',$mem_shop);
+            $this->assign('s_time',$s_time);
+            $this->assign('e_time',$e_time);
+            $this->assign('price_info',$price_info);
+            $this->assign('total_lirun',number_format($total_lirun,2,'.',''));
+
         } else {
-            echo '未知错误';exit;
+            $this->error('参数请求有误!');
         }
 
-        $this->assign('status', $status);
+        $this->assign('show', $show);
         $this->assign('info', $info);
         $this->assign('page', $page);
         $this->display();

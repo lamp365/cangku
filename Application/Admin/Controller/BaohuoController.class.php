@@ -36,7 +36,6 @@ class BaohuoController extends AdminController
             $itmes['groupname']   = $usergM->where("id={$itmes['gid']}")->getField('group_name');
             $itmes['catname1']    = $catM->where("id={$itmes['cat_id1']}")->getField('cat_name');
             $itmes['catname2']    = $catM->where("id={$itmes['cat_id2']}")->getField('cat_name');
-//            $itmes['chanjia']     = $chanM->where("id={$itmes['chang_id']}")->getField('cname');
             $itmes['cm_name']     = $cmM->where("id={$itmes['cm_id']}")->getField('cm_name');
         }
         $this->assign('data',$data);

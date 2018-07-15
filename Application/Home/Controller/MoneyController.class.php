@@ -124,4 +124,12 @@ class MoneyController extends CommonController {
         $this->display();
 	}
 
+	public function addMoney(){
+	    if(IS_POST){
+
+        }else{
+            $this->display();
+        }
+    }
+
 }

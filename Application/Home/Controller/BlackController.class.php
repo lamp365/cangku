@@ -9,14 +9,31 @@ class BlackController extends CommonController {
 
 
     public function index(){
-        //ºÚÃûµ¥
-        $session_user = session("web_user");
-        $uid = $session_user['user_id'];
-        $where['uid'] = $uid;
 
-        $info = M('dangeruser') -> where($where) -> select();
+        $where = array();
+        $search_value = i('search');
+        if(!empty($search_value)){
+            $where["d_mobile|d_name|d_address"] = array("like","%".$search_value."%");
+        }
 
-        $this->assign('info', $info);
+        $count = M('dangeruser') ->where($where)->count();
+        $p     = new \Think\Page($count,4);
+        $page  = $p->show();
+        $res  = M('dangeruser') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+
+        foreach ($res as &$v) {
+            $v['pic_list'] = array();
+            if(!empty($v['pic'])){
+                $v['pic_list'] = explode(',',$v['pic']);
+            }
+            $v['c_date'] = date('Y-m-d H:i:s', $v['c_date']);
+            $v['user_name'] =  M('user') -> where(array('id' =>$v['uid'])) -> getField('user_name');;
+        }
+
+
+        $this->assign('info', $res);
+        $this->assign('$search', $search_value);
+        $this->assign('page', $page);
         $this->display();
 	}
 

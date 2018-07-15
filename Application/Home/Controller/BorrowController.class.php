@@ -9,20 +9,77 @@ class BorrowController extends CommonController {
 
 
     public function index(){
-        //接触记录
-        $session_user = session("web_user");
-        $gid = $session_user['gid'];
-        $where['gid'] = $gid;
-        $info = M('borrow') -> where($where) -> select();
+        $show = i('show');
+        $show = intval($show);
+        //个人借出记录
+        $uid = getUidFromSession();
+        $gid = getGidFromSession();
 
+        if($show == 0){
+            $where['b_uid'] = $uid;
+        }else{
+            $where['gid']   = $gid;
+        }
+        $count = M('borrow') ->where($where)->count();
+        $p     = new \Think\Page($count,4);
+        $page  = $p->show();
+        $info  = M('borrow') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+
+        $userM = M('user');
+        $usergM = M('user_group');
         foreach($info as &$v){
-            $v['b_name'] =  M('user') -> where(['id' => $v['b_uid']]) ->getField('user_name');
-            $v['user_name'] =  M('user') -> where(['id' => $v['uid']]) ->getField('user_name');
-            $v['changjia'] =  M('changjia') -> where(['id' => $v['chang_id']]) ->getField('ch_name');
+            $v['b_name']    = $userM -> where(['id' => $v['b_uid']]) ->getField('user_name');
+            $v['group_name']= $usergM -> where(['id' => $v['gid']]) ->getField('group_name');
+            $v['user_name'] =  $userM -> where(['id' => $v['uid']]) ->getField('user_name');
         }
 
         $this->assign('info', $info);
+        $this->assign('show', $show);
+        $this->assign('page', $page);
         $this->display();
 	}
+
+	public function addBorrow1(){
+        $cate = M('category') -> where(array('is_delete' => 0, 'pid' => 0)) -> select();
+        $userGroup = M('user_group')->where('is_delete=0')->select();
+        $this->assign('cate', $cate);
+        $this->assign('userGroup', $userGroup);
+        $this->display();
+    }
+
+    public function addBorrow2(){
+        $cat_id1 = i('cat_id1');
+        $cat_id2 = i('cat_id2');
+        $gid = i('gid');
+        if(empty($cat_id1) || empty($cat_id2) || empty($gid)){
+            $this->error('参数有误!');
+        }
+        $where['gid'] = $gid;
+        $where['cat_id1'] = $cat_id1;
+        $where['cat_id2'] = $cat_id2;
+        $count = M('kucun') ->where($where)->count();
+        $p     = new \Think\Page($count,20);
+        $page  = $p->show();
+        $info  = M('kucun') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+        foreach ($info as &$val){
+            $val['h_name'] = M('huoyuan')->where("id={$val['huo_id']}")->getField('h_name');
+        }
+        $this->assign('cat_id1', $cat_id1);
+        $this->assign('cat_id2', $cat_id2);
+        $this->assign('gid', $gid);
+        $this->assign('page', $page);
+        $this->assign('info', $info);
+        $this->display();
+    }
+
+    public function addBorrow3(){
+        $cu_id = i('cu_id');
+        $cu_id = intval($cu_id);
+        $huoInfo = M('kucun')->find($cu_id);
+        $huoInfo['h_name'] = M('huoyuan')->where("id={$huoInfo['huo_id']}")->getField('h_name');
+        $this->assign('huoInfo', $huoInfo);
+        $this->assign('cu_id', $cu_id);
+        $this->display();
+    }
 
 }

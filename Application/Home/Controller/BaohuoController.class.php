@@ -87,9 +87,18 @@ class BaohuoController extends CommonController {
         if(empty($cat_id1) || empty($cat_id2)){
             $this->error('参数有误');
         }
-        $data = M('huoyuan')->where(array('cat_id1'=>$cat_id1,'cat_id2'=>$cat_id2))->select();
+        $where['cat_id1'] = $cat_id1;
+        $where['cat_id2'] = $cat_id2;
+        $count = M('huoyuan') ->where($where)->count();
+        $p     = new \Think\Page($count,4);
+        $page  = $p->show();
+        $info  = M('huoyuan') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+
         $this->assign('cat_id1', $cat_id1);
         $this->assign('cat_id2', $cat_id2);
+        $this->assign('page', $page);
+        $this->assign('info', $info);
+
         $this->display();
     }
 

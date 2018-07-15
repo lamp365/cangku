@@ -91,7 +91,13 @@
 </div>
 
 </body>
-
+<script>
+    $(function () {
+        $("#addModalBox").on("hidden.bs.modal", function() {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
 <block name="js"></block>
 
 </html>

@@ -1,34 +1,146 @@
 <extend name="Public/base" />
 
-
+<block name="css">
+    <style>
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -250px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+        .piclist {
+            cursor: pointer;
+        }
+        .piclist img{
+            border: 1px solid #C6C6C6;background: #ffffff;padding: 1px;
+        }
+    </style>
+</block>
 <block name="content">
+    <ul class="nav nav-tabs">
+        <li style="width:110px" <if condition="$show eq 0">class="active" </if> ><a href="{:U('borrow/index',array('show'=>0))}">个人借出</a></li>
+        <li style="width:110px" <if condition="$show eq 1">class="active" </if> ><a href="{:U('borrow/index',array('show'=>1))}">小组被借</a></li>
+    </ul>
 
 
-    <table class="table table-bordered table-hover"  id="table">
-        <thead>
-        <tr>
-            <th style="text-align: center">借出人名字</th>
-            <th style="text-align: center">借出人电话</th>
-            <th style="text-align: center">被借用户</th>
-            <th style="text-align: center">厂家名称</th>
-            <th style="text-align: center">图片</th>
-            <th style="text-align: center">大概归还时间</th>
-            <th style="text-align: center">备注</th>
-        </tr>
-        </thead>
-        <tbody>
-        <volist name="info" id="vo">
+        <if condition="$show eq 0">
+        <div style="text-align: left;margin-bottom: 10px;margin-top: 10px;">
+            <a class="btn btn-info btn-lt" href="__CONTROLLER__/addBorrow1">添加借出</a>
+        </div>
+        <table class="table table-bordered table-hover"  id="table">
+            <thead>
             <tr>
-                <td>{$vo.b_name}</td>
-                <td>{$vo.b_mobile}</td>
-                <td>{$vo.user_name}</td>
-                <td>{$vo.changjia}</td>
-                <td>{$vo.pic}</td>
-                <td>{$vo.h_date}</td>
-                <td>{$vo.info}</td>
+                <th style="text-align: center">被借用户</th>
+                <th style="text-align: center">被借小组</th>
+                <th style="text-align: center">图片</th>
+                <th style="text-align: center">借出时间</th>
+                <th style="text-align: center">归还时间</th>
+                <th style="text-align: center">状态</th>
+                <th style="text-align: center">备注</th>
             </tr>
-        </volist>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            <volist name="info" id="vo">
+                <tr>
+                    <td>{$vo.user_name}</td>
+                    <td>{$vo.group_name}</td>
+                    <td>
+                        <div class="piclist">
+                            <span imghref="{$vo.pic}" class="onepic">
+                            <img src="{$vo.pic}" style="width: 50px;height: 50px;" alt="">
+                            </span>
+                        </div>
+                    </td>
+                    <td>{$vo.c_date|date="Y-m-d H:i:s",###}</td>
+                    <td>{$vo.h_date|date="Y-m-d H:i:s",###}</td>
+                    <td>
+                        <?php if($vo['states'] == 1){ echo "已还";}else{  echo "<font color='red'>借出</font>"; } ?>
+                    </td>
+                    <td>
+                        <empty name="vo['info']">
+                            暂无
+                            <else/>
+                            <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$vo.info}"></span>
+                        </empty>
+                    </td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+        <else/>
 
+        <table class="table table-bordered table-hover"  id="table">
+            <thead>
+            <tr>
+                <th style="text-align: center">借者名字</th>
+                <th style="text-align: center">借者电话</th>
+                <th style="text-align: center">被借用户</th>
+                <th style="text-align: center">图片</th>
+                <th style="text-align: center">借出时间</th>
+                <th style="text-align: center">归还时间</th>
+                <th style="text-align: center">状态</th>
+                <th style="text-align: center">备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="info" id="vo">
+                <tr>
+                    <td>{$vo.b_name}</td>
+                    <td>{$vo.b_mobile}</td>
+                    <td>{$vo.user_name}</td>
+                    <td>
+                        <div class="piclist">
+                            <span imghref="{$vo.pic}" class="onepic">
+                            <img src="{$vo.pic}" style="width: 50px;height: 50px;" alt="">
+                            </span>
+                        </div>
+                    </td>
+                    <td>{$vo.c_date|date="Y-m-d H:i:s",###}</td>
+                    <td>{$vo.h_date|date="Y-m-d H:i:s",###}</td>
+                    <td>
+                        <?php if($vo['states'] == 1){ echo "已还";}else{  echo "<font color='red'>借出</font>"; } ?>
+                    </td>
+                    <td>
+                        <empty name="vo['info']">
+                            暂无
+                            <else/>
+                            <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$vo.info}"></span>
+                        </empty>
+                    </td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+        </if>
+
+
+    <div style="text-align: left">
+        {$page}
+    </div>
+    <div class="big-img-show">
+        <img src="">
+    </div>
+</block>
+
+<block name="js">
+    <script>
+        $(function () {
+            $(".piclist img").on("click",function(){
+                var bigImg = $(this).parent(".onepic").attr("imghref");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").on("click",function(){
+                $(this).fadeOut();
+            });
+        });
+    </script>
 </block>

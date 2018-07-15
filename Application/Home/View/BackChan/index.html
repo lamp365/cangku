@@ -10,7 +10,9 @@
             <th style="text-align: center">分类1</th>
             <th style="text-align: center">分类2</th>
             <th style="text-align: center">图片</th>
+            <th style="text-align: center">用户</th>
             <th style="text-align: center">厂家名称</th>
+            <th style="text-align: center">时间</th>
             <th style="text-align: center">备注</th>
         </tr>
         </thead>
@@ -19,12 +21,23 @@
             <tr>
                 <td>{$vo.cate1}</td>
                 <td>{$vo.cate2}</td>
-                <td><img  width="60" src ="{$vo.pic}"></td>
+                <td>
+                    <img  width="50" height="50px" src ="{$vo.pic}">
+                </td>
+                <td>{$vo.user_name}</td>
                 <td>{$vo.changjia}</td>
-                <td>{$vo.info}</td>
+                <td>{$vo.h_date}</td>
+                <td>
+                    <empty name="vo['info']">
+                        暂无
+                        <else/>
+                        <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$vo.info}"></span>
+                    </empty>
+                </td>
             </tr>
         </volist>
         </tbody>
     </table>
+    <div style="text-align: left">{$page}</div>
 
 </block>

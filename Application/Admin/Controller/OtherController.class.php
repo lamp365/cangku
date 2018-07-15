@@ -86,7 +86,16 @@ class OtherController extends AdminController
     public function sureBack(){
         $id = intval(i('id'));
         $newsM = M('borrow');
-        $newsM->where("id={$id}")->save(array('states'=>2));
+        $borrow = $newsM->find($id);
+        $res = $newsM->where("id={$id}")->save(array('states'=>2));
+        if($res){
+            $cu_id = $borrow['cu_id'];
+            //数量换回去 加1
+            $data = array(
+                'num'   => array('exp', "`num`+1"),
+            );
+            M('kucun')->where("id={$cu_id}")->save($data);
+        }
         $this->success('已经确认归还');
     }
 }

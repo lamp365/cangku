@@ -21,7 +21,7 @@ class BorrowController extends CommonController {
             $where['gid']   = $gid;
         }
         $count = M('borrow') ->where($where)->count();
-        $p     = new \Think\Page($count,4);
+        $p     = new \Think\Page($count,20);
         $page  = $p->show();
         $info  = M('borrow') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
@@ -82,4 +82,39 @@ class BorrowController extends CommonController {
         $this->display();
     }
 
+    public function doAdd(){
+        $cu_id = i('cu_id');
+        $info  = i('info');
+        if(empty($cu_id)){
+            $this->error('参数有误!');
+        }
+
+        $userInfo = session('web_user');
+        $data['b_uid'] = $userInfo['id'];
+        $data['b_mobile'] = $userInfo['mobile'];
+
+        $cuInfo = M('kucun')->find($cu_id);
+        if($cuInfo['num'] == 0){
+            $this->error('已无库存');
+        }
+        $data['cu_id'] = $cu_id;
+        $data['uid'] = $cuInfo['uid'];
+        $data['gid'] = $cuInfo['gid'];
+        $data['cat_id1'] = $cuInfo['cat_id1'];
+        $data['cat_id2'] = $cuInfo['cat_id2'];
+        $data['pic'] = $cuInfo['pic'];
+        $data['info'] = $info;
+        $data['c_date'] = time();
+        $data['h_date'] = time()+3600*24*3;
+        $res = M('borrow')->add($data);
+        if($res){
+            //库存减掉1
+            $kuData['num'] = $cuInfo['num'] -1;
+            M('kucun')->swhere("id={$cu_id}")->ave($kuData);
+            $this->success('已经借出成功!');
+        }else{
+            $this->success('系统开小差了!');
+        }
+
+    }
 }

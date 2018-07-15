@@ -9,22 +9,26 @@ class BackChanController extends CommonController {
 
 
     public function index(){
-        // ÍË»Ø³§¼Ò
-        $session_user = session("web_user");
-        $uid = $session_user['user_id'];
-        $where['uid'] = $uid;
-        $info = M('backchanjia') -> where($where) -> select();
+        $gid = getGidFromSession();
+        $where['gid'] = $gid;
+
+        $count = M('backchanjia') ->where($where)->count();
+        $p     = new \Think\Page($count,4);
+        $page  = $p->show();
+        $info  = M('backchanjia') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
         foreach($info as &$v){
 
             $v['cate1'] =  M('category') -> where(['id' => $v['cat_id1']]) ->getField('cat_name');
             $v['cate2'] =  M('category') -> where(['id' => $v['cat_id2']]) ->getField('cat_name');
             $v['changjia'] =  M('changjia') -> where(['id' => $v['chang_id']]) ->getField('ch_name');
-            $v['h_date'] = date('Y-m-d H:i:s', $v['h_date']);
+            $v['user_name'] =  M('user') -> where(['id' => $v['uid']]) ->getField('user_name');
+            $v['h_date'] = date('Y-m-d H:i:s', $v['c_date']);
 
         }
 
         $this->assign('info', $info);
+        $this->assign('page', $page);
         $this->display();
 	}
 

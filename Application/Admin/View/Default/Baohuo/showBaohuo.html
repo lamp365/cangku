@@ -1,0 +1,406 @@
+<extend name="Public/common" />
+<block name="body">
+    <style>
+        .ibox-content .title{
+            font-weight: bold;
+            font-size: 18px;
+            text-align: left;
+            color: #aec5f7;
+        }
+        .table{text-align: left;}
+        .table .tips{font-weight: bolder;margin-right: 4px;}
+        .table td{width: 25%;overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;}
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -250px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+        .piclist {
+            cursor: pointer;
+        }
+        .piclist img{
+            border: 1px solid #C6C6C6;background: #ffffff;padding: 1px;
+        }
+    </style>
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>报货列表</h5>
+            <div class="ibox-tools" style="display:none;">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-wrench"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#">选项1</a>
+                    </li>
+                    <li><a href="#">选项2</a>
+                    </li>
+                </ul>
+                <a class="close-link">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <p class="title">基本信息 &nbsp;&nbsp;|&nbsp;<a href="JavaScript:;" onclick="goBack()">返回</a></p>
+                    <input type="hidden" id="hid_id" value="{$info.id}">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <td><span class="tips">用户:</span>{$info.user_name}[{$info.user_mobile}]</td>
+                            <td>
+                                <div class="piclist">
+                                    <span class="tips">主图:</span>
+                                    <span imghref="{$info.pic}" class="onepic">
+                                    <img src="{$info.pic}" style="height: 50px;" alt="">
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="piclist">
+                                    <span class="tips">附加图:</span>
+                                    <span imghref="{$info.pic2}" class="onepic">
+                                   <img src="{$info.pic2}" style="height: 50px;" alt="">
+                                   </span>
+                                </div>
+                            </td>
+                            <td><span class="tips">尺码:</span>{$info.cm_name}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span class="tips">卖出价格:</span>{$info.mai_price}*{$info.num}</td>
+                            <td><span class="tips">拿货价格:</span>{$info.jin_price}</td>
+                            <td><span class="tips">打包价格:</span>{$info.da_price}</td>
+                            <td><span class="tips">利润:</span>
+                                <?php if($info['mude'] == 1){
+                                        $lirun = ($info['mai_price']-$info['jin_price'])*$info['num']-$info['da_price'];
+                                        $lirun = number_format($lirun,2);
+                                        echo $lirun;
+                                }else{
+                                    echo '暂无利润';
+                                }?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="tips">厂家:</span>{$info.chang_name}</td>
+                            <td><span class="tips">店铺:</span>{$info.shop_name}</td>
+                            <td colspan="2"><span class="tips" title="{$info.yun_info}">运营备注:</span>{$info.yun_info}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tips">发货人:</span>{$info.send_name}</td>
+                            <td><span class="tips">发货手机:</span>{$info.send_mobile}</td>
+                            <td colspan="2"><span class="tips" title="{$info.send_address}">发货地址:</span>{$info.send_address}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tips">报货时间:</span>{$info.c_date|date="Y-m-d H:i",###}</td>
+                            <td><span class="tips">调货完毕时间:</span><empty name="info.f_date">暂无<else/>{$info.f_date|date="Y-m-d H:i",###}</empty></td>
+                            <td><span class="tips" >发货完毕时间:</span><empty name="info.s_date">暂无<else/>{$info.s_date|date="Y-m-d H:i",###}</empty></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p class="title">客户信息</p>
+                    <table class="table">
+                        <tr>
+                            <td><span class="tips">收货人:</span>{$info.customer}</td>
+                            <td><span class="tips">收货手机:</span>{$info.c_mobile}</td>
+                            <td><span class="tips">收货地址:</span>{$info.c_address}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">预约单号:</span>
+                            <div class="" style="float: left;width: 150px;">
+                                <select name="yu_order_code" id="yu_order_code" class="form-control">
+                                    <option value="0">选择物流</option>
+                                    <foreach name="wuliuData" item="wuiuRow">
+                                        <option value="{$wuiuRow.code}" <if condition="$wuiuRow['code'] eq $info['yu_order_code']">selected</if>>{$wuiuRow.name}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                            <div style="float: left;width: 150px;margin-left: 8px;">
+                                <input type="text" name="yu_order" id="yu_order" placeholder="输入单号" class="form-control" value="{$info['yu_order']}">
+                            </div>
+                            <notempty name="info.yu_order">
+                            <div style="float: left;width: 180px;margin-left: 15px;line-height: 32px;">
+                                {$info.yu_order_name}:[<a href="{$info.yu_order_url}" target="_blank">{$info.yu_order}</a>]
+                            </div>
+                            </notempty>
+                            <div style="float: left;width: 180px;margin-left: 15px;">
+                                <button class="btn btn-info btn-lt" onclick="sureOrder()">确认预约</button>
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">发货单号:</span>
+                                <div class="" style="float: left;width: 150px;">
+                                    <select name="send_order_code" id="send_order_code" class="form-control">
+                                        <option value="0">选择物流</option>
+                                        <foreach name="wuliuData" item="wuiuRow">
+                                            <option value="{$wuiuRow.code}" <if condition="$wuiuRow['code'] eq $info['send_order_code']">selected</if>>{$wuiuRow.name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div style="float: left;width: 150px;margin-left: 8px;">
+                                    <input type="text" name="send_order" id="send_order" class="form-control" placeholder="输入单号" value="{$info['send_order']}">
+                                </div>
+                                <notempty name="info.send_order">
+                                <div style="float: left;width: 180px;margin-left: 15px;line-height: 32px;">
+                                    {$info.send_order_name}:[<a href="{$info.send_order_url}" target="_blank">{$info.send_order}</a>]
+                                </div>
+                                </notempty>
+                                <empty name="info.send_order">
+                                <div style="float: left;width: 180px;margin-left: 15px;">
+                                    <button class="btn btn-info btn-lt" onclick="sureSend()">确认发货</button>
+                                </div>
+                                </empty>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <p class="title">仓库操作</p>
+                    <table class="table">
+                        <tr>
+                            <td colspan="3">
+                                <span class="tips" style="float: left;line-height: 32px;">选择厂家:</span>
+                                <div class="" style="float: left;width: 150px;">
+                                    <select name="chang_id" id="chang_id" class="form-control">
+                                        <option value="0">选择厂家</option>
+                                        <foreach name="changData" item="changOne">
+                                            <option value="{$changOne.id}" <if condition="$changOne['id'] eq $info['chang_id']">selected</if>>{$changOne.cname}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">厂家单号:</span>
+                                <div class="" style="float: left;width: 150px;">
+                                    <select name="chang_order_code" id="chang_order_code" class="form-control">
+                                        <option value="0">选择物流</option>
+                                        <foreach name="wuliuData" item="wuiuRow">
+                                            <option value="{$wuiuRow.code}" <if condition="$wuiuRow['code'] eq $info['chang_order_code']">selected</if>>{$wuiuRow.name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div style="float: left;width: 150px;margin-left: 8px;">
+                                    <input type="text" name="chang_order" id="chang_order" class="form-control" placeholder="输入单号" value="{$info['chang_order']}">
+                                </div>
+                                <notempty name="info.chang_order">
+                                    <div style="float: left;width: 180px;margin-left: 15px;line-height: 32px;">
+                                        {$info.chang_order_name}:[<a href="{$info.chang_order_url}" target="_blank">{$info.chang_order}</a>]
+                                    </div>
+                                </notempty>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3"><span class="tips"  style="float: left;line-height: 32px;" title="{$info.can_info}">仓库备注:</span>
+                                <div class="" style="float: left;width: 310px;">
+                                <textarea name="can_info" id="can_info" class="form-control" id="" cols="30" rows="3">{$info.can_info}</textarea>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">调货状态:</span>
+                                <div class="" style="float: left;width: 150px;">
+                                    <select name="diaohuo" id="diaohuo" class="form-control">
+                                        <option value="0">选择调货状态</option>
+                                        <option value="1">库存</option>
+                                        <option value="2">调货</option>
+                                        <option value="3">缺货</option>
+                                        <option value="4">调货完毕</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">借用他组:</span>
+                                <div class="" style="float: left;width: 150px;">
+                                    <select name="is_jie" id="is_jie" class="form-control">
+                                        <option value="0">选择借用其他组</option>
+                                        <option value="1">库存</option>
+                                        <option value="2">调货</option>
+                                        <option value="3">缺货</option>
+                                        <option value="4">调货完毕</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">进货单价:</span>
+                                <div class="" style="float: left;width: 150px;">
+                                    <input type="number" class="form-control" id="jin_price" name="jin_price" value="{$info.jin_price}">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">打包价格:</span>
+                                <div class="" style="float: left;width: 150px;">
+                                    <input type="number" class="form-control" id="da_price" name="da_price" value="{$info.da_price}">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">物品数量:</span>
+                                <div class="" style="float: left;width: 150px;">
+                                    <input type="number" class="form-control" id="num" name="num" value="{$info.num}">
+                                </div>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <p class="title">售后状态</p>
+                    <form id="afterForm">
+                        <table class="table">
+                            <tr>
+                                <td colspan="2">
+                                    <div class="col-sm-2">
+                                        <span class="tips">客户退换:</span>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select name="after_state" id="" class="form-control">
+                                            <option value="0">暂无</option>
+                                            <option value="1" <?php if($info['after_state'] == 1){echo 'selected';}?>>退货中</option>
+                                            <option value="2" <?php if($info['after_state'] == 2){echo 'selected';}?>>换货中</option>
+                                            <option value="-1" <?php if($info['after_state'] == -1){echo 'selected';}?>>退货完毕</option>
+                                            <option value="-3" <?php if($info['after_state'] == -2){echo 'selected';}?>>换货完毕</option>
+                                        </select>
+                                    </div>
+
+                                    </span>
+                                </td>
+                                <td><span class="tips">&nbsp;</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="col-sm-4">
+                                        <span class="tips">退回物流:</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <select name="back_order_code" id="" class="form-control">
+                                            <option value="0">选择物流</option>
+                                            <foreach name="wuliuData" item="wuiuRow">
+                                                <option value="{$wuiuRow.code}" <if condition="$wuiuRow['code'] eq $info['back_order_code']">selected</if>>{$wuiuRow.name}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="col-sm-4">
+                                        <span class="tips">退回单号:</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="back_order" value="{$info.back_order}">
+                                    </div>
+                                </td>
+                                <td><span class="tips">&nbsp;</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="col-sm-2">
+                                        <span class="tips">退回理由:</span>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="back_reason" value="{$info.back_reason}">
+                                    </div>
+                                </td>
+                                <td><span class="tips">&nbsp;</span></td>
+                            </tr>
+                        </table>
+                        <div class="">
+                            <input type="hidden" name="id" value="{$info.id}">
+                            <button class="btn btn-info btn-lt" style="float: left;margin-left: 135px;" onclick="sureAfter()">确认售后</button>
+                        </div>
+                    </form>
+                    <div class="big-img-show">
+                        <img src="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="modal">
+    <div class="modal fade" id="addCustomer" role="dialog">
+        <div class="modal-dialog modal-lt" id="showbox">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        var $table = $('#table');
+
+        function sureOrder() {
+            var obj = {};
+            var yu_order_code = $("#yu_order_code").val();
+            var yu_order      = $("#yu_order").val();
+            var id = $("#hid_id").val();
+            obj.id = id;
+            obj.yu_order_code   = yu_order_code;
+            obj.yu_order        = yu_order;
+            var url ="__CONTROLLER__/sureOrder";
+            $.post(url,obj,function (data) {
+                if(data.status == 1){
+                    toastr.success(data.info);
+                }else{
+                    toastr.warning(data.info);
+                }
+            });
+        }
+
+        function sureSend() {
+            var obj = {};
+            var send_order_code = $("#send_order_code").val();
+            var send_order      = $("#send_order").val();
+            var id = $("#hid_id").val();
+            obj.id = id;
+            obj.send_order_code = send_order_code;
+            obj.send_order      = send_order;
+            var url ="__CONTROLLER__/sureSend";
+            $.post(url,obj,function (data) {
+                if(data.status == 1){
+                    toastr.success(data.info);
+
+                }else{
+                    toastr.warning(data.info);
+                }
+            });
+        }
+
+        $(function () {
+            $(".piclist img").on("click",function(){
+                var bigImg = $(this).parent(".onepic").attr("imghref");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").on("click",function(){
+                $(this).fadeOut();
+            });
+        });
+        $(function () {
+            $("#addCustomer").on("hidden.bs.modal", function() {
+                $(this).removeData("bs.modal");
+                $table.bootstrapTable('refresh', {silent: true});
+            });
+        });
+    </script>
+</block>

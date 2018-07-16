@@ -13,7 +13,10 @@ class BaohuoController extends CommonController {
         $where = array();
         $gid   = getGidFromSession();
         $where['gid'] = $gid;
-        $where['order_state'] = $order_state;
+        if($order_state != -4){
+            $where['order_state'] = $order_state;
+        }
+
         $baohuoM = M('baohuo');
         $count = $baohuoM->where($where)->count();
         $p     = new \Think\Page($count,4);
@@ -196,15 +199,21 @@ class BaohuoController extends CommonController {
         $data['jin_price'] = $huoInfo['jin_price'];
         $data['da_price']  = $huoInfo['da_price'];
 
+        $kouPrice  = $data['jin_price']*$data['num']+$data['da_price'];
+        $userMoney = M('user_group')->where("id={$gid}")->getField('money');
+        $error = '';
+        if($kouPrice > $userMoney){
+            $error = '(账户金额不足)';
+        }
         $id = $data['id'];
         if(empty($id)){
             $huo_id = M('baohuo')->add($data);
-            $msg = '报货添加成功,你可以现在完善客户信息或者明天抽空完成';
+            $msg = $error.'报货添加成功,你可以现在完善客户信息或者明天抽空完成';
         }else{
             unset($data['id']);
             M('baohuo')->where("id={$id}")->save($data);
             $huo_id = $id;
-            $msg = "报货修改成功,你可以现在完善客户信息或者明天抽空完成";
+            $msg = $error."报货修改成功,你可以现在完善客户信息或者明天抽空完成";
         }
 
         $info['message'] = $msg;

@@ -68,7 +68,7 @@
                <td><span class="tips">打包价格:</span>{$info.da_price}</td>
                <td><span class="tips">利润:</span>
                <?php if($info['mude'] == 1){
-                        $lirun = $info['mai_price']-$info['jin_price']-$info['da_price'];
+                        $lirun = ($info['mai_price']-$info['jin_price'])*$info['num']-$info['da_price'];
                         $lirun = number_format($lirun,2);
                         echo $lirun;
                 }else{
@@ -79,14 +79,17 @@
            <tr>
                <td><span class="tips">厂家:</span>{$info.chang_name}</td>
                <td><span class="tips">店铺:</span>{$info.shop_name}</td>
-               <td><span class="tips">&nbsp;</span></td>
-               <td><span class="tips">&nbsp;</span></td>
+               <td colspan="2"><span class="tips" title="{$info.yun_info}">运营备注:</span>{$info.yun_info}</td>
            </tr>
            <tr>
                <td><span class="tips">发货人:</span>{$info.send_name}</td>
                <td><span class="tips">发货手机:</span>{$info.send_mobile}</td>
-               <td><span class="tips" title="{$info.send_address}">发货地址:</span>{$info.send_address}</td>
-               <td><span class="tips" title="{$info.yun_info}">运营备注:</span>{$info.yun_info}</td>
+               <td colspan="2"><span class="tips" title="{$info.send_address}">发货地址:</span>{$info.send_address}</td>
+           </tr>
+           <tr>
+               <td><span class="tips">报货时间:</span>{$info.c_date|date="Y-m-d H:i",###}</td>
+               <td><span class="tips">调货完毕时间:</span><empty name="info.f_date">暂无<else/>{$info.f_date|date="Y-m-d H:i",###}</empty></td>
+               <td><span class="tips" >发货完毕时间:</span><empty name="info.s_date">暂无<else/>{$info.s_date|date="Y-m-d H:i",###}</empty></td>
            </tr>
            </tbody>
        </table>

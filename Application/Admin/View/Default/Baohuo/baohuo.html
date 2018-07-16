@@ -1,0 +1,171 @@
+<extend name="Public/common" />
+<block name="body">
+    <style>
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -250px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+        .piclist {
+            cursor: pointer;
+        }
+        .piclist img{
+            border: 1px solid #C6C6C6;background: #ffffff;padding: 1px;
+        }
+    </style>
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>报货列表</h5>
+            <div class="ibox-tools" style="display:none;">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-wrench"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#">选项1</a>
+                    </li>
+                    <li><a href="#">选项2</a>
+                    </li>
+                </ul>
+                <a class="close-link">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs">
+                        <li style="width:120px" <if condition="$order_state eq 0">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>0))}">正申请中</a></li>
+                        <li style="width:120px" <if condition="$order_state eq 1">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>1))}">正处理中</a></li>
+                        <li style="width:120px" <if condition="$order_state eq '2'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>2))}">调货完成</a></li>
+                        <li style="width:120px" <if condition="$order_state eq '3'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>3))}">发货完成</a></li>
+                        <li style="width:120px" <if condition="$order_state eq '-1'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>-1))}">已经关闭</a></li>
+                        <li style="width:120px" <if condition="$order_state eq '-4'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>-4))}">全部订单</a></li>
+                    </ul>
+
+                    <form action="__CONTROLLER__/kucun" method="get">
+                    <div id="toolbar" style="margin-top: 15px;">
+                        <div style="width: 180px;float: left;padding-right: 15px;">
+                            <input type="text" name="user_name" class="form-control" placeholder="请输入用户全名" value="{$Think.get.user_name}">
+                        </div>
+                        <div style="width: 90px;float: left;padding-right: 15px;">
+                            <button type="submit" class="btn btn-primary btn-lt">确定</button>
+                        </div>
+                        <div style="width: 180px;float: left;padding-right: 15px;">
+                            <a href="__CONTROLLER__/addKucun" class="btn btn-success btn-lt" target="iframe0">添加库存</a>
+                        </div>
+                    </div>
+                    </form>
+                    <table class="table table-bordered table-hover"  id="table">
+                        <tr>
+                            <th style="text-align: center">编号</th>
+                            <th style="text-align: center">用户</th>
+                            <th style="text-align: center">客户</th>
+                            <th style="text-align: center">宝贝主图</th>
+                            <th style="text-align: center">厂家</th>
+
+                            <th style="text-align: center">尺码大小</th>
+                            <th style="text-align: center">卖出价</th>
+                            <th style="text-align: center">拿货价</th>
+                            <th style="text-align: center">打包价</th>
+                            <th style="text-align: center">目的</th>
+                            <th style="text-align: center">报货状态</th>
+                            <th style="text-align: center">订单状态</th>
+                            <th style="text-align: center">操作</th>
+                        </tr>
+                        <foreach name="data" item="onerow">
+                        <tr class="row{$onerow.id}">
+                            <td style="text-align: center" title="货源编号:{$onerow.huo_id}">{$onerow.id}</td>
+                            <td style="text-align: center">{$onerow.user_name}-{$onerow.group_name}</td>
+                            <td style="text-align: center" title="{$onerow.c_mobile}-{$onerow.c_address}">{$onerow.customer}</td>
+                            <td style="text-align: center">
+                                <div class="piclist">
+                                    <span imghref="{$onerow.pic}" class="onepic">
+                                    <img src="{$onerow.pic}" style="width: 45px;height: 45px;" alt="">
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="" style="text-align: center">
+                                {$onerow.chang_name}
+                            </td>
+                            <td style="text-align: center">{$onerow.cm_name}*{$onerow.num}</td>
+                            <td style="text-align: center">{$onerow.mai_price}</td>
+                            <td style="text-align: center">{$onerow.jin_price}</td>
+                            <td style="text-align: center">{$onerow.da_price}</td>
+                            <td style="text-align: center">{$onerow.da_price}</td>
+                            <td style="text-align: center">{$onerow.da_price}</td>
+                            <td style="text-align: center">{$onerow.da_price}</td>
+
+                            <td class="" style="text-align: center">
+                                <a href="__CONTROLLER__/showBaohuo/id/{$onerow.id}">详情</a>&nbsp;&nbsp;|
+                                <a url="__CONTROLLER__/closeBaohuo/id/{$onerow.id}" onclick="closeOrder(this)" style="cursor: pointer">关闭</a>
+                            </td>
+                        </tr>
+                        </foreach>
+                    </table>
+
+                    <div class="show_page">
+                        {$page}
+                    </div>
+                    <div class="big-img-show">
+                        <img src="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="modal">
+    <div class="modal fade" id="addCustomer" role="dialog">
+        <div class="modal-dialog modal-lt" id="showbox">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        var $table = $('#table');
+
+        function closeOrder(obj) {
+            var url = $(obj).attr('url');
+            $.get(url,function (data) {
+                if(data.status == 1){
+                    toastr.success(data.info);
+                    $(obj).closest('tr').remove();
+                }else{
+                    toastr.warning(data.info);
+                }
+            });
+        }
+        $(function () {
+            $(".piclist img").on("click",function(){
+                var bigImg = $(this).parent(".onepic").attr("imghref");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").on("click",function(){
+                $(this).fadeOut();
+            });
+        });
+        $(function () {
+            $("#addCustomer").on("hidden.bs.modal", function() {
+                $(this).removeData("bs.modal");
+                $table.bootstrapTable('refresh', {silent: true});
+            });
+        });
+    </script>
+</block>

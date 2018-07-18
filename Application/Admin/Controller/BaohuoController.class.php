@@ -63,6 +63,7 @@ class BaohuoController extends AdminController
         $info['yu_order_url'] = "http://m.kuaidi100.com/index_all.html?type={$info['yu_order_code']}&postid={$info['yu_order']}#result";
         $info['send_order_url'] = "http://m.kuaidi100.com/index_all.html?type={$info['send_order_code']}&postid={$info['send_order']}#result";
         $info['chang_order_url'] = "http://m.kuaidi100.com/index_all.html?type={$info['chang_order_code']}&postid={$info['chang_order']}#result";
+        $info['back_order_url'] = "http://m.kuaidi100.com/index_all.html?type={$info['back_order_code']}&postid={$info['back_order']}#result";
         if(!empty($info['yu_order_code'])){
             $info['yu_order_name']    =  M('wuliu')->where("code='{$info['yu_order_code']}'")->getField('name');
         }
@@ -72,9 +73,14 @@ class BaohuoController extends AdminController
         if(!empty($info['chang_order_code'])){
             $info['chang_order_name'] =  M('wuliu')->where("code='{$info['chang_order_code']}'")->getField('name');
         }
+        if(!empty($info['back_order_code'])){
+            $info['back_order_name'] =  M('wuliu')->where("code='{$info['back_order_code']}'")->getField('name');
+        }
         $wuliuData = M('wuliu')->order('sort asc')->select();
         $changData = M('changjia')->where("is_delete=0")->select();
+        $userGData = M('user_group')->where("is_delete=0")->select();
         $this->assign('info',$info);
+        $this->assign('userGData',$userGData);
         $this->assign('wuliuData',$wuliuData);
         $this->assign('changData',$changData);
         $this->display();
@@ -114,9 +120,9 @@ class BaohuoController extends AdminController
         //获取报货信息
         $baoData   = M('baohuo')->find($id);
         $userMoney = M('user_group')->where("id={$baoData['gid']}")->getField('money');
-        $kouMoney  = $baoData['jin_price']*$baoData['num']+$baoData['da_price'];
+        $kouMoney  = $baoData['da_price'];
         if($kouMoney > $userMoney){
-            $this->error('账户资金不足以抵扣');
+            $this->error("账户资金{$userMoney}不足以抵扣");
         }
         //只有是库存 或者 调货完毕才能进行发货
         if($baoData['diaohuo'] == 2 || $baoData['diaohuo'] == 3){
@@ -147,13 +153,13 @@ class BaohuoController extends AdminController
         $bill_data['cat_id1']     = $baoData['cat_id1'];
         $bill_data['cat_id2']     = $baoData['cat_id2'];
         $bill_data['cm_id']     = $baoData['cm_id'];
-        $bill_data['jin_price']     = $baoData['jin_price']*$baoData['num'];
+        $bill_data['jin_price']     = 0;
         $bill_data['da_price']     = $baoData['da_price'];
         $bill_data['mai_price']     = $baoData['mai_price'];
         $bill_data['shen_price']     = $shen_Money;
         $bill_data['c_date']     = time();
         $bill_data['state']     = 2;  //发货
-        $bill_data['info']     = '发货扣除金额'.$kouMoney;
+        $bill_data['info']     = '发货扣除打包金额'.$kouMoney;
         M('bill')->add($bill_data);
 
         //更新报货状态
@@ -169,6 +175,83 @@ class BaohuoController extends AdminController
 
     }
 
+    public function suerAfter(){
+        $id = i('id');
+        $after_state = i('after_state');
+        //把发货账单取出  更新发货账单为 0  并备注 退货或者换货完毕
+        $where['bao_id'] = $id;
+        $where['state']  = 2;
+        if($after_state == -1){
+            $info = '换货完毕';
+        }else{
+            $info = '退货完毕';
+        }
+        $billData = M('bill')->where($where)->find();
+        $info = $billData['info']."--".$info;
+        $saveData = array(
+            'info'      => $info,
+            'mai_price' => 0,
+            'x_date'    =>time()
+        );
+        $res = M('bill')->where("id={$billData['id']}")->save($saveData);
+        if($res){
+            M('baohuo')->where("id={$id}")->save(array('after_state'=>$after_state));
+            $this->success('操作成功!');
+        }else{
+            $this->error('系统开小差了!');
+        }
+
+    }
+
+    //立即处理订单
+    public function sureCheckOrder(){
+        $data = i('post.');
+        if(empty($data['jin_price']) || !is_numeric($data['jin_price'])){
+            $this->error('金额有误!');
+        }
+        if(empty($data['da_price']) || !is_numeric($data['da_price'])){
+            $this->error('金额有误!');
+        }
+        $id = $data['id'];
+        unset($data['id']);
+
+        //判断如果是调货 资金够扣除么  扣除调货资金
+        $baoData  = M('baohuo')->find($id);
+        if($baoData['diaohuo'] == 2){
+            $usergData = M('user_group')->find($baoData['gid']);
+            $kouMoney  = $baoData['jin_price']*$baoData['num'];
+            if($kouMoney>$usergData['money']){
+                $this->error("当前账户余额{$usergData['money']}不够调货");
+            }
+            //扣除用户资金
+            $shen_Money = $usergData['money']-$kouMoney;
+            M("user_group")->where("gid={$baoData['gid']}")->save(array('money'=>$shen_Money));
+            //记录账单
+            $bill_data = array();
+            $bill_data['bao_id'] = $baoData['id'];
+            $bill_data['shop_id'] = $baoData['shop_id'];
+            $bill_data['uid']     = $baoData['uid'];
+            $bill_data['gid']     = $baoData['gid'];
+            $bill_data['pic']     = $baoData['pic'];
+            $bill_data['cat_id1']     = $baoData['cat_id1'];
+            $bill_data['cat_id2']     = $baoData['cat_id2'];
+            $bill_data['cm_id']     = $baoData['cm_id'];
+            $bill_data['jin_price']     = $baoData['jin_price']*$baoData['num'];
+            $bill_data['da_price']      = 0;
+            $bill_data['mai_price']     = 0;
+            $bill_data['shen_price']    = $shen_Money;
+            $bill_data['c_date']     = time();
+            $bill_data['state']     = 1;  //调货
+            $bill_data['info']     = '调货扣除金额'.$kouMoney;
+            M('bill')->add($bill_data);
+        }
+
+
+        $res = M('baohuo')->where("id={$id}")->save($data);
+        if(!$res){
+            $this->error('系统开小差了!');
+        }
+    }
     public function kucun(){
         $kucunM = M('kucun');
         $where = array();

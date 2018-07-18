@@ -171,162 +171,214 @@
                         </tr>
 
                     </table>
-                    <p class="title">仓库操作</p>
-                    <table class="table">
-                        <tr>
-                            <td colspan="3">
-                                <span class="tips" style="float: left;line-height: 32px;">选择厂家:</span>
-                                <div class="" style="float: left;width: 150px;">
-                                    <select name="chang_id" id="chang_id" class="form-control">
-                                        <option value="0">选择厂家</option>
-                                        <foreach name="changData" item="changOne">
-                                            <option value="{$changOne.id}" <if condition="$changOne['id'] eq $info['chang_id']">selected</if>>{$changOne.cname}</option>
-                                        </foreach>
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">厂家单号:</span>
-                                <div class="" style="float: left;width: 150px;">
-                                    <select name="chang_order_code" id="chang_order_code" class="form-control">
-                                        <option value="0">选择物流</option>
-                                        <foreach name="wuliuData" item="wuiuRow">
-                                            <option value="{$wuiuRow.code}" <if condition="$wuiuRow['code'] eq $info['chang_order_code']">selected</if>>{$wuiuRow.name}</option>
-                                        </foreach>
-                                    </select>
-                                </div>
-                                <div style="float: left;width: 150px;margin-left: 8px;">
-                                    <input type="text" name="chang_order" id="chang_order" class="form-control" placeholder="输入单号" value="{$info['chang_order']}">
-                                </div>
-                                <notempty name="info.chang_order">
-                                    <div style="float: left;width: 180px;margin-left: 15px;line-height: 32px;">
-                                        {$info.chang_order_name}:[<a href="{$info.chang_order_url}" target="_blank">{$info.chang_order}</a>]
+
+                    <p class="title">订单状态</p>
+                    <form id="">
+                        <table class="table">
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">订单状态:</span>
+                                    <div class="" style="float: left;width: 150px;margin-left: 12px;line-height:32px;">
+                                        <?php
+                                            switch($info['order_state']){
+                                                case 0: echo '申请中'; break;
+                                                case 1: echo '处理中'; break;
+                                                case 2: echo '调货完毕'; break;
+                                                case 3: echo '发货完毕'; break;
+                                                case -1: echo '已关闭'; break;
+                                            }
+                                        ?>
+                                        <input type="hidden" value="{$info.order_state}" id="order_state" class="form-control">
                                     </div>
-                                </notempty>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                            <if condition="$info['order_state'] eq 0">
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">立即处理:</span>
+                                    <div class="" style="float: left;width: 150px;margin-left: 12px;line-height:32px;">
+                                        <input type="checkbox" value="1" id="check_order_state" class="form-control">
+                                    </div>
+                                </td>
+                            </tr>
+                            </if>
+                            <tr>
+                                <td colspan="3">
+                                    <span class="tips" style="float: left;line-height: 32px;">选择厂家:</span>
+                                    <div class="" style="float: left;width: 150px;">
+                                        <select name="chang_id" id="chang_id" class="form-control">
+                                            <option value="0">选择厂家</option>
+                                            <foreach name="changData" item="changOne">
+                                                <option value="{$changOne.id}" <if condition="$changOne['id'] eq $info['chang_id']">selected</if>>{$changOne.cname}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">报货目的:</span>
+                                    <div class="" style="float: left;width: 150px;margin-left: 12px;line-height:32px;color: red">
+                                        <?php
+                                            switch($info['mude']){
 
-                        <tr>
-                            <td colspan="3"><span class="tips"  style="float: left;line-height: 32px;" title="{$info.can_info}">仓库备注:</span>
-                                <div class="" style="float: left;width: 310px;">
-                                <textarea name="can_info" id="can_info" class="form-control" id="" cols="30" rows="3">{$info.can_info}</textarea>
-                                </div>
-                            </td>
+                                                case 1: echo '发货'; break;
+                                                case 2: echo '备货'; break;
+                                            }
+                                        ?>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">调货状态:</span>
+                                    <div class="" style="float: left;width: 150px;">
+                                        <select name="diaohuo" id="diaohuo" class="form-control">
+                                            <option value="0">选择调货状态</option>
+                                            <option value="1" <if condition="$info['diaohuo'] eq 1">selected</if> >库存</option>
+                                            <option value="2" <if condition="$info['diaohuo'] eq 2">selected</if> >调货</option>
+                                            <option value="3" <if condition="$info['diaohuo'] eq 3">selected</if> >缺货</option>
+                                            <option value="4" <if condition="$info['diaohuo'] eq 4">selected</if> >调货完毕</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr id="show_changjia_order">
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">厂家单号:</span>
+                                    <div class="" style="float: left;width: 150px;">
+                                        <select name="chang_order_code" id="chang_order_code" class="form-control">
+                                            <option value="0">选择物流</option>
+                                            <foreach name="wuliuData" item="wuiuRow">
+                                                <option value="{$wuiuRow.code}" <if condition="$wuiuRow['code'] eq $info['chang_order_code']">selected</if>>{$wuiuRow.name}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+                                    <div style="float: left;width: 150px;margin-left: 8px;">
+                                        <input type="text" name="chang_order" id="chang_order" class="form-control" placeholder="输入单号" value="{$info['chang_order']}">
+                                    </div>
+                                    <notempty name="info.chang_order">
+                                        <div style="float: left;width: 180px;margin-left: 15px;line-height: 32px;">
+                                            {$info.chang_order_name}:[<a href="{$info.chang_order_url}" target="_blank">{$info.chang_order}</a>]
+                                        </div>
+                                    </notempty>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">借用他组:</span>
+                                    <div class="" style="float: left;width: 150px;">
+                                        <select name="is_jie" id="is_jie" class="form-control">
+                                            <option value="0">选择借用其他组</option>
+                                            <foreach name="userGData" item="the_one">
+                                                <option value="{$the_one.id}" <if condition="$info['is_jie'] eq $the_one['id']">selected</if> >{$the_one.group_name}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">进货单价:</span>
+                                    <div class="" style="float: left;width: 150px;">
+                                        <input type="number" class="form-control" id="o_jin_price" name="jin_price" value="{$info.jin_price}" price="{$info.jin_price}">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">打包价格:</span>
+                                    <div class="" style="float: left;width: 150px;">
+                                        <input type="number" class="form-control" id="o_da_price" name="da_price" value="{$info.da_price}">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">物品数量:</span>
+                                    <div class="" style="float: left;width: 150px;">
+                                        <input type="number" class="form-control" id="o_num" name="num" value="{$info.num}">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><span class="tips"  style="float: left;line-height: 32px;" title="{$info.can_info}">仓库备注:</span>
+                                    <div class="" style="float: left;width: 310px;">
+                                        <textarea name="can_info" id="can_info" class="form-control" id="" cols="30" rows="3">{$info.can_info}</textarea>
+                                    </div>
+                                </td>
 
-                        </tr>
-                        <tr>
-                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">调货状态:</span>
-                                <div class="" style="float: left;width: 150px;">
-                                    <select name="diaohuo" id="diaohuo" class="form-control">
-                                        <option value="0">选择调货状态</option>
-                                        <option value="1">库存</option>
-                                        <option value="2">调货</option>
-                                        <option value="3">缺货</option>
-                                        <option value="4">调货完毕</option>
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">借用他组:</span>
-                                <div class="" style="float: left;width: 150px;">
-                                    <select name="is_jie" id="is_jie" class="form-control">
-                                        <option value="0">选择借用其他组</option>
-                                        <option value="1">库存</option>
-                                        <option value="2">调货</option>
-                                        <option value="3">缺货</option>
-                                        <option value="4">调货完毕</option>
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">进货单价:</span>
-                                <div class="" style="float: left;width: 150px;">
-                                    <input type="number" class="form-control" id="jin_price" name="jin_price" value="{$info.jin_price}">
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">打包价格:</span>
-                                <div class="" style="float: left;width: 150px;">
-                                    <input type="number" class="form-control" id="da_price" name="da_price" value="{$info.da_price}">
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">物品数量:</span>
-                                <div class="" style="float: left;width: 150px;">
-                                    <input type="number" class="form-control" id="num" name="num" value="{$info.num}">
-                                </div>
-                            </td>
-                        </tr>
-
-                    </table>
+                            </tr>
+                            <if condition="$info['order_state'] eq 1 OR $info['order_state'] eq 0">
+                            <tr>
+                                <td colspan="3">
+                                    <div class="" style="float: left;width: 150px;margin-left: 68px;text-align: left">
+                                        <button class="btn btn-info btn-lt" onclick="sureCheckOrder('{$info.id}')">确认保存</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </if>
+                        </table>
+                    </form>
                     <p class="title">售后状态</p>
                     <form id="afterForm">
                         <table class="table">
                             <tr>
-                                <td colspan="2">
-                                    <div class="col-sm-2">
-                                        <span class="tips">客户退换:</span>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">客户退换:</span>
+                                    <div class="" style="float: left;width: 150px;margin-left: 12px;line-height:32px;">
+                                        <?php
+                                            switch($info['after_state']){
+                                                case 0: echo '暂无'; break;
+                                                case 1: echo '换货中'; break;
+                                                case 2: echo '退货中'; break;
+                                                case -1: echo '换货完毕'; break;
+                                                case -2: echo '退货完毕'; break;
+                                            }
+                                        ?>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <select name="after_state" id="" class="form-control">
-                                            <option value="0">暂无</option>
-                                            <option value="1" <?php if($info['after_state'] == 1){echo 'selected';}?>>退货中</option>
-                                            <option value="2" <?php if($info['after_state'] == 2){echo 'selected';}?>>换货中</option>
-                                            <option value="-1" <?php if($info['after_state'] == -1){echo 'selected';}?>>退货完毕</option>
-                                            <option value="-3" <?php if($info['after_state'] == -2){echo 'selected';}?>>换货完毕</option>
-                                        </select>
-                                    </div>
-
-                                    </span>
                                 </td>
-                                <td><span class="tips">&nbsp;</span></td>
                             </tr>
                             <tr>
-                                <td>
-                                    <div class="col-sm-4">
-                                        <span class="tips">退回物流:</span>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <select name="back_order_code" id="" class="form-control">
-                                            <option value="0">选择物流</option>
-                                            <foreach name="wuliuData" item="wuiuRow">
-                                                <option value="{$wuiuRow.code}" <if condition="$wuiuRow['code'] eq $info['back_order_code']">selected</if>>{$wuiuRow.name}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                </td>
-                                <td>
-                                    <div class="col-sm-4">
-                                        <span class="tips">退回单号:</span>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" name="back_order" value="{$info.back_order}">
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">退回单号:</span>
+                                    <div class="" style="float: left;width: 150px;margin-left: 12px;line-height:32px;">
+                                        <notempty name="info.send_order">
+                                            {$info.back_order_name}[<a href="{$info.back_order_url}" target="_blank">{$info.back_order}</a>]
+                                        </notempty>
                                     </div>
                                 </td>
-                                <td><span class="tips">&nbsp;</span></td>
                             </tr>
                             <tr>
-                                <td colspan="2">
-                                    <div class="col-sm-2">
-                                        <span class="tips">退回理由:</span>
-                                    </div>
-                                    <div class="col-sm-7">
-                                        <input type="text" class="form-control" name="back_reason" value="{$info.back_reason}">
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">退回理由:</span>
+                                    <div class="" style="float: left;width: 150px;margin-left: 12px;line-height:32px;">
+                                        {$info.back_reason}
                                     </div>
                                 </td>
-                                <td><span class="tips">&nbsp;</span></td>
                             </tr>
+                            <if condition="$info['after_state'] eq 1">
+                            <tr>
+                                <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">换货完毕:</span>
+                                    <div class="" style="float: left;width: 60px;margin-left: 12px;line-height:32px;">
+                                        <input type="checkbox" value="-1" id="h_order_state" class="form-control">
+                                    </div>
+                                    <div class="" style="float: left;width: 150px;margin-left: 12px;line-height:32px;color: red">
+                                        已经收到换货物品
+                                    </div>
+                                </td>
+                            </tr>
+                            </if>
+                            <if condition="$info['after_state'] eq 2">
+                                <tr>
+                                    <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">退换完毕:</span>
+                                        <div class="" style="float: left;width: 60px;margin-left: 12px;line-height:32px;">
+                                            <input type="checkbox" value="-2" id="h_order_state" class="form-control">
+                                        </div>
+                                        <div class="" style="float: left;width: 150px;margin-left: 12px;line-height:32px;color: red">
+                                            已经收到退货物品
+                                        </div>
+                                    </td>
+                                </tr>
+                            </if>
+                            <if condition="$info['after_state'] eq 1 OR $info['after_state'] eq 2">
+                            <tr>
+                                <td colspan="3">
+                                    <div class="" style="float: left;width: 150px;margin-left: 68px;text-align: left">
+                                        <button class="btn btn-info btn-lt" onclick="sureAfter('{$info.id}')">确认售后</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </if>
                         </table>
-                        <div class="">
-                            <input type="hidden" name="id" value="{$info.id}">
-                            <button class="btn btn-info btn-lt" style="float: left;margin-left: 135px;" onclick="sureAfter()">确认售后</button>
-                        </div>
                     </form>
                     <div class="big-img-show">
                         <img src="">
@@ -348,19 +400,59 @@
 <block name="script">
     <script type="text/javascript">
         var $table = $('#table');
-
-        function sureOrder() {
+        function sureAfter(id) {
+            var after_state = $("#h_order_state");
+            if(after_state.checked != true){
+                toastr.warning('请勾选完毕选项');
+                return;
+            }
+            var order_state = $("#h_order_state").val();
             var obj = {};
-            var yu_order_code = $("#yu_order_code").val();
-            var yu_order      = $("#yu_order").val();
-            var id = $("#hid_id").val();
+            obj.order_state = order_state;
             obj.id = id;
-            obj.yu_order_code   = yu_order_code;
-            obj.yu_order        = yu_order;
-            var url ="__CONTROLLER__/sureOrder";
+            var url ="__CONTROLLER__/suerAfter";
             $.post(url,obj,function (data) {
                 if(data.status == 1){
                     toastr.success(data.info);
+                    setTimeout(function () {
+                        window.location.reload();
+                    },1500)
+                }else{
+                    toastr.warning(data.info);
+                }
+            });
+        }
+        function sureCheckOrder(id) {
+            var order_o     = $("#check_order_state");
+            var order_state = $("#order_state");
+            if(order_state == 0 && order_o.checked != true){
+                toastr.warning('请勾选立即处理选项');
+                return;
+            }
+
+            var jin_price = $("#o_jin_price").val();
+            var da_price = $("#o_da_price").val();
+            var num = $("#o_num").val();
+            var obj = {};
+            obj.id = id;
+            obj.order_state = order_state;
+            obj.jin_price   = jin_price;
+            obj.da_price    = da_price;
+            obj.num         = num;
+            obj.chang_id    = $("#chang_id").val();
+            obj.diaohuo     = $("#diaohuo").val();
+            obj.chang_order_code = $("#chang_order_code").val();
+            obj.chang_order      = $("#chang_order").val();
+            obj.is_jie           = $("#is_jie").val();
+            obj.can_info         = $("#can_info").val();
+
+            var url ="__CONTROLLER__/sureCheckOrder";
+            $.post(url,obj,function (data) {
+                if(data.status == 1){
+                    toastr.success(data.info);
+                    setTimeout(function () {
+                        window.location.reload();
+                    },1500)
                 }else{
                     toastr.warning(data.info);
                 }
@@ -386,6 +478,7 @@
             });
         }
 
+
         $(function () {
             $(".piclist img").on("click",function(){
                 var bigImg = $(this).parent(".onepic").attr("imghref");
@@ -395,6 +488,19 @@
             $(".big-img-show").on("click",function(){
                 $(this).fadeOut();
             });
+
+            $("#diaohuo").change(function () {
+               var val  = $(this).val();
+                if(val == 1){
+                    $("#o_jin_price").prop('disabled',true);
+                    $("#show_changjia_order").hide();
+                }else{
+                    $("#o_jin_price").prop('disabled',false);
+                    $("#show_changjia_order").show();
+                }
+                $("#o_jin_price").val($("#o_jin_price").attr('price'));
+            });
+            $("#diaohuo").change();
         });
         $(function () {
             $("#addCustomer").on("hidden.bs.modal", function() {

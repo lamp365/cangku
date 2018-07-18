@@ -100,6 +100,7 @@ class BaohuoController extends AdminController
         $this->success('订单已经关闭');
     }
 
+    //确认预约
     public function sureOrder(){
         $data = i('post.');
         $id = $data['id'];
@@ -212,12 +213,15 @@ class BaohuoController extends AdminController
         if(empty($data['da_price']) || !is_numeric($data['da_price'])){
             $this->error('金额有误!');
         }
+        if(empty($data['num']) || !is_numeric($data['num'])){
+            $this->error('数量有误!');
+        }
         $id = $data['id'];
         unset($data['id']);
 
         //判断如果是调货 资金够扣除么  扣除调货资金
         $baoData  = M('baohuo')->find($id);
-        if($baoData['diaohuo'] == 2){
+        if($data['diaohuo'] == 2){
             $usergData = M('user_group')->find($baoData['gid']);
             $kouMoney  = $baoData['jin_price']*$baoData['num'];
             if($kouMoney>$usergData['money']){
@@ -245,13 +249,36 @@ class BaohuoController extends AdminController
             $bill_data['info']     = '调货扣除金额'.$kouMoney;
             M('bill')->add($bill_data);
         }
-
+        //调货完毕
+        if($data['diaohuo'] == 4){
+            if($baoData['diaohuo'] == 1){
+                $this->error('操作不规范,不允许操作');
+            }
+            $data['f_date'] = time();
+            //库存加加
+            // 用货源id  和尺码id
+            //判断库存是否够 发货
+            $where = array();
+            $where['huo_id'] = $baoData['huo_id'];
+            $where['cm_id']  = $baoData['cm_id'];
+            $where['uid']    = $baoData['uid'];
+            $kuData = M('kucun')->where($where)->find();
+            if(empty($kuData)){
+//                addKuncun();
+            }else{
+                //加加
+                $new_ku = $kuData['num']+$baoData['num'];
+                M('kucun')->where("id={$kuData['id']}")->save(array('num'=>$new_ku));
+            }
+        }
 
         $res = M('baohuo')->where("id={$id}")->save($data);
         if(!$res){
             $this->error('系统开小差了!');
         }
+        $this->success('操作成功!');
     }
+    
     public function kucun(){
         $kucunM = M('kucun');
         $where = array();

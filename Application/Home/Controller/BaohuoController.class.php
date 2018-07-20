@@ -19,7 +19,7 @@ class BaohuoController extends CommonController {
 
         $baohuoM = M('baohuo');
         $count = $baohuoM->where($where)->count();
-        $p     = new \Think\Page($count,4);
+        $p     = new \Think\Page($count,25);
         $page  = $p->show();
         $data  = $baohuoM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
@@ -303,7 +303,15 @@ class BaohuoController extends CommonController {
     }
 
     public function afterSale(){
-
+        $data = i('post.');
+        $id = $data['id'];
+        unset($data['id']);
+        $baohuo = M('baohuo')->find($id);
+        if($baohuo['order_state'] != 3){
+            $this->error('订单还没发货不能操作退货');
+        }
+        M('baohuo')->where("id={$id}")->save($data);
+        $this->success('操作成功!');
     }
 
 }

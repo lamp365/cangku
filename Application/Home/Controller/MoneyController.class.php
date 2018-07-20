@@ -97,7 +97,7 @@ class MoneyController extends CommonController {
                 $shopData =  $usershopM -> where(['id' => $v['shop_id']]) ->find();
                 $v['shop_name'] = $shopData['shop_name'];
                 $v['shop_zg']   = $shopData['shop_zg'];
-                $v['cm_name']   =   $cmM -> where(['id' => $v['cm_id_id']]) ->getField('cm_name');
+                $v['cm_name']   =   $cmM -> where(['id' => $v['cm_id']]) ->getField('cm_name');
                 $v['user_name'] =  $userM->where("id={$v['uid']}")->getField('user_name');
                 if ( 1 == $v['state']) {
                     $v['state'] = '发货';

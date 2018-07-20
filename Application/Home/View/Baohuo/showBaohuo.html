@@ -149,13 +149,22 @@
                        <span class="tips">客户退换:</span>
                    </div>
                     <div class="col-sm-4">
+                        <if condition="$info['after_state'] eq 0">
                         <select name="after_state" id="" class="form-control">
                             <option value="0">暂无</option>
                             <option value="1" <?php if($info['after_state'] == 1){echo 'selected';}?>>退货中</option>
                             <option value="2" <?php if($info['after_state'] == 2){echo 'selected';}?>>换货中</option>
-                            <option value="-1" <?php if($info['after_state'] == -1){echo 'selected';}?>>退货完毕</option>
-                            <option value="-3" <?php if($info['after_state'] == -2){echo 'selected';}?>>换货完毕</option>
                         </select>
+                        </if>
+                        <if condition="$info['after_state'] neq 0">
+                            <select name="after_state" id="" class="form-control">
+                                <option value="0">暂无</option>
+                                <option value="1" <?php if($info['after_state'] == 1){echo 'selected';}?>>退货中</option>
+                                <option value="2" <?php if($info['after_state'] == 2){echo 'selected';}?>>换货中</option>
+                                <option value="-1" <?php if($info['after_state'] == -1){echo 'selected';}?>>退货完毕</option>
+                                <option value="-2" <?php if($info['after_state'] == -2){echo 'selected';}?>>换货完毕</option>
+                            </select>
+                        </if>
                     </div>
 
                </span>
@@ -201,7 +210,9 @@
        </table>
        <div class="">
            <input type="hidden" name="id" value="{$info.id}">
-           <button class="btn btn-info btn-lt" style="float: left;margin-left: 135px;" onclick="sureAfter()">确认售后</button>
+           <if condition="$info['after_state'] eq 0 AND $info['order_state'] eq 3">
+               <span class="btn btn-info btn-lt" style="float: left;margin-left: 135px;" onclick="sureAfter()">确认售后</span>
+           </if>
        </div>
        </form>
        <div class="big-img-show">

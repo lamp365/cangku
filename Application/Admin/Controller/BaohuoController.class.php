@@ -506,7 +506,12 @@ class BaohuoController extends AdminController
         $cate = M('category')->where(array('pid'=>$cat_id))->select();
         $this->ajaxReturn($cate);
     }
-
+    public function setKucun(){
+        $id  = i('id');
+        $num = i('num');
+        M('kucun')->where("id={$id}")->save(array('num'=>$num));
+        $this->success('设置成功!');
+    }
     public function addKucun(){
         $user_group = M('user_group')->where('is_delete=0')->select();
         //查询出顶级分类

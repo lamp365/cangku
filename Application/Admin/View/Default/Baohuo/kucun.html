@@ -59,7 +59,7 @@
                             <td style="text-align: center">{$onerow.catname1}-{$onerow.catname2}</td>
                             <td style="text-align: center">{$onerow.cm_name}</td>
                             <td style="text-align: center">
-                                <span class="btn btn-warning btn-lt up_num">{$onerow.num}</span>
+                                <span class="btn btn-warning btn-lt up_num" id="order_{$onerow.id}"  num="{$onerow.num}" the_id="{$onerow.id}">{$onerow.num}</span>
                             </td>
                             <td style="text-align: center">{$onerow.jin_price}</td>
                             <td style="text-align: center">{$onerow.da_price}</td>
@@ -76,19 +76,41 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="addNumMode" role="dialog">
-        <div class="modal-dialog modal-lt" id="showbox2">
+</block>
+<block name="modal">
+<!--    <div class="modal fade" id="addCustomer" role="dialog">
+        <div class="modal-dialog modal-lt" id="showbox">
             <div class="modal-content">
 
             </div>
         </div>
-    </div>
-</block>
-<block name="modal">
+    </div>-->
     <div class="modal fade" id="addCustomer" role="dialog">
-        <div class="modal-dialog modal-lt" id="showbox">
+        <div class="modal-dialog modal-lt" id="showbox" style="z-index: 99999;">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">库存修改</h4>
+                </div>
+                <div class="modal-body">
 
+                    <input type="hidden" name="url_id" id="url_id" value="" />
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="new_num">库存数量</label>
+                            <div class="col-sm-9">
+                                <input type="number" id="new_num" value="0" class="form-control">
+                            </textarea>
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close">关闭</button>
+                    <button type="button" class="btn btn-primary" id="submit">保存</button>
+                </div>
             </div>
         </div>
     </div>
@@ -105,7 +127,30 @@
             });
 
             $(".up_num").click(function () {
-
+                var id  = $(this).attr('the_id');
+                var num = $(this).attr('num');
+                $('#url_id').val(id);
+                $('#new_num').val(num);
+                $("#addCustomer").modal('show') ;
+            });
+            $("#submit").click(function () {
+                var url = "__CONTROLLER__/setKucun";
+                var id = $('#url_id').val();
+                var num = $('#new_num').val();
+                if(num == ''){
+                    toastr.warning("库存必须是整数");
+                }
+                $.post(url,{num:num,id:id},function (data) {
+                    if(data.status == 1){
+                        var order_num = "#order_"+id;
+                        $(order_num).attr('num',num);
+                        $(order_num).text(num);
+                        toastr.success(data.info);
+                        $("#addCustomer").modal('hide') ;
+                    }else{
+                        toastr.warning(data.info);
+                    }
+                })
             });
         });
     </script>

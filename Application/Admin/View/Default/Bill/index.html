@@ -87,8 +87,14 @@
                             </td>
                             <td style="text-align: center">
                                 <if condition="$is_check eq 0">
-                                    <span class="btn btn-warning btn-lt gaiOne" url="{:U('bill/updateBill',array('id'=>$onerow['id']))}">修改</span>
-                                    <span class="btn btn-success btn-lt checkOne" ids="{$onerow.id}" url="__CONTROLLER__/checkBill">审核</span>
+                                    <a href="javascript:;" class="gaiOne" url="{:U('bill/updateBill',array('id'=>$onerow['id']))}">修改</a>  |
+                                    <if condition="$onerow['state'] eq 3">
+                                        <span class="" href_url="{:U('baohuo/showBaohuo',array('id'=>$onerow['bao_id']))}">查看</span>  |
+                                    <else/>
+                                        <a target="_blank" class="" href="{:U('baohuo/showBaohuo',array('id'=>$onerow['bao_id']))}">查看</a>  |
+                                    </if>
+
+                                    <a href="javascript:;" class="checkOne" ids="{$onerow.id}" url="__CONTROLLER__/checkBill">审核</a>
                                 <else/>
                                     <empty name="onerow['info']">
                                         暂无备注

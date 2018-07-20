@@ -101,7 +101,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <if condition="$info['mude'] eq 1">
+                                    <if condition="$info['order_state'] eq 0">
                                         <tr>
                                             <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">调货状态:</span>
                                                 <div class="" style="float: left;width: 150px;">
@@ -116,12 +116,22 @@
                                             </td>
                                         </tr>
                                     </if>
-                                    <if condition="$info['mude'] eq 2">
+                                    <if condition="$info['order_state'] neq 0 AND $info['mude'] eq 1">
                                         <tr>
                                             <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">调货状态:</span>
                                                 <div class="" style="float: left;width: 150px;">
                                                     <select name="diaohuo" id="diaohuo" class="form-control">
-                                                        <option value="0">选择调货状态</option>
+                                                        <option value="1" <if condition="$info['diaohuo'] eq 1">selected</if> >库存</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </if>
+                                    <if condition="$info['order_state'] neq 0 AND $info['mude'] eq 2">
+                                        <tr>
+                                            <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">调货状态:</span>
+                                                <div class="" style="float: left;width: 150px;">
+                                                    <select name="diaohuo" id="diaohuo" class="form-control">
                                                         <option value="2" <if condition="$info['diaohuo'] eq 2">selected</if> >调货</option>
                                                         <option value="3" <if condition="$info['diaohuo'] eq 3">selected</if> >缺货</option>
                                                         <option value="4" <if condition="$info['diaohuo'] eq 4">selected</if> >调货完毕</option>
@@ -130,7 +140,6 @@
                                             </td>
                                         </tr>
                                     </if>
-
 
                                     <tr id="show_changjia_order">
                                         <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">厂家单号:</span>
@@ -197,7 +206,7 @@
                                         <tr>
                                             <td colspan="3">
                                                 <div class="" style="float: left;width: 150px;margin-left: 68px;text-align: left">
-                                                    <button class="btn btn-info btn-lt" onclick="sureCheckOrder('{$info.id}')">确认保存</button>
+                                                    <button class="btn btn-info btn-lt" id="sureCheckOrder" onclick="sureCheckOrder('{$info.id}')">确认保存</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -314,7 +323,7 @@
                                         </notempty>
                                         <empty name="info.send_order">
                                             <div style="float: left;width: 180px;margin-left: 15px;">
-                                                <button class="btn btn-info btn-lt" onclick="sureSend()">确认发货</button>
+                                                <button class="btn btn-info btn-lt" id="sureSend" onclick="sureSend()">确认发货</button>
                                             </div>
                                         </empty>
                                     </td>
@@ -468,9 +477,10 @@
             $.post(url,obj,function (data) {
                 if(data.status == 1){
                     toastr.success(data.info);
-                   /* setTimeout(function () {
+                    $("#sureCheckOrder").prop('disabled',true);
+                    setTimeout(function () {
                         window.location.reload();
-                    },1500)*/
+                    },1500)
                 }else{
                     toastr.warning(data.info);
                 }
@@ -489,7 +499,10 @@
             $.post(url,obj,function (data) {
                 if(data.status == 1){
                     toastr.success(data.info);
-
+                    $("#sureSend").prop('disabled',true);
+                    setTimeout(function () {
+                        window.location.reload();
+                    },1500)
                 }else{
                     toastr.warning(data.info);
                 }

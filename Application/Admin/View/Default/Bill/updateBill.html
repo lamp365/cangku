@@ -23,25 +23,35 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-2 control-label" for="pass">账单状态</label>
+                <div class="col-sm-6">
+                    <p style="margin-top: 10px">
+                        <?php if($billInfo['state'] == 1){ echo '调货';}else if($billInfo['state'] == 2){ echo '发货';}else{ echo '刷单';} ?>
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group" id="nahuojia" style="display: none">
                 <label class="col-sm-2 control-label" for="jin_price">拿货价</label>
                 <div class="col-sm-6">
                     <input class="form-control" id="jin_price" name="jin_price" type="number" value="{$billInfo.jin_price}"/>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="dabaojia" style="display: none">
                 <label class="col-sm-2 control-label" for="da_price">打包价</label>
                 <div class="col-sm-6">
                     <input class="form-control" id="da_price" name="da_price" type="number" value="{$billInfo.da_price}"/>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="maichujia" style="display: none">
                 <label class="col-sm-2 control-label" for="mai_price">卖出价</label>
                 <div class="col-sm-6">
                     <input class="form-control" id="mai_price" name="mai_price" type="number" value="{$billInfo.mai_price}"/>
                 </div>
             </div>
-            <div class="form-group">
+
+            <div class="form-group" id="shuadanjia" style="display: none">
                 <label class="col-sm-2 control-label" for="shua_price">刷单价</label>
                 <div class="col-sm-6">
                     <input class="form-control" id="shua_price" name="shua_price" type="number" value="{$billInfo.shua_price}"/>
@@ -82,5 +92,17 @@
             }
         }, 'json');
     });
-
+   $(function () {
+      var state = "{$billInfo.state}";
+       if(state == 1){
+            $("#nahuojia").show();
+       }
+       if(state == 2){
+           $("#dabaojia").show();
+           $("#maichujia").show();
+       }
+       if(state==3){
+           $("#shuadanjia").show();
+       }
+   });
 </script>

@@ -99,6 +99,17 @@ class BaohuoController extends AdminController
         $wuliuData = M('wuliu')->order('sort asc')->select();
         $changData = M('changjia')->where("is_delete=0")->select();
         $userGData = M('user_group')->where("is_delete=0")->select();
+        foreach ($userGData as $key=> &$val){
+            $wh = array('gid'=>$val['id'],'huo_id'=>$info['huo_id'],'cm_id'=>$info['cm_id']);
+            $res_num = M('kucun')->where($wh)->getField('num');
+            if($res_num && $res_num>$info['num']){
+
+            }else{
+                unset($userGData[$key]);
+            }
+        }
+        if(empty($userGData))  $userGData = array();
+
         $this->assign('info',$info);
         $this->assign('userGData',$userGData);
         $this->assign('wuliuData',$wuliuData);
@@ -174,7 +185,7 @@ class BaohuoController extends AdminController
 
         //扣除资金
         $shen_Money = $userMoney-$kouMoney;
-        M("user_group")->where("gid={$baoData['gid']}")->save(array('money'=>$shen_Money));
+        M("user_group")->where("id={$baoData['gid']}")->save(array('money'=>$shen_Money));
         //记录账单
         $bill_data = array();
         $bill_data['bao_id'] = $baoData['id'];
@@ -187,7 +198,7 @@ class BaohuoController extends AdminController
         $bill_data['cm_id']     = $baoData['cm_id'];
         $bill_data['jin_price']     = 0;
         $bill_data['da_price']     = $baoData['da_price'];
-        $bill_data['mai_price']     = $baoData['mai_price'];
+        $bill_data['mai_price']     = $baoData['mai_price']*$baoData['num'];
         $bill_data['shen_price']     = $shen_Money;
         $bill_data['c_date']     = time();
         $bill_data['state']     = 2;  //发货
@@ -247,11 +258,41 @@ class BaohuoController extends AdminController
         if(empty($data['num']) || !is_numeric($data['num'])){
             $this->error('数量有误!');
         }
+        if($data['diaohuo'] == 0){
+            $this->error('请选择调货状态!');
+        }
         $id = $data['id'];
         unset($data['id']);
 
         //判断如果是调货 资金够扣除么  扣除调货资金
         $baoData  = M('baohuo')->find($id);
+        //如果是库存 而且 选择了 借用他人组  要产生借出记录
+        if($data['diaohuo'] == 1 && $data['is_jie'] != 0 && $baoData['is_jie']==0){
+            $wh = array('gid'=>$data['is_jie'],'huo_id'=>$baoData['huo_id'],'cm_id'=>$baoData['cm_id']);
+            $res_ku = M('kucun')->where($wh)->find();
+            if(!$res_ku)  $this->error('该组未找到可以借出的');
+            if($res_ku['num'] < $baoData['num']){
+                $this->error('改组库存不足以借出');
+            }
+            $borr_data = array();
+            $borr_data['b_uid'] = $baoData['uid'];
+            $borr_data['b_mobile'] = M('user')->where("id={$baoData['uid']}")->getField('mobile');
+            $borr_data['uid']   = $res_ku['uid'];
+            $borr_data['gid']   = $res_ku['gid'];
+            $borr_data['cat_id1']   = $res_ku['cat_id1'];
+            $borr_data['cat_id2']   = $res_ku['cat_id2'];
+            $borr_data['cu_id']     = $res_ku['id'];
+            $borr_data['pic']       = $res_ku['pic'];
+            $borr_data['states']    = 1;
+            $borr_data['num']       = $data['num'];
+            $borr_data['info']       = "急需借用于发货";
+            $borr_data['c_date']       = time();
+            $borr_data['h_date']       = time()+3600*24*6;
+            M('borrow')->add($borr_data);
+            //库存减掉
+            $new_num = $res_ku['num']-$data['num'];
+            M('kucun')->where("id={$res_ku['id']}")->save(array('num'=>$new_num));
+        }
         if($data['diaohuo'] == 2){
             //验证之前账单 记录过  不用重复记录
             $bill_data = array();
@@ -267,7 +308,7 @@ class BaohuoController extends AdminController
                 }
                 //扣除用户资金
                 $shen_Money = $usergData['money']-$kouMoney;
-                M("user_group")->where("gid={$baoData['gid']}")->save(array('money'=>$shen_Money));
+                M("user_group")->where("id={$baoData['gid']}")->save(array('money'=>$shen_Money));
                 //记录账单
                 $bill_data['shop_id'] = $baoData['shop_id'];
                 $bill_data['gid']     = $baoData['gid'];
@@ -337,9 +378,6 @@ class BaohuoController extends AdminController
         }
 
         $res = M('baohuo')->where("id={$id}")->save($data);
-        if(!$res){
-            $this->error('系统开小差了!');
-        }
         $this->success('操作成功!');
     }
 

@@ -32,7 +32,7 @@ class BaohuoController extends AdminController
         }
         $baohuoM = M('baohuo');
         $count = $baohuoM->where($where)->count();
-        $p     = new \Think\Page($count,4);
+        $p     = new \Think\Page($count,25);
         $page  = $p->show();
         $data  = $baohuoM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
@@ -343,9 +343,6 @@ class BaohuoController extends AdminController
         $this->success('操作成功!');
     }
 
-    public function afterSale(){
-
-    }
 
     public function kucun(){
         $kucunM = M('kucun');
@@ -650,5 +647,54 @@ class BaohuoController extends AdminController
             M('kucun')->add($data);
         }
         $this->success('库存添加成功');
+    }
+
+    public function afterSale(){
+        $after_state = intval(i('after_state'));
+        empty($after_state) && $after_state=1;
+        $gid = i('gid');
+        $mude = i('mude');
+        $diaohuo = i('diaohuo');
+        $keyword = i('keyword');
+        $where = array();
+        $where['after_state'] = $after_state;
+
+        !empty($gid) && $where['gid'] = $gid;
+        !empty($mude) && $where['mude'] = $mude;
+        !empty($diaohuo) && $where['diaohuo'] = $diaohuo;
+        if(!empty($keyword)){
+            $uid = M("user")->where("user_name='$keyword'")->getField('id');
+            if($uid){
+                $where['uid'] = $uid;
+            }else{
+                $where["customer"] = $keyword;
+            }
+        }
+        $baohuoM = M('baohuo');
+        $count = $baohuoM->where($where)->count();
+        $p     = new \Think\Page($count,25);
+        $page  = $p->show();
+        $data  = $baohuoM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+
+        $user = M('user');
+        $cmM= M('cm_size');
+        $usegM = M('user_group');
+        $changM = M('changjia');
+        foreach ($data as &$item){
+            $item['user_name'] = $user->where("id={$item['uid']}")->getField('user_name');
+            $item['cm_name'] = $cmM->where("id={$item['cm_id']}")->getField('cm_name');
+            $item['group_name'] = $usegM->where("id={$item['gid']}")->getField('group_name');
+            $item['chang_name'] = $changM->where("id={$item['chang_id']}")->getField('cname');
+        }
+        $all_group = M('user_group')->where('is_delete=0')->select();
+        $this->assign('after_state',$after_state);
+        $this->assign('page',$page);
+        $this->assign('data',$data);
+        $this->assign('all_group',$all_group);
+        $this->assign('keyword',$keyword);
+        $this->assign('gid',$gid);
+        $this->assign('mude',$mude);
+        $this->assign('diaohuo',$diaohuo);
+        $this->display();
     }
 }

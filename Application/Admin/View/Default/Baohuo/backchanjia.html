@@ -1,5 +1,27 @@
 <extend name="Public/common" />
 <block name="body">
+    <style>
+        .big-img-show {
+            display: none;
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            margin: -250px 0 0 -300px;
+            width: 600px;
+            height: 600px;
+            cursor: pointer;
+        }
+        .big-img-show img{
+            width: 600px;
+            height: 600px;
+        }
+        .piclist {
+            cursor: pointer;
+        }
+        .piclist img{
+            border: 1px solid #C6C6C6;background: #ffffff;padding: 1px;width: 45px;height: 45px;
+        }
+    </style>
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>退回厂家</h5>
@@ -33,7 +55,7 @@
                             <button type="submit" class="btn btn-primary btn-lt">确定</button>
                         </div>
                         <div style="width: 180px;float: left;padding-right: 15px;">
-                            <a href="__CONTROLLER__/addBack" class="btn btn-success btn-lt" target="iframe0">添加退货</a>
+                            <a href="__CONTROLLER__/addBack1" class="btn btn-success btn-lt" target="iframe0">添加退货</a>
                         </div>
                     </div>
                     </form>
@@ -44,19 +66,35 @@
                             <th style="text-align: center">分类2</th>
                             <th style="text-align: center">用户</th>
                             <th style="text-align: center">厂家</th>
+                            <th style="text-align: center">单价*数量</th>
+                            <th style="text-align: center">状态</th>
                             <th style="text-align: center">时间</th>
                             <th style="text-align: center">备注</th>
-                            <th style="text-align: center">操作</th>
+                            <!--<th style="text-align: center">操作</th>-->
                         </tr>
                         <foreach name="data" item="onerow">
                         <tr class="row{$onerow.id}">
-                            <td style="text-align: center"><img src="{$onerow.pic}" style="width: 45px;height: 45px;"></td>
+                            <td style="text-align: center">
+                                <div class="piclist">
+                                 <span imghref="{$onerow.pic}" class="onepic">
+                                    <img src="{$onerow.pic}"  alt="">
+                                 </span>
+                                </div>
+                            </td>
                             <td style="text-align: center">{$onerow.catname1}</td>
                             <td style="text-align: center">{$onerow.catname2}</td>
                             <td class="" style="text-align: center">
                                 {$onerow.username}--[{$onerow.groupname}]
                             </td>
                             <td style="text-align: center">{$onerow.chanjia}</td>
+                            <td style="text-align: center">{$onerow.num}*{$onerow.price}</td>
+                            <td style="text-align: center">
+                                <if condition="$onerow['state'] eq 1">
+                                    <font color="green">现金退回</font>
+                                <else/>
+                                    下次抵扣
+                                </if>
+                            </td>
                             <td class="" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i:s",###}</td>
                             <td class=""  style="text-align: center">
                                 <empty name="onerow['info']">
@@ -65,15 +103,18 @@
                                     <span class="glyphicon glyphicon-envelope" style="color: #337ab7;cursor: pointer" title="{$onerow.info}"></span>
                                 </empty>
                             </td>
-                            <td class="" style="text-align: center">
+                           <!-- <td class="" style="text-align: center">
                                 <span class="delOne btn btn-danger btn-lt">删 除</span>
-                            </td>
+                            </td>-->
                         </tr>
                         </foreach>
                     </table>
 
                     <div class="show_page">
                         {$page}
+                    </div>
+                    <div class="big-img-show">
+                        <img src="">
                     </div>
                 </div>
             </div>
@@ -99,8 +140,17 @@
                 var url = "__CONTROLLER__/delChan";
                 confirmDelete2(url,{id:id},'post',this);
             });
+            $(".piclist img").on("click",function(){
+                var bigImg = $(this).parent(".onepic").attr("imghref");
+                $(".big-img-show").fadeIn();
+                $(".big-img-show").find("img").attr("src",bigImg);
+            });
+            $(".big-img-show").on("click",function(){
+                $(this).fadeOut();
+            });
 
         });
+
 
 
         $(function () {

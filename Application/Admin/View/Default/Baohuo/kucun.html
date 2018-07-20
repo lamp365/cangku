@@ -58,11 +58,13 @@
                             </td>
                             <td style="text-align: center">{$onerow.catname1}-{$onerow.catname2}</td>
                             <td style="text-align: center">{$onerow.cm_name}</td>
-                            <td style="text-align: center">{$onerow.num}</td>
+                            <td style="text-align: center">
+                                <span class="btn btn-warning btn-lt up_num">{$onerow.num}</span>
+                            </td>
                             <td style="text-align: center">{$onerow.jin_price}</td>
                             <td style="text-align: center">{$onerow.da_price}</td>
 
-                            <td class="" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i:s",###}</td>
+                            <td class="" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i",###}</td>
                         </tr>
                         </foreach>
                     </table>
@@ -71,6 +73,13 @@
                         {$page}
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addNumMode" role="dialog">
+        <div class="modal-dialog modal-lt" id="showbox2">
+            <div class="modal-content">
+
             </div>
         </div>
     </div>
@@ -93,6 +102,10 @@
             $("#addCustomer").on("hidden.bs.modal", function() {
                 $(this).removeData("bs.modal");
                 $table.bootstrapTable('refresh', {silent: true});
+            });
+
+            $(".up_num").click(function () {
+
             });
         });
     </script>

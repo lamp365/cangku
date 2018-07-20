@@ -49,7 +49,6 @@
                     </ul>
                     <div id="myTabContent" class="tab-content" style="margin-top: 13px;">
                         <div class="tab-pane fade in active" id="order_set">
-                            <form id="">
                                 <table class="table">
                                     <tr>
                                         <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">订单状态:</span>
@@ -57,7 +56,7 @@
                                                 <?php
                                             switch($info['order_state']){
                                                 case 0: echo '申请中'; break;
-                                                case 1: echo '处理中'; break;
+                                                case 1: echo "<font color='green'>处理中</font>"; break;
                                                 case 2: echo '调货完毕'; break;
                                                 case 3: echo '发货完毕'; break;
                                                 case -1: echo '已关闭'; break;
@@ -204,7 +203,6 @@
                                         </tr>
                                     </if>
                                 </table>
-                            </form>
                         </div>
 
                         <!--报货信息-->
@@ -327,8 +325,6 @@
 
                         <!--售后服务-->
                         <div class="tab-pane fade" id="after_set">
-
-                            <form id="afterForm">
                                 <table class="table">
                                     <tr>
                                         <td colspan="3"><span class="tips" style="float: left;line-height: 32px;">客户退换:</span>
@@ -395,7 +391,6 @@
                                         </tr>
                                     </if>
                                 </table>
-                            </form>
                         </div>
                     </div>
 
@@ -421,8 +416,8 @@
     <script type="text/javascript">
         var $table = $('#table');
         function sureAfter(id) {
-            var after_state = $("#h_order_state");
-            if(after_state.checked != true){
+            var after_state = $("#h_order_state").prop('checked');
+            if(after_state != true){
                 toastr.warning('请勾选完毕选项');
                 return;
             }
@@ -443,9 +438,10 @@
             });
         }
         function sureCheckOrder(id) {
-            var order_o     = $("#check_order_state");
-            var order_state = $("#order_state");
-            if(order_state == 0 && order_o.checked != true){
+            var order_o     = $("#check_order_state").prop('checked');
+            var order_state = $("#order_state").val();
+
+            if(order_state == 0 && order_o != true){
                 toastr.warning('请勾选立即处理选项');
                 return;
             }
@@ -472,9 +468,9 @@
             $.post(url,obj,function (data) {
                 if(data.status == 1){
                     toastr.success(data.info);
-                    setTimeout(function () {
+                   /* setTimeout(function () {
                         window.location.reload();
-                    },1500)
+                    },1500)*/
                 }else{
                     toastr.warning(data.info);
                 }

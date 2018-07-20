@@ -18,8 +18,11 @@ class MoneyController extends CommonController {
 
         if(1 == $show){
             //充值记录
+            $sql = "select sum(chon_price) as chon_price  from recharge where gid={$where['gid']}";
+            $price_info  = M('recharge')->query($sql);
+
             $count = M('recharge') ->where($where)->count();
-            $p     = new \Think\Page($count,4);
+            $p     = new \Think\Page($count,25);
             $page  = $p->show();
             $info  = M('recharge') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
             $userM = M('user');
@@ -39,6 +42,7 @@ class MoneyController extends CommonController {
                 $v['pic'] = $pic;
             }
 
+            $this->assign('price_info',$price_info);
         } else if(0 == $show) {
             //账单记录
             $uwhere['is_forbid'] = 0;
@@ -81,7 +85,7 @@ class MoneyController extends CommonController {
 
 
             $count = $billM ->where($where2)->count();
-            $p     = new \Think\Page($count,4);
+            $p     = new \Think\Page($count,25);
             $page  = $p->show();
             $info  = $billM ->where($where2)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 

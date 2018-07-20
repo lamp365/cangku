@@ -41,6 +41,7 @@
                 <th style="text-align: center">被借用户</th>
                 <th style="text-align: center">被借小组</th>
                 <th style="text-align: center">图片</th>
+                <th style="text-align: center">借走个数</th>
                 <th style="text-align: center">借出时间</th>
                 <th style="text-align: center">归还时间</th>
                 <th style="text-align: center">状态</th>
@@ -59,8 +60,9 @@
                             </span>
                         </div>
                     </td>
-                    <td>{$vo.c_date|date="Y-m-d H:i:s",###}</td>
-                    <td>{$vo.h_date|date="Y-m-d H:i:s",###}</td>
+                    <td>{$vo.num}</td>
+                    <td>{$vo.c_date|date="Y-m-d H:i",###}</td>
+                    <td>{$vo.h_date|date="Y-m-d H:i",###}</td>
                     <td>
                         <?php if($vo['states'] == 1){ echo "已还";}else{  echo "<font color='red'>借出</font>"; } ?>
                     </td>
@@ -84,6 +86,7 @@
                 <th style="text-align: center">借者电话</th>
                 <th style="text-align: center">被借用户</th>
                 <th style="text-align: center">图片</th>
+                <th style="text-align: center">借走个数</th>
                 <th style="text-align: center">借出时间</th>
                 <th style="text-align: center">归还时间</th>
                 <th style="text-align: center">状态</th>
@@ -103,8 +106,9 @@
                             </span>
                         </div>
                     </td>
-                    <td>{$vo.c_date|date="Y-m-d H:i:s",###}</td>
-                    <td>{$vo.h_date|date="Y-m-d H:i:s",###}</td>
+                    <td>{$vo.num}</td>
+                    <td>{$vo.c_date|date="Y-m-d H:i",###}</td>
+                    <td>{$vo.h_date|date="Y-m-d H:i",###}</td>
                     <td>
                         <?php if($vo['states'] == 1){ echo "已还";}else{  echo "<font color='red'>借出</font>"; } ?>
                     </td>

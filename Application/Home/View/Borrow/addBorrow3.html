@@ -16,6 +16,7 @@
                 <label class="col-sm-2 control-label" for="info">物品库存</label>
                 <div class="col-sm-9">
                     <p style="text-align: left;line-height: 33px;margin-bottom: 0px;">{$huoInfo.num}个</p>
+                    <input type="hidden" id="max_num" value="{$huoInfo.num}">
                 </div>
             </div>
             <div class="form-group">
@@ -24,6 +25,12 @@
                     <p style="text-align: left;line-height: 33px;margin-bottom: 0px;">
                         <img src="{$huoInfo.pic}"  style="height: 50px;width: 50px;" alt="">
                     </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="info">借用个数</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control" id="num" placeholder="" value="1">
                 </div>
             </div>
             <div class="form-group">
@@ -44,8 +51,17 @@
     function sureBorrow() {
         var cu_id = $("#cu_id").val();
         var info = $("#info").val();
+        var num  = $("#num").val();
+        var max_num  = $("#max_num").val();
         var data = {};
+        if(num == ''){
+            toastr.warning('个数必须是整数');
+        }
+        if(num>max_num){
+            toastr.warning('最多只能借'+max_num+"个");
+        }
         data.cu_id = cu_id;
+        data.num  = num;
         var url = "__CONTROLLER__/doAdd";
         data.info = info;
         $.post(url,data,function (obj) {

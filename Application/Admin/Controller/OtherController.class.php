@@ -87,13 +87,17 @@ class OtherController extends AdminController
         $id = intval(i('id'));
         $newsM = M('borrow');
         $borrow = $newsM->find($id);
+
         $res = $newsM->where("id={$id}")->save(array('states'=>2));
         if($res){
             $cu_id = $borrow['cu_id'];
+            $ku_data = M('kucun')->find($cu_id);
             //数量换回去 加1
-            $data = array(
+            /*$data = array(
                 'num'   => array('exp', "`num`+1"),
-            );
+            );*/
+            $new_num = $borrow['num']+$ku_data['num'];
+            $data = array('num'=>$new_num);
             M('kucun')->where("id={$cu_id}")->save($data);
         }
         $this->success('已经确认归还');

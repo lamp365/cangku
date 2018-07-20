@@ -85,6 +85,7 @@ class BorrowController extends CommonController {
     public function doAdd(){
         $cu_id = i('cu_id');
         $info  = i('info');
+        $num  = i('num');
         if(empty($cu_id)){
             $this->error('参数有误!');
         }
@@ -97,6 +98,9 @@ class BorrowController extends CommonController {
         if($cuInfo['num'] == 0){
             $this->error('已无库存');
         }
+        if($num>$cuInfo['num']){
+            $this->error("最多只能借{$cuInfo['num']}个");
+        }
         $data['cu_id'] = $cu_id;
         $data['uid'] = $cuInfo['uid'];
         $data['gid'] = $cuInfo['gid'];
@@ -104,13 +108,14 @@ class BorrowController extends CommonController {
         $data['cat_id2'] = $cuInfo['cat_id2'];
         $data['pic'] = $cuInfo['pic'];
         $data['info'] = $info;
+        $data['num']  = $num;
         $data['c_date'] = time();
         $data['h_date'] = time()+3600*24*3;
         $res = M('borrow')->add($data);
         if($res){
             //库存减掉1
-            $kuData['num'] = $cuInfo['num'] -1;
-            M('kucun')->swhere("id={$cu_id}")->ave($kuData);
+            $kuData['num'] = $cuInfo['num'] -$num;
+            M('kucun')->where("id={$cu_id}")->save($kuData);
             $this->success('已经借出成功!');
         }else{
             $this->success('系统开小差了!');

@@ -26,6 +26,7 @@
                             <th style="text-align: center">用户手机</th>
                             <th style="text-align: center">主图</th>
                             <th style="text-align: center">物品属组</th>
+                            <th style="text-align: center">借出个数</th>
                             <th style="text-align: center">借出时间</th>
                             <th style="text-align: center">归还时间</th>
                             <th style="text-align: center">状态</th>
@@ -38,6 +39,9 @@
                             <td style="text-align: center"><img src="{$onerow.pic}" style="width: 45px;height: 45px;"></td>
                             <td class="" style="text-align: center">
                                 {$onerow.username}--[{$onerow.groupname}]
+                            </td>
+                            <td class="" style="text-align: center">
+                                {$onerow.num}
                             </td>
                             <td class="" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i:s",###}</td>
                             <td class="" style="text-align: center">{$onerow.h_date|date="Y-m-d H:i:s",###}</td>

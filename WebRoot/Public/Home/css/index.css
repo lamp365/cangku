@@ -284,3 +284,6 @@ html,body{font-size: 16px;color: #000;background: url(../img/bg.jpg) no-repeat; 
 .data_table{
 	font-size: 15px;
 }
+.show_page a, .show_page span {
+	padding: 4px;
+}

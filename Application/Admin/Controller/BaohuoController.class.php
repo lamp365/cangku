@@ -10,12 +10,26 @@ class BaohuoController extends AdminController
     }
     public function baohuo(){
         $order_state = intval(i('order_state'));
+        $gid = i('gid');
+        $mude = i('mude');
+        $diaohuo = i('diaohuo');
+        $keyword = i('keyword');
         $where = array();
 
         if($order_state != -4){
             $where['order_state'] = $order_state;
         }
-
+        !empty($gid) && $where['gid'] = $gid;
+        !empty($mude) && $where['mude'] = $mude;
+        !empty($diaohuo) && $where['diaohuo'] = $diaohuo;
+        if(!empty($keyword)){
+            $uid = M("user")->where("user_name='$keyword'")->getField('id');
+            if($uid){
+                $where['uid'] = $uid;
+            }else{
+                $where["customer"] = $keyword;
+            }
+        }
         $baohuoM = M('baohuo');
         $count = $baohuoM->where($where)->count();
         $p     = new \Think\Page($count,4);
@@ -32,9 +46,15 @@ class BaohuoController extends AdminController
             $item['group_name'] = $usegM->where("id={$item['gid']}")->getField('group_name');
             $item['chang_name'] = $changM->where("id={$item['chang_id']}")->getField('cname');
         }
+        $all_group = M('user_group')->where('is_delete=0')->select();
         $this->assign('order_state',$order_state);
         $this->assign('page',$page);
         $this->assign('data',$data);
+        $this->assign('all_group',$all_group);
+        $this->assign('keyword',$keyword);
+        $this->assign('gid',$gid);
+        $this->assign('mude',$mude);
+        $this->assign('diaohuo',$diaohuo);
         $this->display();
     }
     public function showBaohuo(){

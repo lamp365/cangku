@@ -20,6 +20,10 @@
             <th style="text-align: center">会员名称</th>
             <th style="text-align: center">级别</th>
             <th style="text-align: center">状态</th>
+            <if condition="$session_user['level'] eq 1">
+                <th style="text-align: center">操作</th>
+            </if>
+
 
         </tr>
         </thead>
@@ -30,7 +34,13 @@
                 <td>{$vo.mobile}</td>
                 <td>{$vo.user_name}</td>
                 <td><if condition="$vo['level'] eq 0">组员 <else /> 组长 </if></td>
-                <td><if condition="$vo['is_forbid'] eq 0">可用 <else /> 禁用 </if></td>
+                <td><if condition="$vo['is_forbid'] eq 0">可用 <else /> <font color="red">禁用</font> </if></td>
+                <if condition="$session_user['level'] eq 1">
+                <td>
+                    <a href="__CONTROLLER__/forbid/id/{$vo.id}/is_forbid/1">禁用</a>  |
+                    <a href="__CONTROLLER__/forbid/id/{$vo.id}/is_forbid/0"href="">解禁</a>
+                </td>
+                </if>
             </tr>
         </volist>
         </tbody>

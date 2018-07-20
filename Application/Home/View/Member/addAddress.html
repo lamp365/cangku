@@ -18,32 +18,43 @@
 <block name="content">
     <form id="userForm">
    <div class="choose_cat form-horizonta" style="margin-top: 45px;">
-       <p style="line-height: 60px;font-size: 22px;margin-left: 13px;font-weight: bolder">添加成员</p>
+       <empty name="info.id">
+           <p style="line-height: 60px;font-size: 22px;margin-left: 13px;font-weight: bolder">添加发货地址</p>
+       <else/>
+           <p style="line-height: 60px;font-size: 22px;margin-left: 13px;font-weight: bolder">修改发货地址</p>
+       </empty>
+
        <div class="form-group">
-           <label for="cat_id1" class="col-sm-3 control-label">登录手机</label>
+           <label for="cat_id1" class="col-sm-3 control-label">发货姓名</label>
            <div class="col-sm-9">
-               <input type="number" name="mobile" class="form-control">
+               <input type="text" name="send_name" class="form-control" value="{$info.send_name}">
            </div>
        </div>
        <hr class="hr15"/>
        <div class="form-group">
-           <label for="cat_id2" class="col-sm-3 control-label">用户名字</label>
+           <label for="cat_id2" class="col-sm-3 control-label">发货手机</label>
            <div class="col-sm-9">
-               <input type="text" name="user_name" class="form-control">
+               <input type="number" name="send_mobile" class="form-control" value="{$info.send_mobile}">
            </div>
        </div>
        <hr class="hr15"/>
        <div class="form-group">
-           <label for="cat_id2" class="col-sm-3 control-label">登录密码</label>
+           <label for="cat_id2" class="col-sm-3 control-label">发货地址</label>
            <div class="col-sm-9">
-               <input type="text" name="password" class="form-control" value="123456">
+               <input type="text" name="send_address" class="form-control" value="{$info.send_address}">
            </div>
        </div>
        <hr class="hr15"/>
        <div class="form-group">
            <label for="" class="col-sm-3 control-label">&nbsp;</label>
            <div class="col-sm-9">
-              <span class="btn btn-info btn-lt" onclick="checkForm()">添加组员</span>
+               <input type="hidden" name="id" value="{$info.id}">
+               <empty name="info.id">
+                   <span class="btn btn-info btn-lt" onclick="checkForm()">确认添加</span>
+               <else/>
+                   <span class="btn btn-info btn-lt" onclick="checkForm()">确认修改</span>
+               </empty>
+
            </div>
        </div>
    </div>
@@ -53,7 +64,7 @@
 <block name="js">
     <script>
         function checkForm() {
-            var url = "{$self}";
+            var url = "__CONTROLLER__/addAddress";
             var parme = $("#userForm").serialize();
             $.post(url,parme,function (data) {
                 if(data.status == 1){
@@ -63,7 +74,7 @@
                         text:data.info,
                         type:"success"
                     },function(){
-                        window.location.href = "__CONTROLLER__/index";
+                        window.location.href = "__CONTROLLER__/address";
                     });
                 }else{
                     toastr.warning(data.info);return false;

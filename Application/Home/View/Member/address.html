@@ -3,7 +3,7 @@
 
 <block name="content">
     <div style="text-align: left;margin-bottom: 13px;">
-        <a class="btn btn-info btn-lt" href="__CONTROLLER__/addAddredd">添加发货地址</a>
+        <a class="btn btn-info btn-lt" href="__CONTROLLER__/addAddress">添加发货地址</a>
     </div>
     <ul class="nav nav-tabs">
         <li style="width:120px"  ><a href="{:U('member/index')}">组员列表</a></li>
@@ -18,25 +18,29 @@
             <th style="text-align: center">发货手机</th>
             <th style="text-align: center">发货地址</th>
             <th style="text-align: center">状态</th>
+            <th style="text-align: center">操作</th>
 
         </tr>
         </thead>
         <tbody>
-
-        <tr>
-           <td>1</td>
-           <td>234</td>
-           <td>234</td>
-           <td>234</td>
-           <td><a href="" class="btn btn-info btn-lt">设置默认</a></td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>234</td>
-            <td>234</td>
-            <td>234</td>
-            <td><a href="" class="btn btn-danger btn-lt">取消默认</a></td>
-        </tr>
+        <foreach name="data" item="vo">
+            <tr>
+                <td>{$vo.id}</td>
+                <td>{$vo.send_name}</td>
+                <td>{$vo.send_mobile}</td>
+                <td>{$vo.send_address}</td>
+                <td>
+                <if condition="$vo['is_default'] eq 1">
+                    <a href="__CONTROLLER__/setDefault/id/{$vo.id}/is_default/0" class="btn btn-danger btn-lt">取消默认</a>
+                <else/>
+                    <a href="__CONTROLLER__/setDefault/id/{$vo.id}/is_default/1" class="btn btn-info btn-lt">设置默认</a>
+                </if>
+                </td>
+                <td>
+                    <a href="__CONTROLLER__/addAddress/id/{$vo.id}" class="btn btn-info btn-lt">修改</a>
+                </td>
+            </tr>
+        </foreach>
         </tbody>
     </table>
 

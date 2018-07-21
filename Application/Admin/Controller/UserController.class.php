@@ -222,10 +222,10 @@ class UserController extends AdminController
 
         $search_value = i('search');
         if(!empty($search_value)){
-            $where["d_mobile|d_name|d_address"] = array("like","%".$search_value."%");
+            $where["d_ww|d_mobile|d_name|d_address"] = array("like","%".$search_value."%");
         }
         $count = M('dangeruser') -> where($where) -> count();
-        $res = M('dangeruser') -> where($where) -> limit($offset,$limit) -> select();
+        $res = M('dangeruser') -> where($where) ->order("id desc")-> limit($offset,$limit) -> select();
         foreach ($res as &$v) {
             $v['c_date'] = date('Y-m-d H:i:s', $v['c_date']);
             $v['uid'] =  M('user') -> where(array('id' =>$v['uid'])) -> getField('user_name');;

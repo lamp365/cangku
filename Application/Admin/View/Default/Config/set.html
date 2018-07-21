@@ -65,6 +65,13 @@
                         </div>
                     </div><br/>
                 <div style="overflow: hidden;clear: both">
+                    <div class="col-sm-2 control-label" style="line-height: 26px;">收款账户</div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="zhifubao" id="zhifubao" value="{$res.zhifubao}">
+                    </div>
+                    <div class="col-sm-5 control-label" style="line-height: 26px;color:#e3e3e3;">用于会员充值如:青青之火[qingqing163@zhifubao.com]</div>
+                </div><br/>
+                <div style="overflow: hidden;clear: both">
                     <div class="col-sm-2 control-label" style="line-height: 26px;">客服电话</div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" name="mobile" id="mobile" value="{$res.mobile}">
@@ -180,6 +187,7 @@
        parmes.site_pic = $("#pic").val();
        parmes.beian = $("#beian").val();
        parmes.keyword = $("#keyword").val();
+       parmes.zhifubao = $("#zhifubao").val();
        parmes.description = $("#description").val();
        parmes.mobile = $("#mobile").val();
        parmes.qq = $("#qq").val();

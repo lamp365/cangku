@@ -13,11 +13,11 @@ class BlackController extends CommonController {
         $where = array();
         $search_value = i('search');
         if(!empty($search_value)){
-            $where["d_mobile|d_name|d_address"] = array("like","%".$search_value."%");
+            $where["d_ww|d_mobile|d_name|d_address"] = array("like","%".$search_value."%");
         }
 
         $count = M('dangeruser') ->where($where)->count();
-        $p     = new \Think\Page($count,4);
+        $p     = new \Think\Page($count,25);
         $page  = $p->show();
         $res  = M('dangeruser') ->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
@@ -36,5 +36,38 @@ class BlackController extends CommonController {
         $this->assign('page', $page);
         $this->display();
 	}
+
+	public function add(){
+        $id = intval(i('id'));
+        $info = M('dangeruser')->find($id);
+        $this->assign('info',$info);
+        if(IS_POST){
+            $data = i('post.');
+            unset($data['id']);
+            foreach ($data['pic'] as $key=>$val){
+                if(empty($val)){
+                    unset($data['pic'][$key]);
+                }
+            }
+            if(!empty($data['pic'])){
+                $data['pic'] = implode(',',$data['pic']);
+            }
+            if(empty($data['d_ww']) || empty($data['d_name']) || empty($data['d_mobile'])){
+                $this->error('请完善买家信息!');
+            }
+            $data['uid'] = getUidFromSession();
+            $data['c_date'] = time();
+            if(empty($id)){
+                M('dangeruser')->add($data);
+                $this->success('添加成功!');
+            }else{
+                M('dangeruser')->where("id={$id}")->save($data);
+                $this->success('修改成功!');
+            }
+
+        }else{
+            $this->display();
+        }
+    }
 
 }

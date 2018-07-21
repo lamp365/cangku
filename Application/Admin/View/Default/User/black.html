@@ -91,6 +91,7 @@
                         {checkbox: true, align: 'center', valign: 'middle'},
                         //{field: 'Sort',title: '排序', align: 'center', valign: 'middle', sortable: true,},
                         {field: 'uid',title: '举报用户', align: 'center'},
+                        {field: 'd_ww',title: '买家旺旺', align: 'center'},
                         {field: 'd_name',title: '恶意买家', align: 'center'},
                         {field: 'd_mobile', title: '买家手机', align: 'center'},
                         {field: 'd_address', title: '买家地址', align: 'center'},
@@ -140,9 +141,7 @@
         $(function () {
             $("#addCustomer").on("hidden.bs.modal", function() {
                 $(this).removeData("bs.modal");
-                $edit.prop('disabled',true);
-                $EditAuth.prop('disabled',true);
-                $remove.prop('disabled',true);
+                $pingzhen.prop('disabled',true);
                 $table.bootstrapTable('refresh', {silent: true});
             });
             eachSeries(getScript, initTable);

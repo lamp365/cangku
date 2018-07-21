@@ -151,6 +151,10 @@ class MoneyController extends CommonController {
             M('recharge')->add($data);
             $this->success('等待审核中');
         }else{
+            $conf = M('siteconfig');
+            $res = $conf->select();
+            $zhifubao = $res[0]['zhifubao'];
+            $this->assign('zhifubao', $zhifubao);
             $this->display();
         }
     }

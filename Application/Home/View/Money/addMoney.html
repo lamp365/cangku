@@ -13,7 +13,7 @@
             font-size: 22px;
             margin-bottom:65px;
         }
-        #uploadifive-btn-upload1 input,#uploadifive-btn-upload2 input,#uploadifive-btn-upload3 input,#uploadifive-btn-upload4 input{
+        #uploadifive-btn-upload1 input,#uploadifive-btn-upload2 input,#uploadifive-btn-upload3 input,#uploadifive-btn-upload input{
             cursor: pointer;
         }
         #form_file div{margin-bottom: 10px;}
@@ -22,7 +22,14 @@
 <block name="content">
     <div class="choose_cat form-horizonta">
         <form id="billParme">
-        <p class="title">金额充值</p>
+        <p class="title">金额充值: <span style="font-size: 12px;color: red">请先用手机完成转账,再来上传凭证,等待审核</span></p>
+        <div class="form-group">
+            <label for="chon_price" class="col-sm-3 control-label">收款账户</label>
+            <div class="col-sm-9">
+                <input type="text" disabled value="{$zhifubao}" class="form-control">
+            </div>
+        </div>
+        <hr class="hr15"/>
         <div class="form-group">
             <label for="chon_price" class="col-sm-3 control-label">金额数目</label>
             <div class="col-sm-9">
@@ -33,10 +40,6 @@
         <div class="form-group" id="">
             <label for="price" class="col-sm-3 control-label">上传凭证</label>
             <div class="col-sm-9" id="form_file">
-
-                <!--<div class='file'>
-                    <input id="file_upload1" name="file_upload" type="file" multiple="true" class="form-control">
-                </div>-->
                 <div>
                     <input type="hidden" id="pic" name="pic[]" value="" />
                     <img src="/Public/no_photo.png" width="100" id="photo_preview" />

@@ -22,11 +22,16 @@
         <volist name="info" id="vo">
             <tr>
                 <td>{$vo.id}</td>
-                <td>{$vo.shop_zg}</td>
+                <empty name="vo.shop_url">
+                    <td>{$vo.shop_zg}</td>
+                <else/>
+                    <td><a href="{$vo.shop_url}" target="_blank">{$vo.shop_zg}</a></td>
+                </empty>
+
                 <td>{$vo.shop_name}</td>
-                <td><if condition="$vo['is_forbid'] eq 0">正常可用 <else /> 无法使用 </if></td>
+                <td><if condition="$vo['is_forbid'] eq 0">正常可用 <else /> <font color="red">无法使用</font> </if></td>
                 <td>
-                    <a href="__CONTROLLER__/editShop/id/{$vo.id}" class="btn btn-info btn-lt">修改</a>
+                    <a href="__CONTROLLER__/addShop/id/{$vo.id}" class="btn btn-info btn-lt">修改</a>
                 </td>
                 <td>
                     <empty name="vo['info']">

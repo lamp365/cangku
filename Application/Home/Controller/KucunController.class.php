@@ -21,7 +21,7 @@ class KucunController extends CommonController {
             $where['cat_id2'] = $cat_id2;
 
         $count = M('kucun')->where($where)->count();
-        $p     = new \Think\Page($count,4);
+        $p     = new \Think\Page($count,25);
         $page  = $p->show();
         $info  = M('kucun')->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 

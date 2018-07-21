@@ -130,7 +130,26 @@ class MoneyController extends CommonController {
 
 	public function addMoney(){
 	    if(IS_POST){
-
+            $data = i('post.');
+            foreach ($data['pic'] as $key=>$val){
+                if(empty($val)){
+                    unset($data['pic'][$key]);
+                }
+            }
+            if(!empty($data['pic'])){
+                $data['pic'] = implode(',',$data['pic']);
+            }
+            if(empty($data['chon_price']) || !is_numeric($data['chon_price'])){
+                $this->error('金额有误!');
+            }
+            $data['uid'] = getUidFromSession();
+            $data['gid'] = getGidFromSession();
+            $user_money = M('user_group')->where("id={$data['gid']}")->getField('money');
+            $data['shen_price'] = $user_money+$data['chon_price'];
+            $data['c_date'] = time();
+            $data['state'] = 0;
+            M('recharge')->add($data);
+            $this->success('等待审核中');
         }else{
             $this->display();
         }

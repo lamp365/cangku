@@ -169,14 +169,13 @@ class UserController extends AdminController
     public function loadShop(){
         $offset = i("offset");
         $limit = i("limit");
-        $where['is_delete'] = 0;
 
         $search_value = i('search');
         if(!empty($search_value)){
             $where["shop_name"] = array("like","%".$search_value."%");
         }
         $count = M('user_shop') -> where($where) -> count();
-        $res = M('user_shop') -> where($where) -> limit($offset,$limit) -> select();
+        $res = M('user_shop') -> where($where) ->order('is_forbid asc ,id desc')->limit($offset,$limit) -> select();
         foreach ($res as &$v) {
             $v['c_date'] = date('Y-m-d H:i:s' ,$v['c_date']);
             $v['group_name'] = M('user_group') -> where(['id' => $v['gid']]) ->getField('group_name');

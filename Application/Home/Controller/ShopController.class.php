@@ -13,11 +13,35 @@ class ShopController extends CommonController {
         $session_user = session("web_user");
         $gid = $session_user['gid'];
         $where['gid'] = $gid;
-        $where['is_delete'] = 0;
-        $info = M('user_shop') -> where($where) ->select();
+        $info = M('user_shop') -> where($where)->order('is_forbid asc ,id desc') ->select();
 
         $this->assign('info', $info);
         $this->display();
 	}
+
+    public function addShop(){
+        $id = intval(i('id'));
+        $info = M('user_shop')->find($id);
+        if(IS_POST){
+            $data = i('post.');
+            unset($data['id']);
+            $data['uid'] = getUidFromSession();
+            $data['gid'] = getGidFromSession();
+            $data['c_date'] = time();
+            if(empty($data['shop_name']) || empty($data['shop_zg'])){
+                $this->error('店铺名不为空');
+            }
+            if(empty($id)){
+                M('user_shop')->add($data);
+            }else{
+                M('user_shop')->where("id={$id}")->save($data);
+            }
+            $this->success('操作成功');
+        }else{
+            $this->assign('info',$info);
+            $this->display();
+        }
+    }
+
 
 }

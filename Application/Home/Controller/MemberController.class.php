@@ -87,4 +87,8 @@ class MemberController extends CommonController {
         }
     }
 
+    public function ceshi(){
+        $this->display('center/ceshi');
+    }
+
 }

@@ -127,7 +127,7 @@
                    </if>
                </td>
                <td><span class="tips" style="color: red">调货状态:</span>{$info.diaohuo|getDiaohuoState=###}</td>
-               <td><span class="tips">订单状态:</span>
+               <td><span class="tips" style="color: red">订单状态:</span>
                 <?php
                     switch($info['order_state']){
                         case 0: echo '申请中'; break;

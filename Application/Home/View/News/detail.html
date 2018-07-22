@@ -2,13 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>个人中心</title>
+    <title>{$sets.site_name}</title>
+    <meta name="description" content="{$sets.description}">
+    <meta name="keywords" content="{$sets.keyword}">
     <link rel="stylesheet" href="__PUBLIC__/Static/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="__PUBLIC__/Static/bootstrap/css/bootstrap-theme.min.css" />
     <link rel="stylesheet" href="__PUBLIC__/Admin/css/font-awesome.min.css">
     <link rel="stylesheet" href="__PUBLIC__/Admin/css/toastr.min.css">
     <link rel="stylesheet" href="__PUBLIC__/Admin/css/sweetalert.css">
     <link rel="stylesheet" href="__PUBLIC__/Home/css/index.css" />
+    <link rel="stylesheet" href="__PUBLIC__/Home/css/news.css" />
 
     <script type="text/javascript" src='__PUBLIC__/Static/jquery-1.11.2.min.js'></script>
     <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.js"></script>
@@ -39,9 +42,9 @@
                 <nav class="men">
                     <ul>
                         <li><a href="/">首页</a></li>
-                        <li><a href="/news">公司资讯</a></li>
+                        <li class="action"><a href="/news">公司资讯</a></li>
                         <li><a href="/about">关于我们</a></li>
-                        <li class="action"><a href="/center">个人中心</a></li>
+                        <li><a href="/center">个人中心</a></li>
                     </ul>
                 </nav>
                 <div class="head_right">
@@ -53,33 +56,51 @@
             </div>
         </div>
     </header>
-    <section class="section">
-        <div class="section-title">
-            <i class="icon-title"></i>
-            <h2>平台公告：</h2>
-            欢迎有您，我们将竭力为您服务！
-        </div>
-        <div class="row_box">
-            <div class="row_men">
-                <div class="row_regin">
+    <div class="new_content" style="margin-bottom: 25px;">
+        <div class="caes">
+            <div class="Center">
 
-                    <include file="Public/meun"/>
+                <div class="caes_title">
+                    <h1 class="h1T" data-strid="3">{$newsinfo.title}</h1>
+                    <p>
+                        发表日期：{$newsinfo.c_date|date="Y-m-d H:i:s",###}  ,  文章来源：{$sets.site_name}
+                    </p>
                 </div>
-            </div><!--left菜单-->
-            <div class="row_right">
+                <div class="content-news">
+                    <?php echo htmlspecialchars_decode(html_entity_decode($newsinfo['content']));?>
+                </div>
+                <div style="height:45px;">
 
-                <block name="content">
+                </div>
+                <div class="updown">
+                    <div class="floatLeft divup"></div>
+                    <div class="floatRight divdown"><strong>下一篇：</strong>
+                        <notempty name="nextNews">
+                            <a href="/detail/{$nextNews.id}.html">{$nextNews.title}</a>
+                        </notempty>
+                    </div>
+                    <div class="clear"></div>
+                    <div><strong style="font-size:14px;">{$sets.site_name}</strong></div>
+                </div>
+                <div class="wrapper related">
+                    <h3> 相关信息  </h3>
+                    <ul class="ulNews">
+                        <foreach name="randNews" item="two_val">
+                            <li><a href="/detail/{$two_val.id}.html">{$two_val.title}</a><span>({$two_val.c_date|date="Y-m-d",###})</span></li>
+                        </foreach>
 
-                </block>
-
+                    </ul>
+                </div>
+                <!--page_menu -->
             </div>
+            <div class="clear"></div>
+            <!--Center -->
         </div>
-    </section>
-
+    </div>
 
 
     <footer class="footer">
-        Copyright @ QT Network Company Ltd. All Rights Reserved. 2013-2017 青春之火
+        Copyright @ {$sets.site_name}. All Rights Reserved. 2013-2018 <a target="_blank" href="http://icp.alexa.cn/qqzhihuo.com">{$sets.beian}</a>
     </footer>
     <div class="modal fade" id="addModalBox" role="dialog">
         <div class="modal-dialog modal-lt" id="showbox">

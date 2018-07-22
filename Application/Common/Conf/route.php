@@ -18,5 +18,7 @@ return array(
         'logout' => 'Login/loginOut',
         //个人中心其他地址可以不做  映射   只是网站的外表可以简单包装,个人中心就算了,没事,麻烦
         'edituser' => 'Center/edituser',
+        'news'=>'News/index',
+        'detail/:id'=>'News/detail'
     )
 );

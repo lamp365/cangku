@@ -1,0 +1,217 @@
+.new_banner{
+    height: 390px;
+    width: 100%;
+    margin-top: 1px;
+}
+.new_center{
+    width: 1170px;
+    margin: 0 auto;
+    display: block;
+}
+.newsul {
+    padding: 0px 100px;
+}
+.newsul li {
+    position: relative;
+    padding-top: 35px;
+
+}
+.newsul li,.newsul ol,.newsul ul {
+    list-style: none;
+}
+.news-sjc-left {
+    width: auto;
+    float: left;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.news-sjc-left ol, .news-sjc-left dl, .news-sjc-right dd, .news-sjc-right dt {
+    float: left;
+}
+.news-sjc-left ol dd {
+    background: url(../img/news-sjc.jpg) repeat-y center;
+    height: 161px;
+    padding-top: 40px;
+}
+.news-sjc-left ol dd em {
+    width: 42px;
+    height: 42px;
+    display: inline-block;
+    background: url(../img/png-a.png) no-repeat 0 -288px;
+}
+.news-sjc-left dl dd {
+    padding-top: 44px;
+}
+.news-sjc-left dl dd strong {
+    font-size: 20px;
+    color: #666;
+    font-weight: normal;
+    line-height: 20px;
+}
+.news-sjc-left dl dd span {
+    color: #999;
+    line-height: 16px;
+    font-size: 16px;
+}
+.newsul li a {
+    display: block;
+    overflow: hidden;
+}
+.newsul li a .i_news_right {
+    float: left;
+    width: 100%;
+    margin-left: 150px;
+    border-bottom: 1px dashed #dcdcdc;
+    padding-bottom: 40px;
+    text-align: left;
+}
+.newsul li a .i_news_right .bigbox {
+    border: 1px solid #f1f1f1;
+    position: relative;
+    float: left;
+    width: 200px;
+    height: 150px;
+    overflow: hidden;
+}
+.newsul li a .i_news_right .bigbox img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 200px;
+    height: 100%;
+    transition: 0.5s;
+    -moz-transition: 0.5s;
+    -webkit-transition: 0.5s;
+    -o-transition: 0.5s;
+}
+.newsul li a .i_news_right span {
+    float: left;
+    width: 590px;
+    padding: 0 0 0 20px;
+    overflow: hidden;
+}
+.newsul li a .i_news_right span b {
+    font-size: 20px;
+    color: #333;
+    line-height: 30px;
+    height: 30px;
+    display: block;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+.newsul li a .i_news_right span b:hover{
+    color: #7ecff4;
+}
+.newsul li a .i_news_right span cite {
+    color: #555;
+    line-height: 18px;
+    font-size: 16px;
+    line-height: 180%;
+    overflow: hidden;
+    display: block;
+    padding-top: 15px;
+}
+a cite {
+    font-style: normal;
+}
+.new_content .caes {
+    clear: both;
+    padding-top: 15px;
+}
+.new_content .Center {
+    width: 1200px;
+    padding: 50px 80px;
+    background: #fff;
+    padding-top: 30px;
+    margin: 40px auto 0px auto;
+}
+.new_content .caes_title {
+    padding: 30px 0;
+}
+.caes_title {
+    width: 100%;
+}
+.caes_title {
+    clear: both;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.caes_title h1, .caes_title b {
+    font-size: 28px;
+    color: #3a3a3a;
+    line-height: 40px;
+    text-align: center;
+    display: block;
+}
+.caes_title p {
+    height: 40px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 1.08em;
+    color: #5f5f5f;
+    white-space: nowrap;
+    height: 40px;
+    line-height: 40px;
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+}
+.content-news {
+    font-size: 16px;
+    line-height: 28px;
+    text-align: left;
+    color: #666666;
+}
+.content-news p {
+    text-indent: 2em;
+}
+.updown {
+    width: 100%;
+    padding-top: 10px;
+    border-top: 1px solid #dedede;
+    text-align: right;
+    font-size: 14px;
+    margin-bottom: 30px;
+    margin: 30px auto 30px auto;
+    line-height: 200%;
+    color: #444;
+}
+.related {
+    padding-bottom: 15px;
+}
+.related h3 {
+    position: relative;
+    height: 40px;
+    font: bold 14px/40px Microsoft YaHei;
+    border-top: 1px dotted #ccc;
+    border-bottom: 1px dotted #ccc;
+    margin-bottom: 10px;
+    text-align: left;
+    font-size: 16px;
+}
+.related ul {
+    padding-left: 20px;
+}
+.related li {
+    line-height: 200%;
+    list-style-type: disc;
+    font-size: 14px;
+    width: 100%;
+    text-align: left;
+}
+.related li a {
+    text-decoration: none;
+    color: #666666;
+    font-size: 1.08em;
+}
+.related li span {
+    color: #999;
+}
+.related li a:hover{
+    color: #7ecff4;
+}

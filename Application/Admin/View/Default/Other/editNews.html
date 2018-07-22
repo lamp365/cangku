@@ -42,7 +42,12 @@
                         <input class="upload-btn" type="file" id="btn-upload" style="cursor: pointer">
                     </div>
                 </div><br/>
-
+                <div  style="overflow: hidden;clear: both" class="">
+                    <div class="col-sm-2 control-label" style="line-height: 26px;">新闻简介</div>
+                    <div class="col-sm-4">
+                        <textarea name="new_desc" id="new_desc" cols="30" rows="3" class="form-control">{$res.new_desc}</textarea>
+                    </div>
+                </div><br/>
                 <div style="clear: both">
                     <div class="col-sm-2 control-label" style="line-height: 26px;">内容详情</div>
                     <div class="col-sm-9">
@@ -144,6 +149,7 @@
             var parmes = {};
             parmes.id = $("#hid_id").val();
             parmes.title = $("#title").val();
+            parmes.new_desc = $("#new_desc").val();
             parmes.pic = $("#pic").val();
             parmes.content = html;
             var url = "__CONTROLLER__/editNews";

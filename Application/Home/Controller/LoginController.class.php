@@ -9,7 +9,7 @@ class LoginController extends Controller {
         if (!empty($session_user)) {
             redirect("/index.php/center");
         }
-        $this->display('public/login');
+        $this->display('Public/login');
 	}
 
 	public function dologin(){

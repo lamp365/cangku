@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="mobile">登录手机</label>
                     <div class="col-sm-6">
-                    <input class="form-control" id="mobile" name="mobile" type="text" value="{$info.mobile}"/>
+                    <input class="form-control" id="mobile" name="mobile" <notempty name="Think.get.id">disabled</notempty>  type="text" value="{$info.mobile}"/>
                 </div>
             </div>
 <!--

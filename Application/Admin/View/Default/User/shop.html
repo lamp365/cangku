@@ -25,9 +25,17 @@
             <div class="row row-lg">
                 <div class="col-sm-12">
                     <div id="toolbar">
+                        <div style="float: left">
                             <button id="seeinfo" class="btn btn-primary" disabled>
                                 查看备注
                             </button>
+                        </div>
+                        <select name="" class="form-control" id="user_group" style="float: left;width: 140px;margin-left: 20px;">
+                            <option value="0">选择属组</option>
+                            <foreach name="user_group" item="one_row">
+                                <option value="{$one_row.id}" <if condition="$one_row['id'] eq $gid">selected</if> >{$one_row.group_name}</option>
+                            </foreach>
+                        </select>
 
                     </div>
                     <table id="table"
@@ -48,7 +56,7 @@
                            data-page-list="[10,20,50,100,ALL]"
                            data-show-footer="false"
                            data-side-pagination="server"
-                           data-url="/index.php/admin/user/loadShop"
+                           data-url="/index.php/admin/user/loadShop/gid/{$gid}"
                            data-response-handler="responseHandler">
                     </table>
 
@@ -148,6 +156,11 @@
                 $table.bootstrapTable('refresh', {silent: true});
             });
             eachSeries(getScript, initTable);
+        });
+        $("#user_group").change(function () {
+            var gid = $(this).val();
+            var url = "__CONTROLLER__/shop/gid/"+gid;
+            window.location.href=url;
         });
     </script>
 </block>

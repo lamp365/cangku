@@ -26,26 +26,33 @@
                 <div class="col-sm-12">
                     <div id="toolbar">
 
+                            <div style="float: left">
+                                <button id="addform" class="btn btn-success">
+                                    新增
+                                </button>
+                                <button id="edit" class="btn btn-primary" disabled>
+                                    编辑
+                                </button>
+                                <!-- <button id="remove" class="btn btn-danger" disabled>
+                                     <i class="glyphicon glyphicon-remove"></i> 删除
+                                 </button>-->
+                                <button id="editPWD" class="btn btn-primary" disabled>
+                                    重置密码
+                                </button>
+                                <button id="zuzhang" class="btn btn-primary" disabled>
+                                    设为组长
+                                </button>
+                                <button id="see" class="btn btn-primary" disabled>
+                                    查看发货地址
+                                </button>
+                            </div>
 
-                            <button id="addform" class="btn btn-success">
-                                新增
-                            </button>
-                            <button id="edit" class="btn btn-primary" disabled>
-                                编辑
-                            </button>
-                           <!-- <button id="remove" class="btn btn-danger" disabled>
-                                <i class="glyphicon glyphicon-remove"></i> 删除
-                            </button>-->
-                            <button id="editPWD" class="btn btn-primary" disabled>
-                                重置密码
-                            </button>
-                        <button id="zuzhang" class="btn btn-primary" disabled>
-                            设为组长
-                        </button>
-                        <button id="see" class="btn btn-primary" disabled>
-                            查看发货地址
-                        </button>
-
+                        <select name="" class="form-control" id="user_group" style="float: left;width: 140px;margin-left: 20px;">
+                            <option value="0">选择属组</option>
+                            <foreach name="user_group" item="one_row">
+                                <option value="{$one_row.id}" <if condition="$one_row['id'] eq $gid">selected</if> >{$one_row.group_name}</option>
+                            </foreach>
+                        </select>
                     </div>
                     <table id="table"
                            data-toolbar="#toolbar"
@@ -65,7 +72,7 @@
                            data-page-list="[10,20,50,100,ALL]"
                            data-show-footer="false"
                            data-side-pagination="server"
-                           data-url="/index.php/Admin/User/loadUser"
+                           data-url="/index.php/Admin/User/loadUser/gid/{$gid}"
                            data-response-handler="responseHandler">
                     </table>
 
@@ -218,6 +225,12 @@
                 $table.bootstrapTable('refresh', {silent: true});
             });
             eachSeries(getScript, initTable);
+        });
+
+        $("#user_group").change(function () {
+           var gid = $(this).val();
+            var url = "__CONTROLLER__/index/gid/"+gid;
+            window.location.href=url;
         });
     </script>
 </block>

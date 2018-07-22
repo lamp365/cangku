@@ -9,16 +9,22 @@ class UserController extends AdminController
         parent::_initialize();
     }
     public function index(){
-
+        $gid = intval(i('gid'));
+        $user_group = M('user_group')->where("is_delete=0")->select();
+        $this->assign('user_group',$user_group);
+        $this->assign('gid',$gid);
         $this->display();
     }
 
     public function loadUser(){
-        $value = i('search');
+        $gid = i('gid');
         $offset = i("offset");
         $limit = i("limit");
         $where = [];
         $search_value = i('search');
+        if(!empty($gid)){
+            $where['gid'] = $gid;
+        }
         if(!empty($search_value)){
             $where["user_name|mobile"] = array("like","%".$search_value."%");
         }
@@ -163,14 +169,20 @@ class UserController extends AdminController
 
     //会员店铺
     public function shop(){
+        $gid = intval(i('gid'));
+        $user_group = M('user_group')->where("is_delete=0")->select();
+        $this->assign('user_group',$user_group);
+        $this->assign('gid',$gid);
         $this->display();
     }
     //加载会员店铺
     public function loadShop(){
         $offset = i("offset");
         $limit = i("limit");
+        $gid = intval(i("gid"));
 
         $search_value = i('search');
+        !empty($gid) && $where['gid'] = $gid;
         if(!empty($search_value)){
             $where["shop_name"] = array("like","%".$search_value."%");
         }

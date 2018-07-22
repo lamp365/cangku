@@ -289,13 +289,28 @@ class VenderController extends AdminController
 
     //货源管理
     public function huoyuan(){
+        $cat_id1= intval(i("cat_id1"));
+        $cat_id2= intval(i("cat_id2"));
+        $sonCate = array();
+        $allCate = M('category')->where("pid=0 and is_delete=0")->select();
+        if(!empty($cat_id1)){
+            $sonCate = M('category')->where("pid={$cat_id1} and is_delete=0")->select();
+        }
+        $this->assign('cat_id1',$cat_id1);
+        $this->assign('cat_id2',$cat_id2);
+        $this->assign('sonCate',$sonCate);
+        $this->assign('allCate',$allCate);
         $this->display();
     }
     //加载货源管理
     public function loadHuoyuan(){
         $offset = i("offset");
-        $limit = i("limit");
+        $limit  = i("limit");
+        $cat_id2= intval(i("cat_id2"));
+        !empty($cat_id1) && $where['cat_id1'] = $cat_id1;
+        !empty($cat_id2) && $where['cat_id2'] = $cat_id2;
         $where['is_delete'] = 0;
+
 
         $search_value = i('search');
         if(!empty($search_value)){

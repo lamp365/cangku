@@ -32,7 +32,7 @@ class BlackController extends CommonController {
 
 
         $this->assign('info', $res);
-        $this->assign('$search', $search_value);
+        $this->assign('search', $search_value);
         $this->assign('page', $page);
         $this->display();
 	}

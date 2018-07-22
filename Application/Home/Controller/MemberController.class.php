@@ -35,6 +35,11 @@ class MemberController extends CommonController {
             if(empty($data['password'])){
                 $this->error('密码不能为空');
             }
+            $wh['mobile'] = $data['mobile'];
+            $res = M('user')->where($wh)->find();
+            if($res){
+                $this->error('手机号已经存在!');
+            }
             $data['gid']    = $session_user['gid'];
             $data['c_date'] = time();
             $data['password'] = md5(md5($data['password']));
@@ -52,7 +57,8 @@ class MemberController extends CommonController {
         $this->success('操作成功!');
     }
     public function address(){
-        $data = M("address")->order('is_default desc')->select();
+        $uid = getUidFromSession();
+        $data = M("address")->where("uid={$uid}")->order('is_default desc,id desc')->select();
         $this->assign('data',$data);
         $this->display();
     }

@@ -16,7 +16,6 @@ class LoginController extends Controller {
 
         $phone = I('phone');//手机
         $password = I('password');//密码
-
        //先查找是否有次手机用户
         $result = M('user') -> where(array('mobile' => $phone)) -> find();
 

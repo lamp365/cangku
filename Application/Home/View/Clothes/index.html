@@ -42,18 +42,18 @@
                 <nav class="men">
                     <ul>
                         <li><a href="/">首页</a></li>
-                        <li class="action"><a href="/news">公司资讯</a></li>
+                        <li><a href="/news">公司资讯</a></li>
                         <li><a href="/about">关于我们</a></li>
                         <li><a href="/center">个人中心</a></li>
                     </ul>
                 </nav>
                 <notempty name="Think.session.id">
-                    <div class="head_right">
-                        <div class="ShippingCenter">
-                            <i class="icon-regin"></i>
-                            <a class="text" href="/logout">退出登录</a>
-                        </div>
+                <div class="head_right">
+                    <div class="ShippingCenter">
+                        <i class="icon-regin"></i>
+                        <a class="text" href="/logout">退出登录</a>
                     </div>
+                </div>
                 </notempty>
             </div>
         </div>
@@ -62,29 +62,38 @@
         <img src="__PUBLIC__/Home/img/banner_news.jpg" style="width: 100%;height: 100%" alt="">
     </div>
     <div class="new_center" style="margin-bottom: 35px;">
+        <div class="search">
+            <div style="float: left;width: 200px">
+                <input id="search" style="margin-top: 8px;" type="text" name="search" placeholder="按照ID或者域名查询" value="{$search}" class="form-control">
+            </div>
+            <div style="float: left;width: 80px;margin-left: 15px;">
+                <span class="btn btn-info btn-lt" onclick="get_search();">确定</span>
+            </div>
+            <div style="float: left;width: 80px;margin-left: 15px;">
+                <span class="btn btn-warning btn-lt" id="add_more">添加记录</span>
+            </div>
+        </div>
         <div class="newsul">
             <ul class="news_content">
                 <foreach name="newsData" item="row">
-                    <li>
+                    <li style="padding-top: 20px;">
                         <div class="news-sjc-left">
                             <ol>
-                                <dd><em></em></dd>
+                                <dd style="padding-top: 22px;"><em></em></dd>
                             </ol>
                             <dl>
-                                <dd><strong>{$row.c_date|date="m",###}.{$row.c_date|date="d",###}</strong><br><span>{$row.c_date|date="Y",###}</span></dd>
+                                <dd style="padding-top: 32px;"><strong>{$row.c_date|date="m",###}.{$row.c_date|date="d",###}</strong><br><span>{$row.c_date|date="Y",###}</span></dd>
                             </dl>
                         </div>
-                        <a href="/detail/{$row.id}.html" title="{$row.title}" target="_blank">
-                            <div class="i_news_right">
-                                <div class="bigbox">
-                                    <img src="{$row.pic}" alt="{$row.title}">
-                                </div>
+                        <a href="javascrip:;" title="{$row.title}">
+                            <div class="i_news_right" style="padding-bottom: 8px;">
                                 <span>
-                                    <b>{$row.title}</b>
-                                    <cite>
-                                        {$row.new_desc}
+                                    <b url="">依文诺宝贝ID:<font>{$row.tmall_id}</font></b>
+                                    <cite url="{$row.url}" style="margin-top: 0px;padding-top: 0px;">
+                                        来源:[{$row.pingtai}]{$row.url}
                                     </cite>
                                 </span>
+                                <i style="float: right;margin-right: 162px;" class="del" id="{$row.id}">删除</i>
                             </div>
                             <div class="clear"></div>
                         </a>
@@ -117,6 +126,58 @@
         $("#addModalBox").on("hidden.bs.modal", function() {
             $(this).removeData("bs.modal");
         });
+        $(".i_news_right b").click(function (event) {
+            var url = $(this).attr('url');
+        });
+        $(".i_news_right cite").click(function (event) {
+            var url = $(this).attr('url');
+            window.open(url);
+        });
+    });
+    function get_search() {
+        var search = $("#search").val();
+        var url = "__CONTROLLER__/index";
+        if($.trim(search) != ''){
+            url = url +"?search="+search;
+        }
+        window.location.href = url;
+    }
+    $(".i_news_right").dblclick(function (e) {
+        var id = $(this).find("font").text();
+        id = $.trim(id);
+        $("#search").val(id);
+        stopproPagation(e);
+    })
+    //阻止冒泡
+    function stopproPagation(e){
+        //为什么用三元表达呢！因为考虑到兼容ie浏览器
+        window.event?window.event.cancelBubble=true:e.stopPropagation();
+    }
+
+    $("#add_more").click(function () {
+        $("#addModalBox").modal({
+            remote: "__CONTROLLER__/add/t=" + Math.random(1000)
+        }) ;
+    });
+
+    $(".del").click(function () {
+        var id = $(this).attr('id');
+        var url = "__CONTROLLER__/del";
+        var obj = this;
+        $.post(url,{id:id},function (data) {
+            if(data.status == 1){
+                //保存成功
+                swal({
+                    title:"保存成功",
+                    text:data.info,
+                    type:"success"
+                },function(){
+                    $(obj).closest('li').remove();
+                });
+            }else{
+                toastr.warning(data.info);return false;
+            }
+        })
     });
 </script>
 <block name="js"></block>

@@ -215,3 +215,11 @@ a cite {
 .related li a:hover{
     color: #7ecff4;
 }
+.new_center .search{
+    padding: 0 115px;
+    text-align: left;
+    height: 50px;
+    line-height: 48px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}

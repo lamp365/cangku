@@ -47,12 +47,14 @@
                         <li><a href="/center">个人中心</a></li>
                     </ul>
                 </nav>
-                <div class="head_right">
-                    <div class="ShippingCenter">
-                        <i class="icon-regin"></i>
-                        <a class="text" href="/logout">退出登录</a>
+                <notempty name="Think.session.id">
+                    <div class="head_right">
+                        <div class="ShippingCenter">
+                            <i class="icon-regin"></i>
+                            <a class="text" href="/logout">退出登录</a>
+                        </div>
                     </div>
-                </div>
+                </notempty>
             </div>
         </div>
     </header>

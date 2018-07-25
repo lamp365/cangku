@@ -46,8 +46,10 @@ class ClothesController extends CommonController {
         $this->display();
 	}
 	public function add(){
+	    $id = i('id');
 	    if(IS_POST){
             $data = i('post.');
+            if(!empty($data['id'])) unset($data['id']);
             if(empty($data['tmall_id'])){
                 $this->error('请输入宝贝ID');
             }
@@ -64,9 +66,16 @@ class ClothesController extends CommonController {
             $data['uri'] = $http.'://'.$host;
             $data['gid'] = getGidFromSession();
             $data['uid'] = getUidFromSession();
-            M('Clother')->add($data);
+            if($id){
+                M('Clother')->where("id={$id}")->save($data);
+            }else{
+                M('Clother')->add($data);
+            }
             $this->success('操作成功!');
         }
+        $info = M('Clother')->find($id);
+        $this->assign('info',$info);
+        $this->assign('id',$id);
         $this->display();
     }
 

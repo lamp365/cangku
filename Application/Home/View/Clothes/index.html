@@ -88,12 +88,16 @@
                         <a href="javascrip:;" title="{$row.title}">
                             <div class="i_news_right" style="padding-bottom: 8px;">
                                 <span>
-                                    <b url="">依文诺宝贝ID:<font>{$row.tmall_id}</font></b>
+                                    <b url="">依文诺宝贝ID:<font tmall_id="{$row.tmall_id}">{$row.tmall_id}</font></b>
                                     <cite url="{$row.url}" style="margin-top: 0px;padding-top: 0px;">
                                         来源:[{$row.pingtai}]{$row.url}
                                     </cite>
                                 </span>
-                                <i style="float: right;margin-right: 162px;" class="del" id="{$row.id}">删除</i>
+                                <p style="float: right;margin-right: 162px;width: 50px;" >
+                                    <i class="edit" the_id="{$row.id}">编辑</i>
+                                    <i class="del" the_id="{$row.id}">删除</i>
+                                </p>
+
                             </div>
                             <div class="clear"></div>
                         </a>
@@ -126,8 +130,10 @@
         $("#addModalBox").on("hidden.bs.modal", function() {
             $(this).removeData("bs.modal");
         });
-        $(".i_news_right b").click(function (event) {
-            var url = $(this).attr('url');
+        $(".i_news_right b font").click(function (event) {
+            var tmall_id = $(this).attr('tmall_id');
+            var url = "https://detail.tmall.com/item.html?id="+tmall_id;
+            window.open(url);
         });
         $(".i_news_right cite").click(function (event) {
             var url = $(this).attr('url');
@@ -159,9 +165,15 @@
             remote: "__CONTROLLER__/add/t=" + Math.random(1000)
         }) ;
     });
+    $(".edit").click(function () {
+        var id = $(this).attr('the_id');
+        $("#addModalBox").modal({
+            remote: "__CONTROLLER__/add/id/"+id+"/t/" + Math.random(1000)
+        }) ;
+    });
 
     $(".del").click(function () {
-        var id = $(this).attr('id');
+        var id = $(this).attr('the_id');
         var url = "__CONTROLLER__/del";
         var obj = this;
         $.post(url,{id:id},function (data) {

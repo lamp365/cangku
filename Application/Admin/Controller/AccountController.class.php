@@ -77,7 +77,8 @@ class AccountController extends AdminController {
                 $add['register_time'] = time_format();
                 $this->dal->add($add);
             }
-
+            $sets = M('siteconfig')->find();
+            $this->assign('sets',$sets);
             $this->display('Account/Login');
         }
     }

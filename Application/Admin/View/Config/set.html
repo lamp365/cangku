@@ -65,6 +65,12 @@
                         </div>
                     </div><br/>
                 <div style="overflow: hidden;clear: both">
+                    <div class="col-sm-2 control-label" style="line-height: 26px;">公司地址</div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="address" id="address" value="{$res.address}">
+                    </div>
+                </div><br/>
+                <div style="overflow: hidden;clear: both">
                     <div class="col-sm-2 control-label" style="line-height: 26px;">收款账户</div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" name="zhifubao" id="zhifubao" value="{$res.zhifubao}">
@@ -187,6 +193,7 @@
        parmes.site_pic = $("#pic").val();
        parmes.beian = $("#beian").val();
        parmes.keyword = $("#keyword").val();
+       parmes.address = $("#address").val();
        parmes.zhifubao = $("#zhifubao").val();
        parmes.description = $("#description").val();
        parmes.mobile = $("#mobile").val();

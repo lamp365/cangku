@@ -9,13 +9,19 @@ class OtherController extends AdminController
         parent::_initialize();
     }
     public function news(){
+        $tuijian = intval(i('tuijian'));
+        $where = array();
+        if(!empty($tuijian)){
+            $where['tuijian'] = $tuijian;
+        }
         $newsM = M('news');
 
-        $count = $newsM->count();
+        $count = $newsM->where($where)->count();
         $p     = new \Think\Page($count,20);
         $page  = $p->show();
-        $data  = $newsM->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+        $data  = $newsM->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
 
+        $this->assign('tuijian',$tuijian);
         $this->assign('data',$data);
         $this->assign('page',$page);
         $this->display();
@@ -47,6 +53,13 @@ class OtherController extends AdminController
         $id = intval(I('id'));
         M('news')->where("id={$id}")->delete();
         $this->success('文章删除成功!');
+    }
+
+    public function tuijian(){
+        $id = intval(I('id'));
+        $tuijian = i('tuijian');
+        M('news')->where("id={$id}")->save(array("tuijian"=>$tuijian));
+        $this->success('操作成功!');
     }
 
     public function borrow(){

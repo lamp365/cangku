@@ -26,6 +26,12 @@
                 <div class="col-sm-12">
                     <div id="toolbar" style="">
                         <div style="width: 180px;float: left;padding-right: 15px;">
+                            <select name="" id="choose_tui" class="form-control">
+                                <option value="0" <if condition="$tuijian eq 0">selected</if> >查看所有</option>
+                                <option value="1"<if condition="$tuijian eq 1">selected</if> >查看推荐</option>
+                            </select>
+                        </div>
+                        <div style="width: 180px;float: left;padding-right: 15px;">
                             <a href="__CONTROLLER__/editNews" target="iframe0" class="btn btn-primary btn-lt">添加资讯</a>
                         </div>
                     </div>
@@ -36,6 +42,7 @@
                             <th style="text-align: center">新闻标题</th>
                             <th style="text-align: center">缩略图</th>
                             <th style="text-align: center">时间</th>
+                            <th style="text-align: center">推荐</th>
                             <th style="text-align: center">操作</th>
                         </tr>
                         <foreach name="data" item="onerow">
@@ -44,6 +51,13 @@
                             <td style="text-align: center">{$onerow.title}</td>
                             <td style="text-align: center"><img src="{$onerow.pic}" style="width: 45px;height: 45px;"></td>
                             <td class="jin_price" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i:s",###}</td>
+                            <td style="text-align: center">
+                            <?php if($onerow['tuijian'] == 0){ ?>
+                                <span url="__CONTROLLER__/tuijian/id/{$onerow.id}/tuijian/1" onclick="tuijian(this)" style="cursor: pointer">设置推荐</span>
+                            <?php }else{ ?>
+                                <span url="__CONTROLLER__/tuijian/id/{$onerow.id}/tuijian/0" onclick="tuijian(this)" style="cursor: pointer;color: red">取消推荐</span>
+                            <?php } ?>
+                            </td>
                             <td class="da_price"  style="text-align: center">
                                 <a class="btn btn-warning btn-lt gaiOne" target="iframe0" href="__CONTROLLER__/editNews/id/{$onerow.id}">修 改</a>
                                 <span class="btn btn-danger btn-lt delOne" ids="{$onerow.id}">删 除</span>
@@ -81,7 +95,15 @@
             });
 
         });
-
+        function tuijian(obj) {
+            var url = $(obj).attr('url');
+            $.get(url,function (data) {
+                toastr.success(data.info);
+                setTimeout(function () {
+                    window.location.reload();
+                },1500)
+            })
+        }
 
         $(function () {
             $("#addCustomer").on("hidden.bs.modal", function() {
@@ -89,5 +111,10 @@
                 $table.bootstrapTable('refresh', {silent: true});
             });
         });
+        $("#choose_tui").change(function () {
+            var tuijian = $(this).val();
+            var url = "__CONTROLLER__/news/tuijian/"+tuijian;
+            window.location.href = url;
+        })
     </script>
 </block>

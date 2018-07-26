@@ -26,7 +26,6 @@ h1{ font-size: 32px; line-height: 48px; }
 </head>
 <body>
 <div class="error">
-<p class="face">:(</p>
 <h1><?php echo strip_tags($e['message']);?></h1>
 <div class="content">
 <?php if(isset($e['file'])) {?>
@@ -52,7 +51,6 @@ h1{ font-size: 32px; line-height: 48px; }
 </div>
 </div>
 <div class="copyright">
-<p><a title="官方网站" href="http://www.thinkphp.cn">ThinkPHP</a><sup><?php echo THINK_VERSION ?></sup> { Fast & Simple OOP PHP Framework } -- [ WE CAN DO IT JUST THINK ]</p>
 </div>
 </body>
 </html>

@@ -23,6 +23,7 @@ define('APP_PATH','../Application/');
 define('RUNTIME_PATH','../Runtime/');
 
 define('BIND_MODULE','User');
+header('Location:http://127.0.0.1');
 //define('BIND_CONTROLLER','Index'); // 绑定Index控制器到当前入口文件
 //define('BUILD_CONTROLLER_LIST','Admin,Account,File');
 

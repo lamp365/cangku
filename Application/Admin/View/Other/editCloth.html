@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">
+        <empty name="id">添加记录<else/>修改记录</empty>
+
+    </h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" role="form" id="defaultForm">
+        <fieldset>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="info">宝贝ID</label>
+                <div class="col-sm-9">
+                    <input type="text" name="tmall_id" class="form-control" value="{$info.tmall_id}" placeholder="输入依文诺宝贝ID">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="info">复制链接</label>
+                <div class="col-sm-9">
+                    <input type="text" name="url" class="form-control" value="{$info.url}" placeholder="输入所复制的来源地址">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="info">来源平台</label>
+                <div class="col-sm-9">
+                    <input type="hidden" name="id" value="{$id}">
+                    <input type="text" name="pingtai" class="form-control" value="{$info.pingtai}" placeholder="简单记录来源平台">
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <div class="big-img-show">
+        <img src="">
+    </div>
+</div>
+<div class="modal-footer">
+    <span type="button" class="btn btn-info" id="save_all">保存</span>
+    <button type="button" class="btn btn-default" data-dismiss="modal" id="close">关闭</button>
+</div>
+<script>
+    $("#save_all").click(function () {
+       var parme = $("#defaultForm").serialize();
+        var url = "__CONTROLLER__/editCloth";
+        $.post(url,parme,function (data) {
+            if(data.status == 1){
+                //保存成功
+                swal({
+                    title:"保存成功",
+                    text:data.info,
+                    type:"success"
+                },function(){
+                    window.location.href = "__CONTROLLER__/tmall";
+                });
+            }else{
+                toastr.warning(data.info);return false;
+            }
+        });
+    });
+</script>

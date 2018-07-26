@@ -1,0 +1,159 @@
+<extend name="Public/common" />
+<block name="body">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>天猫宝贝</h5>
+            <div class="ibox-tools" style="display:none;">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-wrench"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#">选项1</a>
+                    </li>
+                    <li><a href="#">选项2</a>
+                    </li>
+                </ul>
+                <a class="close-link">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="toolbar" style="">
+                        <div style="width: 180px;float: left;padding-right: 15px;">
+                            <input type="hidden" value="{$uid}--{$gid}">
+                            <select name="" id="gid" class="form-control">
+                                <option value="0">选择小组</option>
+                                <foreach name="userG" item="oneRow">
+                                    <option value="{$oneRow.id}" <if condition="$oneRow['id'] eq $gid">selected</if>>{$oneRow.group_name}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="width: 180px;float: left;padding-right: 15px;">
+                            <select name="" id="uid" class="form-control">
+                                <option value="0">选择用户</option>
+                                <foreach name="users" item="one2">
+                                    <option value="{$one2.id}" <if condition="$one2['id'] eq $uid">selected</if>>{$one2.user_name}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="width: 180px;float: left;padding-right: 15px;">
+                            <span class="btn btn-info btn-lt" id="sure_bu">确定</span>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-hover"  id="table" style="margin-top: 15px;">
+                        <tr>
+                            <th style="text-align: center">ID</th>
+                            <th style="text-align: center">依文诺宝贝</th>
+                            <th style="text-align: center">平台</th>
+                            <th style="text-align: center">来源链接</th>
+                            <th style="text-align: center">时间</th>
+                            <th style="text-align: center">操作</th>
+                        </tr>
+                        <foreach name="newsData" item="onerow">
+                        <tr class="row{$onerow.id}">
+                            <td style="text-align: center">{$onerow.id}</td>
+                            <td style="text-align: center"><a href="https://detail.tmall.com/item.html?id={$onerow.tmall_id}" target="_blank">{$onerow.tmall_id}</a></td>
+                            <td style="text-align: center">{$onerow.pingtai}</td>
+                            <td style="text-align: center"><a href="{$onerow.url}" target="_blank">{$onerow.url}</a></td>
+                            <td class="jin_price" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i",###}</td>
+                            <td class="da_price"  style="text-align: center">
+                                <a class="btn btn-warning btn-lt edit" the_id="{$onerow.id}">修 改</a>
+                                <span class="btn btn-danger btn-lt del" the_id="{$onerow.id}">删 除</span>
+                            </td>
+                        </tr>
+                        </foreach>
+                    </table>
+
+                    <div class="show_page">
+                        {$page}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="modal">
+    <div class="modal fade" id="addCustomer" role="dialog">
+        <div class="modal-dialog modal-lt" id="showbox">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        var $table = $('#table');
+        $(".edit").click(function () {
+            var id = $(this).attr('the_id');
+            $("#addCustomer").modal({
+                remote: "__CONTROLLER__/editCloth/id/"+id+"/t/" + Math.random(1000)
+            }) ;
+        });
+        $(".del").click(function () {
+            var id = $(this).attr('the_id');
+            var url = "__CONTROLLER__/delCloth";
+            var obj = this;
+            $.post(url,{id:id},function (data) {
+                if(data.status == 1){
+                    //保存成功
+                    swal({
+                        title:"保存成功",
+                        text:data.info,
+                        type:"success"
+                    },function(){
+                        $(obj).closest('tr').remove();
+                    });
+                }else{
+                    toastr.warning(data.info);return false;
+                }
+            })
+        });
+
+
+
+        $(function () {
+            $("#addCustomer").on("hidden.bs.modal", function() {
+                $(this).removeData("bs.modal");
+                $table.bootstrapTable('refresh', {silent: true});
+            });
+        });
+
+        $("#sure_bu").click(function () {
+            var uid = $("#uid").val();
+            var gid = $("#gid").val();
+            var url = "__CONTROLLER__/tmall/uid/"+uid+"/gid/"+gid;
+            window.location.href = url;
+        });
+        $("#gid").change(function () {
+            var url = "/admin/bill/ajaxUser";
+            var gid = $(this).val();
+            if(gid == 0){
+                $("#uid").html("<option value='0'>前选择对应用户</option>");
+            }else{
+                $.post(url,{gid:gid},function (result) {
+                    if(result.status==1){
+                        var item = result.info;
+                        var users = item.users;
+                        var user_html = '';
+                        for(var i=0;i<users.length;i++){
+                            var the_one = users[i];
+                            user_html = user_html + '<option value="'+the_one.id+'">'+the_one.user_name+'</option>';
+                        }
+
+                        $("#uid").html(user_html);
+                    }else{
+                        toastr.warning(result.info);return false;
+                    }
+                });
+            }
+        });
+    </script>
+</block>

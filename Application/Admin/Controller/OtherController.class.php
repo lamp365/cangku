@@ -115,4 +115,81 @@ class OtherController extends AdminController
         }
         $this->success('已经确认归还');
     }
+
+    public function tmall(){
+        $where = array();
+        $uid   = i('uid');
+        $gid   = i('gid');
+        !empty($uid) && $where['uid'] = $uid;
+
+        $search = i('search');
+        if(!empty($search)){
+            $res = explode('http',$search);
+            if(count($res) == 2){
+                $where['uri'] = $search;
+            }else{
+                $where['tmall_id'] = $search;
+            }
+        }
+        $sets = M('siteconfig')->find();
+
+        $count = M('Clother')->where($where)->count();
+        $p     = new \Think\Page($count,30);
+        $page  = $p->show();
+        $newsData  = M('Clother')->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+        $userG     = M('user_group')->where("is_delete=0")->select();
+        $users     = array();
+        if(!empty($gid)){
+            $users = M('user')->where("gid={$gid} and is_forbid=0")->select();
+        }
+        $this->assign("users",$users);
+        $this->assign("userG",$userG);
+        $this->assign("uid",$uid);
+        $this->assign("gid",$gid);
+        $this->assign("newsData",$newsData);
+        $this->assign("page",$page);
+        $this->assign("sets",$sets);
+        $this->assign("search",$search);
+        $this->display();
+    }
+
+    public function editCloth(){
+        $id = i('id');
+        if(IS_POST){
+            $data = i('post.');
+            if(!empty($data['id'])) unset($data['id']);
+            if(empty($data['tmall_id'])){
+                $this->error('请输入宝贝ID');
+            }
+            if(empty($data['url'])){
+                $this->error('请输入来源地址');
+            }
+            if(empty($data['pingtai'])){
+                $this->error('请输入平台');
+            }
+
+            $arr = parse_url($data['url']);
+            $http = $arr['scheme'];
+            $host = $arr['host'];
+            $data['uri'] = $http.'://'.$host;
+            if($id){
+                M('Clother')->where("id={$id}")->save($data);
+            }else{
+                $data['c_date'] = time();
+                M('Clother')->add($data);
+            }
+            $this->success('操作成功!');
+        }
+        $info = M('Clother')->find($id);
+        $this->assign('info',$info);
+        $this->assign('id',$id);
+        $this->display();
+    }
+
+    public function delCloth(){
+        $id = I('id');
+        if(empty($id)) $this->error('id不能为空!');
+        M("Clother")->where("id={$id}")->delete();
+        $this->success("删除成功!");
+    }
 }

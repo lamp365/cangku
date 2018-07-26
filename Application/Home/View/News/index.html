@@ -35,29 +35,48 @@
 </head>
 <body style="background: #ffffff;height: 100%">
 <div class="contain">
-    <header class="header">
-        <div class="new-head">
-            <div class="logo"><img src="__PUBLIC__/Home/img/logo.png"/></div>
-            <div class="head_men">
-                <nav class="men">
-                    <ul>
-                        <li><a href="/">首页</a></li>
-                        <li class="action"><a href="/news">公司资讯</a></li>
-                        <li><a href="/about">关于我们</a></li>
-                        <li><a href="/center">个人中心</a></li>
-                    </ul>
-                </nav>
-                <notempty name="Think.session.id">
-                    <div class="head_right">
-                        <div class="ShippingCenter">
-                            <i class="icon-regin"></i>
-                            <a class="text" href="/logout">退出登录</a>
-                        </div>
+    <div id="hd" style="background:#FFF; height:60px; border-bottom:1px solid #E6E6E6; ">
+
+        <div class="clear"></div>
+
+        <div id="week_nav">
+
+            <div class="wk_navwp">
+
+                <div class="wk_lonav">
+
+                    <div class="wk_logo">
+
+                        <h2><a href="/" title=""><img src="__PUBLIC__/Index/images/logo.png" alt="" border="0" /></a></h2>
+
                     </div>
-                </notempty>
+
+                    <div class="wk_inav" style="width:860px; height:60px;">
+
+                        <ul class="nav">
+
+                            <li><a href="/">网站首页</a></li>
+
+                            <li><a href="/news" class="actone">公司资讯</a></li>
+                            <li><a href="/about" >关于我们</a></li>
+                            <li><a href="/center" >个人中心</a></li>
+                            <?php if(isset($_SESSION['web_user']['id'])){  ?>
+                            <li><a href="/logout" >退出登录</a></li>
+                            <?php } ?>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+
+
             </div>
+
         </div>
-    </header>
+
+    </div>
+
     <div class="new_banner">
         <img src="__PUBLIC__/Home/img/banner_news.jpg" style="width: 100%;height: 100%" alt="">
     </div>

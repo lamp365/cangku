@@ -11,6 +11,8 @@
     width: 100%;
     max-width: 1000px;
     margin-top: 5px;
+    margin-bottom: 70px;
+    overflow: hidden;
 }
 .am-container:before,
 .am-container:after {
@@ -752,6 +754,21 @@
     padding-top: 49px;
 }
 /* footer 底部菜单 */
+.my-header i{
+    display: block;
+    width: 30px;
+    height: 30px;
+}
+.icon{
+    display: inline-block;;
+    background: url("../picture/icon.png");
+    background-size: 350px 350px;
+}
+.my-header i.icon-return {
+    margin-top: 7px;
+    background-position: -280px -10px;
+}
+
 footer{
     position: fixed;
     right: 0;

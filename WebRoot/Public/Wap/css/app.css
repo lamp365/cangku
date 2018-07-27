@@ -524,6 +524,9 @@ h2 {
 ul,
 ol {
   padding-left: 2em;
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
 }
 /* Reset margin for nested lists */
 ul > li > ul,

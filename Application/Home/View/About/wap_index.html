@@ -1,0 +1,126 @@
+<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{$sets.site_name}</title>
+
+    <meta name="description" content="{$sets.description}" />
+
+    <meta name="keywords" content="{$sets.keyword}" />
+
+    <link rel="shortcut icon" href="/host.ico" />
+
+    <link rel="bookmark"href="/host.ico" />
+
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+
+    <!-- No Baidu Siteapp-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="/host.ico">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="apple-touch-icon-precomposed" href="/host.ico">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/host.ico">
+    <meta name="msapplication-TileColor" content="#0e90d2">
+    <!--AmazeUi  CSS代码-->
+    <link rel="stylesheet" href="__PUBLIC__/Wap/css/app.css" />
+    <link rel="stylesheet" href="__PUBLIC__/Wap/css/style.css" />
+    <style>
+        .content-news {
+            font-size: 14px;
+            line-height: 24px;
+            text-align: left;
+            color: #666666;
+        }
+        .content-news p {
+            text-indent: 2em;
+        }
+    </style>
+</head>
+
+
+<body>
+<!--顶部导航-->
+<div class="my-header">
+
+    <header data-am-widget="header" class="am-header am-header-default am-header-fixed">
+        <div class="am-header-left am-header-nav">
+            <a href="/" class="">
+
+                <i class="am-header-icon am-icon-home"></i>
+            </a>
+        </div>
+
+        <h1 class="am-header-title">
+            关于我们
+        </h1>
+
+        <div class="am-header-right am-header-nav">
+            <i class="icon icon-return" id="go_back"></i>
+        </div>
+    </header>
+</div>
+<!--顶部导航  end-->
+
+<!--新闻资讯-->
+<div class="my-synews">
+    <div class="am-container my-qcwbj">
+        <div class="caes_title" style="text-align: center">
+            <h1 class="h1T" data-strid="3"><?php echo msubstr($newsinfo['title'],0,18); ?></h1>
+            <p>
+              文章来源：{$sets.site_name}
+            </p>
+        </div>
+        <div class="content-news">
+            <?php echo htmlspecialchars_decode(html_entity_decode($newsinfo['content']));?>
+        </div>
+    </div>
+</div>
+
+
+<!-- footer 底部菜单 -->
+<footer>
+    <a href="/">
+        <i class="icon icon-f1"></i>
+        首页
+    </a>
+    <a href="/news.html" >
+        <i class="icon icon-f2"></i>
+        资讯
+    </a>
+    <a href="/about.html" class="pick">
+        <i class="icon icon-f3"></i>
+        关于
+    </a>
+    <a href="/center.html">
+        <i class="icon icon-f4"></i>
+        我的
+    </a>
+</footer>
+
+<!--底部工具栏  end-->
+
+<script type="text/javascript" src="__PUBLIC__/Wap/js/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Wap/js/amazeui.js"></script>
+<script>
+    $("#go_back").click(function () {
+        window.history.back();
+    })
+</script>
+</body>
+
+</html>

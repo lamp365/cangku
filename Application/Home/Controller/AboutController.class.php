@@ -5,7 +5,8 @@ use Think\Controller;
 
 class AboutController extends Controller {
     public function index(){
-        die('稍等！！！');
+        $sets = M('siteconfig')->find();
+        $this->assign("sets",$sets);
         $this->display();
 	}
 

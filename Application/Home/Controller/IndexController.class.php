@@ -10,4 +10,10 @@ class IndexController extends Controller {
         $this->display();
 	}
 
+	public function ceshi(){
+        $sets = M('siteconfig')->find();
+        $this->assign("sets",$sets);
+        $this->display();
+    }
+
 }

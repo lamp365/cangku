@@ -103,7 +103,7 @@
                                 <span>
                                     <b>{$row.title}</b>
                                     <cite>
-                                        {$row.new_desc}
+                                        <?php echo msubstr($row['new_desc'],0,130); ?>
                                     </cite>
                                 </span>
                             </div>

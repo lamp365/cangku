@@ -49,6 +49,12 @@
         .content-news p {
             text-indent: 2em;
         }
+        .my-synews li{
+            color: #666;
+            font-weight: 800;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -102,9 +108,14 @@
         <div class="content-news">
             <?php echo htmlspecialchars_decode(html_entity_decode($newsinfo['content']));?>
         </div>
+        <ul>
+            <li>公司名称: {$sets.site_name}</li>
+            <li>联系电话: {$sets.mobile}</li>
+            <li>联系Q Q: <a href="http://wpa.qq.com/msgrd?v=3&uin={$sets.qq}&site=qqzhihuo.com&menu=yes" target="_blank">{$sets.qq}</a></li>
+            <li>公司地址: {$sets.address}</li>
+        </ul>
     </div>
 </div>
-
 
 <!-- footer 底部菜单 -->
 <footer>

@@ -120,6 +120,7 @@ function mkdirs($dir){
     if(!is_dir($dir))
     {
         if(!mkdirs(dirname($dir))){
+            ppd(2);
             return false;
         }
         if(!mkdir($dir,0777)){

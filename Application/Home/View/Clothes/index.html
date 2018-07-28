@@ -199,20 +199,37 @@
         var id = $(this).attr('the_id');
         var url = "__CONTROLLER__/del";
         var obj = this;
-        $.post(url,{id:id},function (data) {
-            if(data.status == 1){
-                //保存成功
-                swal({
-                    title:"保存成功",
-                    text:data.info,
-                    type:"success"
-                },function(){
-                    $(obj).closest('li').remove();
-                });
+        swal({
+            title:"确定要删除",
+            text:'删除后不能在恢复',
+            type:"success",
+            showCancelButton:true,
+            confirmButtonColor:"#DD6B55",
+            confirmButtonText:"是的删除",
+            cancelButtonText:"暂不删除",
+            closeOnConfirm:false,
+            closeOnCancle:false,
+        },function(isConfirm){
+            if(isConfirm){
+                $.post(url,{id:id},function (data) {
+                    if(data.status == 1){
+                        //保存成功
+                        swal({
+                            title:"保存成功",
+                            text:data.info,
+                            type:"success"
+                        },function(){
+                            $(obj).closest('li').remove();
+                        });
+                    }else{
+                        toastr.warning(data.info);return false;
+                    }
+                })
             }else{
-                toastr.warning(data.info);return false;
+                return '';
             }
-        })
+        });
+
     });
 </script>
 <block name="js"></block>

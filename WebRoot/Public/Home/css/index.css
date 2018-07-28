@@ -134,7 +134,7 @@ html,body{font-size: 16px;color: #000;}
 	font-size: 15px;
 }
 .row_regin {width: 100%;height: auto;}
-.logo_rgi {width: 68px;border: 1px solid #c6cbcf;display: inline-block; vertical-align: middle;}
+.logo_rgi {width: 68px;display: inline-block; vertical-align: middle;}
 .text_row {
 	display: inline-block;
 	vertical-align: middle;

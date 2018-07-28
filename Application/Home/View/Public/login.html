@@ -152,7 +152,7 @@
             console.log(data);
             if (data.status == 1) {
                 toastr.success("登录成功");
-                $("#sub").prop('disabled',true);
+                $("#sub").attr('disabled',true);
                 setTimeout(function () {
                     location.href = "/center";
                 },2000);

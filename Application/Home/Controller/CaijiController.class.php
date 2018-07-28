@@ -7,6 +7,7 @@ use QL\QueryList;
 class CaijiController extends Controller{
 
     public function getCont(){
+        header("Content-Type: text/html;charset=utf-8");
         set_time_limit(0);
         $goods_arr = array(
           0 => array('good_url'=>"http://www.ruijiafushi.com/shop_gln1_a1/1440/products.aspx?sku=754607&shbid=6741"),
@@ -28,8 +29,11 @@ class CaijiController extends Controller{
             );
 
 
+            //手动转码
+//            $html = iconv('GBK','UTF-8',file_get_contents($run_url));
+
             //按照用户设置的规则采集数据
-            $result =  QueryList::Query($run_url,$caiji_rule)->getData(function($item) use($run_url){
+            $result =  QueryList::Query($run_url,$caiji_rule,'','UTF-8','GBK')->getData(function($item) use($run_url){
                 foreach($item as $key => &$content){
                     if($key == 'content'){
                         $piclist = array();
@@ -48,7 +52,7 @@ class CaijiController extends Controller{
             });
             $dir = './demo/'.$sku;
             mkdirs($dir);
-            $dir  = $_SERVER['DOCUMENT_ROOT'].'/Public/demo/'.$sku;
+            $dir  = $_SERVER['DOCUMENT_ROOT'].'/demo/'.$sku;
             foreach ($result[0]['content'] as $key => $one_pic){
                 //下载图片
                 $img = file_get_contents($one_pic);
@@ -58,16 +62,41 @@ class CaijiController extends Controller{
                 file_put_contents($file,$img);
             }
 
+//            $title = iconv("GBK","UTF-8",$result[0]['title']);
+
             $cont_data = $run_url.PHP_EOL.$result[0]['title'];
-            file_put_contents($cont_data,'11.txt');
+            $file = $dir.'/001.txt';
+            file_put_contents($file,$cont_data);
 
             if($loop%8==0){
                 sleep(1);
             }
             $loop++;
         }
-        ppd($result);
+//        ppd($result);
+        ppd('wanbi');
 
+    }
+
+    public function getlist(){
+        header("Content-Type: text/html;charset=utf-8");
+        set_time_limit(0);
+        $page = 1;
+        for($page;$page<=2;$page++){
+            $run_url = "http://www.ruijiafushi.com/shop_gln1_a1/1440/Products_List.aspx?page={$page}&shbid=6741";
+            $caiji_rule = array(
+                //采集文章标题
+                'content' => array('#ProductList1_Repeater1 .SPSX_STYLE1','text'),
+                'url'     => array('#ProductList1_Repeater1 .SPSX_bian a','href')
+            );
+            //按照用户设置的规则采集数据
+            $result =  QueryList::Query($run_url,$caiji_rule,'','UTF-8','GBK')->getData();
+            foreach ($result as $row){
+                $list_url = "http://www.ruijiafushi.com/shop_gln1_a1/1440/".$row['url'];
+                $title    = $row['content'];
+
+            }
+        }
 
     }
 

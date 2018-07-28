@@ -572,72 +572,24 @@
 
                     <ul>
 
+                        <foreach name="newData" item="one_data">
                         <li >
 
                             <dl>
 
-                                <dt>2018-07-06</dt>
+                                <dt>{$one_data.c_date|date="Y-m-d",###}</dt>
 
                             </dl>
 
-                            <h4><a href="/news/mtbd/_gcc_dzztszmsjd__46.html" title="“高产出”的钻展图是怎么设" target="_blank">“高产出”的钻展图是怎么设</a></h4>
+                            <h4><a href="/detail/{$one_data.id}.html" title="{$one_data.title}" target="_blank"><?php echo mbsubstr($one_data['title'],0,10); ?></a></h4>
 
-                            <div class="wk_news_des">相信在淘宝上开店的卖家对于钻展都是非常熟悉的，都知道它是一个付费的引流工具。由于钻展是按照千次展现来扣费的，所以开店的卖家想要得到更多的...</div>
+                            <div class="wk_news_des"><?php echo mbsubstr($one_data['new_desc'],0,10); ?></div>
 
-                            <div class="wk_news_more"><a href="/news/mtbd/_gcc_dzztszmsjd__46.html" title="阅读更多" target="_blank"></a></div>
-
-                        </li>
-
-                        <li >
-
-                            <dl>
-
-                                <dt>2018-07-05</dt>
-
-                            </dl>
-
-                            <h4><a href="/news/mtbd/wdtgnwdptgnxfw_45.html" title="网店托管能为店铺提供哪些服" target="_blank">网店托管能为店铺提供哪些服</a></h4>
-
-                            <div class="wk_news_des">近几年，随着电商平台的火热发展，很多企业想借助这个线上平台来拓展自己的产品，但是大部分企业在这方面什么都不懂，缺乏运营经验，又不想花太多...</div>
-
-                            <div class="wk_news_more"><a href="/news/mtbd/wdtgnwdptgnxfw_45.html" title="阅读更多" target="_blank"></a></div>
+                            <div class="wk_news_more"><a href="/detail/{$one_data.id}.html" title="阅读更多" target="_blank"></a></div>
 
                         </li>
 
-                        <li >
-
-                            <dl>
-
-                                <dt>2018-07-04</dt>
-
-                            </dl>
-
-                            <h4><a href="/news/mtbd/kdzqxyjjnxwt__44.html" title="开店之前需要解决哪些问题？" target="_blank">开店之前需要解决哪些问题？</a></h4>
-
-                            <div class="wk_news_des">提到开淘宝店，可能很多人认为开店是非常容易的一件事，但是却不知道运营的不易。现如今淘宝上竞争是愈演愈烈，想要赚钱可不是我们想的那么简单，...</div>
-
-                            <div class="wk_news_more"><a href="/news/mtbd/kdzqxyjjnxwt__44.html" title="阅读更多" target="_blank"></a></div>
-
-                        </li>
-
-                        <li >
-
-                            <dl>
-
-                                <dt>2018-07-03</dt>
-
-                            </dl>
-
-                            <h4><a href="/news/mtbd/tbmjygzyclxfzwq__43.html" title="淘宝卖家应该怎样处理消费者" target="_blank">淘宝卖家应该怎样处理消费者</a></h4>
-
-                            <div class="wk_news_des">对于淘宝维权这个问题，很多卖家都有说不清道不明的苦楚，想要成为一个成功优秀的卖家，总是要了解透彻淘宝维权这个问题。下面淘宝代运营小编就和...</div>
-
-                            <div class="wk_news_more"><a href="/news/mtbd/tbmjygzyclxfzwq__43.html" title="阅读更多" target="_blank"></a></div>
-
-                        </li>
-
-
-
+                        </foreach>
                     </ul>
 
 

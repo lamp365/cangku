@@ -124,9 +124,9 @@ class OtherController extends AdminController
 
         $search = i('search');
         if(!empty($search)){
-            $res = explode('http',$search);
-            if(count($res) == 2){
-                $where['uri'] = $search;
+            $res = explode('.',$search);
+            if(count($res) >1){
+                $where['uri'] =  array("like","%".$search."%");
             }else{
                 $where['tmall_id'] = $search;
             }

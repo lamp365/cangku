@@ -295,7 +295,7 @@ function ismobile() {
  * @param string $suffix 截断显示字符
  * @return string
  */
-function msubstr($str, $start=0, $length, $charset="utf-8", $suffix=true) {
+function mbsubstr($str, $start=0, $length, $charset="utf-8", $suffix=true) {
     if(function_exists("mb_substr"))
         $slice = mb_substr($str, $start, $length, $charset);
     elseif(function_exists('iconv_substr')) {

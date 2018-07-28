@@ -42,6 +42,9 @@
                                 </foreach>
                             </select>
                         </div>
+                        <div style="width: 240px;float: left;padding-right: 15px;">
+                            <input id="search" type="text" name="search" placeholder="按照ID或者域名查询www.baidu.com" value="{$search}" class="form-control">
+                        </div>
                         <div style="width: 180px;float: left;padding-right: 15px;">
                             <span class="btn btn-info btn-lt" id="sure_bu">确定</span>
                         </div>
@@ -61,7 +64,7 @@
                             <td style="text-align: center">{$onerow.id}</td>
                             <td style="text-align: center"><a href="https://detail.tmall.com/item.html?id={$onerow.tmall_id}" target="_blank">{$onerow.tmall_id}</a></td>
                             <td style="text-align: center">{$onerow.pingtai}</td>
-                            <td style="text-align: center"><a href="{$onerow.url}" target="_blank">{$onerow.url}</a></td>
+                            <td style="text-align: center"><a href="{$onerow.url}" target="_blank"><?php echo mbsubstr($onerow['url'],0,150); ?></a></td>
                             <td class="jin_price" style="text-align: center">{$onerow.c_date|date="Y-m-d H:i",###}</td>
                             <td class="da_price"  style="text-align: center">
                                 <a class="btn btn-warning btn-lt edit" the_id="{$onerow.id}">修 改</a>
@@ -126,10 +129,20 @@
             });
         });
 
+        $("#search").blur(function () {
+           $("#gid").find("option[value='0']").prop('selected',true);
+            $("#uid").html("<option value='0'>前选择对应用户</option>");
+        });
+
         $("#sure_bu").click(function () {
             var uid = $("#uid").val();
             var gid = $("#gid").val();
+            var search = $("#search").val();
+            search = $.trim(search);
             var url = "__CONTROLLER__/tmall/uid/"+uid+"/gid/"+gid;
+            if(search != ''){
+                url = url+"/search/"+search;
+            }
             window.location.href = url;
         });
         $("#gid").change(function () {

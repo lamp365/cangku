@@ -82,7 +82,8 @@ class CaijiController extends Controller{
         header("Content-Type: text/html;charset=utf-8");
         set_time_limit(0);
         $page = 1;
-        for($page;$page<=2;$page++){
+        $length = $page+1;
+        for($page;$page<=$length;$page++){
             $run_url = "http://www.ruijiafushi.com/shop_gln1_a1/1440/Products_List.aspx?page={$page}&shbid=6741";
             $caiji_rule = array(
                 //采集文章标题
@@ -94,10 +95,28 @@ class CaijiController extends Controller{
             foreach ($result as $row){
                 $list_url = "http://www.ruijiafushi.com/shop_gln1_a1/1440/".$row['url'];
                 $title    = $row['content'];
-
+                if(strpos($title,'缺') || strpos($title,'暂') || strpos($title,'断')){
+                    continue;
+                }
+                $url_info = parse_url($list_url);
+                $arr_info = array();
+                parse_str($url_info['query'], $arr_info);
+                $sku = $arr_info['sku'];
+                $data = array();
+                $data['title']    = $title;
+                $data['list_url'] = $list_url;
+                $data['page']     = $page;
+                $data['good_id']       = $sku;
+                $data['type']     = 1;
+                $data['read']     = 0;
+                $res = M("caiji")->where("good_id='{$sku}'")->find();
+                if(!$res){
+                    echo "{$sku}---{$list_url}[完毕]<br/>";
+                    M('caiji')->add($data);
+                }
             }
         }
-
+        echo 'finish!!';
     }
 
     public function demo()

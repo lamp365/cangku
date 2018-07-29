@@ -678,6 +678,15 @@ INSERT INTO `wuliu` (`id`, `code`, `name`, `sendtype`, `desc`, `dispatch_web`, `
 --
 -- Indexes for dumped tables
 --
+CREATE TABLE IF NOT EXISTS `caiji` (
+  `id` int(7) unsigned NOT NULL PRIMARY KEY,
+  `title` varchar(256) NOT NULL DEFAULT '',
+  `list_url` text,
+  `page` int(10) NOT NULL,
+  `good_id` VARCHAR(80) NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL DEFAULT '1' comment "1为 JR家的",
+  `read` tinyint(2) DEFAULT '0' COMMENT '1为已读'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for table `address`

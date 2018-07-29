@@ -179,6 +179,9 @@ class View {
             if(MODULE_NAME == 'Home' && ismobile()){
                 $act = strtolower($tpl_arr[1]);
                 $template = $tpl_arr[0].'/wap_'.$act;
+            }else{
+                $act = strtolower($tpl_arr[1]);
+                $template = $tpl_arr[0].$act;
             }
         }
         $file   =   THEME_PATH.$template.C('TMPL_TEMPLATE_SUFFIX');

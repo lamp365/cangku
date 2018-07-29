@@ -182,7 +182,7 @@ class View {
             }
         }
         $file   =   THEME_PATH.$template.C('TMPL_TEMPLATE_SUFFIX');
-        
+
 //        if(MODULE_NAME == 'Admin') ppd($file);
 
         if(C('TMPL_LOAD_DEFAULTTHEME') && THEME_NAME != C('DEFAULT_THEME') && !is_file($file)){

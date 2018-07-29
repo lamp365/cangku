@@ -17,6 +17,7 @@ class CaijiController extends Controller{
         );
         $loop = 0;
         foreach($goods_arr as $one_item){
+            $page = "page1";
             $run_url  = $one_item['good_url'];
             $url_info = parse_url($run_url);
             $arr_info = array();
@@ -50,16 +51,20 @@ class CaijiController extends Controller{
                 }// foreach end
                 return $item;
             });
-            $dir = './demo/'.$sku;
+            $dir = './ruijie/'.$page.'/'.$sku;
             mkdirs($dir);
-            $dir  = $_SERVER['DOCUMENT_ROOT'].'/demo/'.$sku;
+            $dir  = $_SERVER['DOCUMENT_ROOT'].'/ruijie/'.$page.'/'.$sku;
             foreach ($result[0]['content'] as $key => $one_pic){
+                $houzhui = pathinfo($one_pic, PATHINFO_EXTENSION);
                 //下载图片
                 $img = file_get_contents($one_pic);
-                $name = $key.".jpg";
+                $name = "yuan".$key.'.'.$houzhui;
+                $name2 = $key.'.'.$houzhui;
 
-                $file = $dir.'/'.$name;
+                $file    = $dir.'/'.$name;
+                $sm_file = $dir.'/'.$name2;
                 file_put_contents($file,$img);
+                img2thumb($file,$sm_file,750);
             }
 
 //            $title = iconv("GBK","UTF-8",$result[0]['title']);
@@ -67,7 +72,7 @@ class CaijiController extends Controller{
             $cont_data = $run_url.PHP_EOL.$result[0]['title'];
             $file = $dir.'/001.txt';
             file_put_contents($file,$cont_data);
-
+            ppd(1);
             if($loop%8==0){
                 sleep(1);
             }
@@ -81,7 +86,8 @@ class CaijiController extends Controller{
     public function getlist(){
         header("Content-Type: text/html;charset=utf-8");
         set_time_limit(0);
-        $page = 1;
+        $page = i('page');
+        empty($page) && $page = 1;
         $length = $page+1;
         for($page;$page<=$length;$page++){
             $run_url = "http://www.ruijiafushi.com/shop_gln1_a1/1440/Products_List.aspx?page={$page}&shbid=6741";
@@ -109,7 +115,7 @@ class CaijiController extends Controller{
                 $data['good_id']       = $sku;
                 $data['type']     = 1;
                 $data['read']     = 0;
-                $res = M("caiji")->where("good_id='{$sku}'")->find();
+                $res = M("caiji")->where("type=1 and good_id='{$sku}'")->find();
                 if(!$res){
                     echo "{$sku}---{$list_url}[完毕]<br/>";
                     M('caiji')->add($data);

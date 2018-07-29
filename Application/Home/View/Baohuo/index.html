@@ -35,7 +35,7 @@
         <li style="width:120px" <if condition="$order_state eq '2'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>2))}">调货完成</a></li>
         <li style="width:120px" <if condition="$order_state eq '3'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>3))}">发货完成</a></li>
         <li style="width:120px" <if condition="$order_state eq '-1'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>-1))}">已经关闭</a></li>
-        <li style="width:120px" <if condition="$order_state eq '-4'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>-4))}">全部关闭</a></li>
+        <li style="width:120px" <if condition="$order_state eq '-4'">class="active" </if> ><a href="{:U('baohuo/index',array('order_state'=>-4))}">全部订单</a></li>
     </ul>
     <table class="table table-bordered table-hover"  id="table">
         <thead>

@@ -679,7 +679,7 @@ INSERT INTO `wuliu` (`id`, `code`, `name`, `sendtype`, `desc`, `dispatch_web`, `
 -- Indexes for dumped tables
 --
 CREATE TABLE IF NOT EXISTS `caiji` (
-  `id` int(7) unsigned NOT NULL PRIMARY KEY,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `title` varchar(256) NOT NULL DEFAULT '',
   `list_url` text,
   `page` int(10) NOT NULL,

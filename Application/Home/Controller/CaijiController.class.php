@@ -9,16 +9,17 @@ class CaijiController extends Controller{
     public function getCont(){
         header("Content-Type: text/html;charset=utf-8");
         set_time_limit(0);
-        $goods_arr = array(
-          0 => array('good_url'=>"http://www.ruijiafushi.com/shop_gln1_a1/1440/products.aspx?sku=754607&shbid=6741"),
-          1 => array('good_url'=>"http://www.ruijiafushi.com/shop_gln1_a1/1440/products.aspx?sku=754506&shbid=6741"),
-          2 => array('good_url'=>"http://www.ruijiafushi.com/shop_gln1_a1/1440/products.aspx?sku=754504&shbid=6741"),
-          3 => array('good_url'=>"http://www.ruijiafushi.com/shop_gln1_a1/1440/products.aspx?sku=754498&shbid=6741"),
-        );
+        $page = i('page');
+        empty($page) && $page = 1;
+        $goods_arr = M('caiji')->where("page={$page} and `read`=0")->select();
+        if(empty($goods_arr)){
+            die('no data');
+        }
+
         $loop = 0;
         foreach($goods_arr as $one_item){
-            $page = "page1";
-            $run_url  = $one_item['good_url'];
+            $page = "page".$one_item['page'];
+            $run_url  = $one_item['list_url'];
             $url_info = parse_url($run_url);
             $arr_info = array();
             parse_str($url_info['query'], $arr_info);
@@ -64,7 +65,7 @@ class CaijiController extends Controller{
                 $file    = $dir.'/'.$name;
                 $sm_file = $dir.'/'.$name2;
                 file_put_contents($file,$img);
-                img2thumb($file,$sm_file,750);
+//                img2thumb($file,$sm_file,750);
             }
 
 //            $title = iconv("GBK","UTF-8",$result[0]['title']);
@@ -72,13 +73,15 @@ class CaijiController extends Controller{
             $cont_data = $run_url.PHP_EOL.$result[0]['title'];
             $file = $dir.'/001.txt';
             file_put_contents($file,$cont_data);
-            ppd(1);
-            if($loop%8==0){
+            M('caiji')->where("id={$one_item['id']}")->save(array('read'=>1));
+            echo "宝贝{$sku}完毕<br/>";
+           /* if($loop%8==0){
                 sleep(1);
-            }
+            }*/
             $loop++;
         }
 //        ppd($result);
+        echo "本次一共:".count($goods_arr);
         ppd('wanbi');
 
     }

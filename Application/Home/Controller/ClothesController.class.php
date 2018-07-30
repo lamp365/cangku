@@ -21,6 +21,10 @@ class ClothesController extends CommonController {
  KEY `tamll_id` (`tmall_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 */
 
+        $today = strtotime(date("Y-m-d",time()));
+        $t_wh['c_date'] = array('gt',$today);
+        $t_num = M('Clother')->where($t_wh)->count();
+
         $where = array();
         $where['uid'] = getUidFromSession();
         $search = i('search');
@@ -43,6 +47,7 @@ class ClothesController extends CommonController {
         $this->assign("page",$page);
         $this->assign("sets",$sets);
         $this->assign("search",$search);
+        $this->assign("t_num",$t_num);
         $this->display();
 	}
 	public function add(){

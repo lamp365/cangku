@@ -48,11 +48,15 @@
                         <div style="width: 180px;float: left;padding-right: 15px;">
                             <span class="btn btn-info btn-lt" id="sure_bu">确定</span>
                         </div>
+                        <div style="width: 180px;float: right;text-align: right;font-size: 14px;color: #999">
+                            今日发布{$t_count}个
+                        </div>
                     </div>
 
                     <table class="table table-bordered table-hover"  id="table" style="margin-top: 15px;">
                         <tr>
                             <th style="text-align: center">ID</th>
+                            <th style="text-align: center">发布用户</th>
                             <th style="text-align: center">依文诺宝贝</th>
                             <th style="text-align: center">平台</th>
                             <th style="text-align: center">来源链接</th>
@@ -62,6 +66,7 @@
                         <foreach name="newsData" item="onerow">
                         <tr class="row{$onerow.id}">
                             <td style="text-align: center">{$onerow.id}</td>
+                            <td style="text-align: center">{$onerow.user_name}</td>
                             <td style="text-align: center"><a href="https://detail.tmall.com/item.html?id={$onerow.tmall_id}" target="_blank">{$onerow.tmall_id}</a></td>
                             <td style="text-align: center">{$onerow.pingtai}</td>
                             <td style="text-align: center"><a href="{$onerow.url}" target="_blank"><?php echo mbsubstr($onerow['url'],0,150); ?></a></td>

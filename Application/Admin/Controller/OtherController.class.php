@@ -134,14 +134,24 @@ class OtherController extends AdminController
         $sets = M('siteconfig')->find();
 
         $count = M('Clother')->where($where)->count();
+
+        $t_wh = $where;
+        $today = strtotime(date("Y-m-d",time()));
+        $t_wh['c_date'] = array('gt',$today);
+        $t_count = M('Clother')->where($t_wh)->count();
+
         $p     = new \Think\Page($count,30);
         $page  = $p->show();
         $newsData  = M('Clother')->where($where)->order('id desc')->limit($p->firstRow.','.$p->listRows)->select();
+        foreach ($newsData as &$row){
+            $row['user_name'] = M('user')->where("id={$row['uid']}")->getField('user_name');
+        }
         $userG     = M('user_group')->where("is_delete=0")->select();
         $users     = array();
         if(!empty($gid)){
             $users = M('user')->where("gid={$gid} and is_forbid=0")->select();
         }
+
         $this->assign("users",$users);
         $this->assign("userG",$userG);
         $this->assign("uid",$uid);
@@ -150,6 +160,7 @@ class OtherController extends AdminController
         $this->assign("page",$page);
         $this->assign("sets",$sets);
         $this->assign("search",$search);
+        $this->assign("t_count",$t_count);
         $this->display();
     }
 

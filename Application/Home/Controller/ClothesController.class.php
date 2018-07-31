@@ -22,6 +22,7 @@ class ClothesController extends CommonController {
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 */
 
         $today = strtotime(date("Y-m-d",time()));
+        $t_wh['uid']    = getUidFromSession();
         $t_wh['c_date'] = array('gt',$today);
         $t_num = M('Clother')->where($t_wh)->count();
 

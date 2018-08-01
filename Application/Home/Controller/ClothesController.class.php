@@ -65,7 +65,7 @@ class ClothesController extends CommonController {
             if(empty($data['pingtai'])){
                 $this->error('请输入平台');
             }
-            $data['c_date'] = time();
+
             $arr = parse_url($data['url']);
             $http = $arr['scheme'];
             $host = $arr['host'];
@@ -75,6 +75,7 @@ class ClothesController extends CommonController {
             if($id){
                 M('Clother')->where("id={$id}")->save($data);
             }else{
+                $data['c_date'] = time();
                 M('Clother')->add($data);
             }
             $this->success('操作成功!');

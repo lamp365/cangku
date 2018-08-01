@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{$sets.site_name}</title>
+    <meta name="description" content="{$sets.description}">
+    <meta name="keywords" content="{$sets.keyword}">
+    <link rel="shortcut icon" href="/host.ico" />
+    <link rel="bookmark"href="/host.ico" />
+    <link rel="stylesheet" href="__PUBLIC__/Static/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="__PUBLIC__/Static/bootstrap/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/toastr.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/sweetalert.css">
+    <link rel="stylesheet" href="__PUBLIC__/Home/css/index.css" />
+    <link rel="stylesheet" href="__PUBLIC__/Home/css/news.css" />
+
+    <script type="text/javascript" src='__PUBLIC__/Static/jquery-1.11.2.min.js'></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.js"></script>
+    <script>
+        // 现在window.$和window.jQuery是1.11版本:
+        console.log($().jquery); // => '1.11.0'
+        var $jq = jQuery.noConflict(true);
+        // 现在window.$和window.jQuery被恢复成1.5版本:
+        console.log($().jquery); // => '1.5.0'
+        // 可以通过$jq访问1.11版本的jQuery了
+    </script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.bgiframe.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.ajaxQueue.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/jquery.autocomplete.js"></script>
+    <script src="__PUBLIC__/Static/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/Static/assets/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLIC__/Admin/js/toastr.min.js"></script>
+    <script src="__PUBLIC__/Admin/js/sweetalert.min.js"></script>
+    <script src="__PUBLIC__/Admin/js/layer/laydate/laydate.js"></script>
+    <block name="css"></block>
+</head>
+<body style="background: #ffffff;height: 100%">
+<div class="contain">
+    <div id="hd" style="background:#FFF; height:60px; border-bottom:1px solid #E6E6E6; ">
+
+        <div class="clear"></div>
+
+        <div id="week_nav">
+
+            <div class="wk_navwp">
+
+                <div class="wk_lonav">
+
+                    <div class="wk_logo">
+
+                        <h2><a href="/" title=""><img src="{$sets.site_pic}" alt="" border="0" /></a></h2>
+
+                    </div>
+
+                    <div class="wk_inav" style="width:860px; height:60px;">
+
+                        <ul class="nav">
+
+                            <li><a href="/">网站首页</a></li>
+
+                            <li><a href="/news">公司资讯</a></li>
+                            <li><a href="/about" class="actone">关于我们</a></li>
+                            <li><a href="/center" >个人中心</a></li>
+                            <?php if(isset($_SESSION['web_user']['id'])){  ?>
+                            <li><a href="/logout" >退出登录</a></li>
+                            <?php } ?>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="new_banner">
+        <img src="__PUBLIC__/Home/img/banner_news.jpg" style="width: 100%;height: 100%" alt="">
+    </div>
+    <div class="new_center">
+        <div class="newsul">
+            <ul class="news_content">
+                <p class="a_title">
+                    公司简介
+                    <span class="en">Company profile</span>
+                </p>
+            </ul>
+        </div>
+
+    </div>
+    <div class="new_center" style="background: #f9f9f9;padding-top: 10px;padding-bottom: 15px;">
+        <div class="newsul">
+            <ul class="news_content" style="text-align: left">
+                <p style="margin-top: 30px;" class="a_cont">
+                    青火电商团队成立于2013年，是一个为客户提供一站式电子商务解决方案的年轻团队。<br/>起初是由集美大学在校生曾伟在厦门集美大学成立的一个在校生团队，经过五年如一日的奋斗。<br/>截至目前，青火电商拥有了专业的运营、设计、培训及营销团队成员近50人。
+
+                    <span style="height: 12px;display: block;width: 100%"></span>
+                    青火电商致力于协助客户打通全球电子商务销售链条、完善销售渠道、提升企业品牌价值，以国际化的管理理念、本土化的贴心服务，始终从市场的角度和客户的需求出发，融合视觉美学及有效策略，为品牌创造独到的形象，拓展市场竞争空间与竞争优势。
+                    <br/>2016年成立莆田市荔城区青青之火贸易有限公司，积极拓展线下销售业务，并把有价值的品牌推送到线上运营团队（青火电商）。
+                    <span style="height: 12px;display: block;width: 100%"></span>
+                    <strong style="">目前合作的公司有：</strong>日本goodsoft inc.、香港 NEW BALUNITE LIMITED、深圳麦克韦尔股份有限公司、IASO(UK)英国著名医疗器械公司
+                    <br/><strong style="">目前主营的品牌有：</strong>卡西欧（casio）、精工（Seiko）、西铁城（CITIZEN）、Ivenour服装品牌
+                </p>
+            </ul>
+        </div>
+
+    </div>
+    <!--公司价值观-->
+    <div class="new_center" style="">
+        <div class="newsul">
+            <ul class="news_content" style="text-align: left;background: url('__PUBLIC__/Home/img/service_04.jpg') right bottom no-repeat;">
+                <p class="a_title">
+                    公司价值观
+                    <span class="en">Corporate values</span>
+                </p>
+                <p style="margin-top: 15px;" class="a_cont">
+                    <strong style="color: #ff9900;font-size: 18px;">
+                        做人理念：
+                    </strong>梦想激情诚信感恩
+                    <br/>
+                    <br/>
+                    <strong style="color: #ff9900;font-size: 18px;">
+                        做事理念：
+                    </strong>团队合作敬业尽责创新求变
+                    <br/>
+                    <br/>
+                    <strong style="color: #ff9900;font-size: 18px;">
+                        服务理念：
+                    </strong>为客户创造价值，让客户不断增值。帮助客户成功，我们才能成功
+                    <br/>
+                    <br/>
+                    <strong style="color: #ff9900;font-size: 18px;">
+                        合作理念：
+                    </strong>开放共享，合作共赢
+                    <br/>
+                    <br/>
+                    <strong style="color: #ff9900;font-size: 18px;">
+                        人才理念：
+                    </strong>人皆人才，能者居上。人尽其才，挖掘潜能
+                    <br/>
+                    <br/>
+                    <strong style="color: #ff9900;font-size: 18px;">
+                        财务理念：
+                    </strong>物尽其用，开源节流
+                    <br/>
+                    <br/>
+                </p>
+            </ul>
+        </div>
+
+    </div>
+    <!--使命和愿景-->
+    <div class="new_center" style="background: #f9f9f9;padding-top: 10px;padding-bottom: 15px;">
+        <div class="newsul">
+            <ul class="news_content" style="text-align: left;">
+                <p class="a_title">
+                    使命和愿景
+                    <span class="en">Mission and Vision</span>
+                </p>
+                <p style="margin-top: 15px;" class="a_cont">
+                    <strong style="color: #ff9900;font-size: 18px;">
+                        【使命】：
+                    </strong>
+                    帮助中小企业，赢在电子商务<br/>
+                    <strong style="color: #ff9900;font-size: 18px;">
+                        【愿景】：
+                    </strong>
+                    成为中国第一电子商务服务连锁机构<br/><br/>
+
+                    青火电商旗下拥有一支电子商务专家运营团队和一家专注线下推广、品牌市场挖掘的专业公司（莆田市荔城区青青之火贸易有限公司）<br/>团队成员总共50多人，核心团队有丰富电子商务行业经验，其创始人曾伟拥有超过8年的电商运营经验。<br/>团队从电子商务技术到网络营销策略，从方案咨询指导到托管执行，
+                    <br/>
+                    可以为线上线下客户提供全方位的营销运营服务，实现管理和销售两翼齐飞的服务体系。
+                     <span style="height: 12px;display: block;width: 100%"></span>
+                    青火电商结合中国现阶段的中小企业状况，在服务模式上进行不断创新，推出独特的电子商务代运营服务模式：网络品牌孵化中心。<br/>从前期品牌定位咨询到运营实施，帮助企业解决网络品牌建设和销售渠道建设难题，让企业走上电子商务发展的快车道。
+                    <span style="height: 12px;display: block;width: 100%"></span>
+                    青火电商5年来活跃于来自于淘宝、天猫、拍拍、有啊、团购、聚划算等下有活跃分销商100多家。<br/>致力于为客户提供一站式电子商务解决方案，使客户从传统营销渠道跨进电子商务世界。
+
+                </p>
+            </ul>
+        </div>
+
+    </div>
+
+
+    <footer class="footer">
+        Copyright @ {$sets.site_name}. All Rights Reserved. 2013-2018 <a target="_blank" href="http://icp.alexa.cn/qqzhihuo.com">{$sets.beian}</a>
+    </footer>
+    <div class="modal fade" id="addModalBox" role="dialog">
+        <div class="modal-dialog modal-lt" id="showbox">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    $(function () {
+        $("#addModalBox").on("hidden.bs.modal", function() {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<block name="js"></block>
+
+</html>

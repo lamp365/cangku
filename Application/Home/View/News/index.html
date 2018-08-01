@@ -60,7 +60,7 @@
                             <li><a href="/">网站首页</a></li>
 
                             <li><a href="/news" class="actone">公司资讯</a></li>
-                            <!--<li><a href="/about" >关于我们</a></li>-->
+                            <li><a href="/about" >关于我们</a></li>
                             <li><a href="/center" >个人中心</a></li>
                             <?php if(isset($_SESSION['web_user']['id'])){  ?>
                             <li><a href="/logout" >退出登录</a></li>
@@ -84,7 +84,7 @@
     </div>
     <div class="new_center" style="margin-bottom: 35px;">
         <div class="newsul">
-            <ul class="news_content">
+            <ul class="news_content" style="min-height: 300px;">
                 <foreach name="newsData" item="row">
                     <li>
                         <div class="news-sjc-left">

@@ -55,7 +55,19 @@
             font-size: 18px;
             margin-bottom: 20px;
         }
-    </style>
+        .a_title{
+            font-size: 24px;
+            text-align: left;
+            height: 30PX;
+            line-height: 30PX;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .a_title span.en {
+            padding-left: 15px;
+            color: #ff9900;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+</style>
 </head>
 
 
@@ -89,7 +101,8 @@
         <div data-am-widget="slider" class="am-slider am-slider-a1" data-am-slider='{&quot;directionNav&quot;:false}'>
             <ul class="am-slides">
                 <li>
-                    <img src="__PUBLIC__/Wap/picture/about.jpg">
+                    <!--<img src="__PUBLIC__/Wap/picture/about.jpg">-->
+                    <img src="__PUBLIC__/Home/img/about_mobile.jpg">
                 </li>
             </ul>
         </div>
@@ -105,9 +118,10 @@
               当前位置 》主页 》关于我们
             </p>
         </div>
-        
         <ul>
-            <li>公司名称: {$sets.site_name}</li>
+            <!--<li class="a_title">-->
+                <!--公司简介-->
+                <!--<span class="en">Company profile</span></li>-->
             <li>联系电话: {$sets.mobile}</li>
             <li>联系Q Q: <a href="http://wpa.qq.com/msgrd?v=3&uin={$sets.qq}&site=qqzhihuo.com&menu=yes" target="_blank">{$sets.qq}</a></li>
             <li>公司地址: {$sets.address}</li>

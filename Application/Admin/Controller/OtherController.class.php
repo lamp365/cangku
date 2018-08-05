@@ -122,6 +122,10 @@ class OtherController extends AdminController
         $gid   = i('gid');
         !empty($uid) && $where['uid'] = $uid;
 
+        $timeInfo = getTimestapFromTimeJS();
+        $s_time   = $timeInfo['s_time'];
+        $e_time   = $timeInfo['e_time'];
+
         $search = i('search');
         if(!empty($search)){
             $res = explode('.',$search);
@@ -131,6 +135,10 @@ class OtherController extends AdminController
                 $where['tmall_id'] = $search;
             }
         }
+        if(!empty($s_time) && !empty($e_time)){
+            $where['c_date'] = array(array('gt',$s_time),array('lt',$e_time));
+        }
+
         $sets = M('siteconfig')->find();
 
         $count = M('Clother')->where($where)->count();
@@ -161,6 +169,8 @@ class OtherController extends AdminController
         $this->assign("sets",$sets);
         $this->assign("search",$search);
         $this->assign("t_count",$t_count);
+        $this->assign("s_time",$s_time);
+        $this->assign("e_time",$e_time);
         $this->display();
     }
 

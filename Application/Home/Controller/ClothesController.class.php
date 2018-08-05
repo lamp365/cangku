@@ -28,6 +28,11 @@ class ClothesController extends CommonController {
 
         $where = array();
         $where['uid'] = getUidFromSession();
+
+        $timeInfo = getTimestapFromTimeJS();
+        $s_time   = $timeInfo['s_time'];
+        $e_time   = $timeInfo['e_time'];
+
         $search = i('search');
         if(!empty($search)){
             $res = explode('http',$search);
@@ -37,6 +42,10 @@ class ClothesController extends CommonController {
                 $where['tmall_id'] = $search;
             }
         }
+        if(!empty($s_time) && !empty($e_time)){
+            $where['c_date'] = array(array('gt',$s_time),array('lt',$e_time));
+        }
+
         $sets = M('siteconfig')->find();
 
         $count = M('Clother')->where($where)->count();
@@ -47,6 +56,8 @@ class ClothesController extends CommonController {
         $this->assign("newsData",$newsData);
         $this->assign("page",$page);
         $this->assign("sets",$sets);
+        $this->assign("s_time",$s_time);
+        $this->assign("e_time",$e_time);
         $this->assign("search",$search);
         $this->assign("t_num",$t_num);
         $this->display();

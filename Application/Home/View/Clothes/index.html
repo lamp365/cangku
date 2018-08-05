@@ -89,6 +89,12 @@
             <div style="float: left;width: 200px">
                 <input id="search" style="margin-top: 8px;" type="text" name="search" placeholder="按照ID或者域名查询" value="{$search}" class="form-control">
             </div>
+            <div style="float: left;width: 140px;margin-left: 10px">
+                <input class="form-control" style="margin-top: 8px;" autocomplete="off" id="startTime" name="s_time"  value="{$s_time|tplhtmlTime='start',###}" type="text" />
+            </div>
+            <div style="float: left;width: 140px;margin-left: 10px">
+                <input class="form-control" style="margin-top: 8px;" autocomplete="off" id="endTime" name="e_time"  value="{$e_time|tplhtmlTime='end',###}" type="text" />
+            </div>
             <div style="float: left;width: 80px;margin-left: 15px;">
                 <span class="btn btn-info btn-lt" onclick="get_search();">确定</span>
             </div>
@@ -165,14 +171,32 @@
             var url = $(this).attr('url');
             window.open(url);
         });
+
+        laydate({
+            elem: '#startTime',
+            format: 'YYYY-MM-DD', //日期格式
+            event: 'focus'
+        });
+        laydate({
+            elem: '#endTime',
+            format: 'YYYY-MM-DD', //日期格式
+            event: 'focus'
+        });
+
     });
     function get_search() {
-        var search = $("#search").val();
-        var url = "__CONTROLLER__/index";
-        if($.trim(search) != ''){
-            url = url +"?search="+search;
+        var res = checkForm();
+        if(res){
+            var s_time = $("#startTime").val();
+            var e_time = $("#endTime").val();
+            var search = $("#search").val();
+            var url = "__CONTROLLER__/index?s_time="+s_time+"&e_time="+e_time;
+            if($.trim(search) != ''){
+                url = url +"&search="+search;
+            }
+            window.location.href = url;
         }
-        window.location.href = url;
+
     }
     $(".i_news_right").dblclick(function (e) {
         var id = $(this).find("font").text();
@@ -234,6 +258,33 @@
         });
 
     });
+
+    function checkForm() {
+        var s_time = $("#startTime").val();
+        var e_time = $("#endTime").val();
+
+        var time1 = new Date(s_time);
+        s_time = time1.getTime()/1000;
+
+        var time2 = new Date(e_time);
+        e_time = time2.getTime()/1000;
+        console.log(s_time);
+        console.log(e_time);
+        if(isNaN(s_time) && !isNaN(e_time) ){
+            toastr.warning('请设置好时间!');
+            return false;
+        }
+
+        if(!isNaN(s_time) && isNaN(e_time) ){
+            toastr.warning('请设置好时间!');
+            return false;
+        }
+        if(s_time > e_time){
+            toastr.warning('开始时间要小于结束时间!');
+            return false;
+        }
+        return true;
+    }
 </script>
 <block name="js"></block>
 

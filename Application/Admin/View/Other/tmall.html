@@ -45,10 +45,16 @@
                         <div style="width: 240px;float: left;padding-right: 15px;">
                             <input id="search" type="text" name="search" placeholder="按照ID或者域名查询www.baidu.com" value="{$search}" class="form-control">
                         </div>
-                        <div style="width: 180px;float: left;padding-right: 15px;">
+                        <div style="width: 140px;float: left;padding-right: 15px;">
+                            <input class="form-control" autocomplete="off" id="startTime" name="s_time"  value="{$s_time|tplhtmlTime='start',###}" type="text" />
+                        </div>
+                        <div style="width: 140px;float: left;padding-right: 15px;">
+                            <input class="form-control" autocomplete="off" id="endTime" name="e_time"  value="{$e_time|tplhtmlTime='end',###}" type="text" />
+                        </div>
+                        <div style="width: 80px;float: left;padding-right: 15px;">
                             <span class="btn btn-info btn-lt" id="sure_bu">确定</span>
                         </div>
-                        <div style="width: 180px;float: right;text-align: right;font-size: 14px;color: #999">
+                        <div style="width: 140px;float: right;text-align: right;font-size: 14px;color: #999">
                             今日发布{$t_count}个
                         </div>
                     </div>
@@ -132,6 +138,16 @@
                 $(this).removeData("bs.modal");
                 $table.bootstrapTable('refresh', {silent: true});
             });
+            laydate({
+                elem: '#startTime',
+                format: 'YYYY-MM-DD', //日期格式
+                event: 'focus'
+            });
+            laydate({
+                elem: '#endTime',
+                format: 'YYYY-MM-DD', //日期格式
+                event: 'focus'
+            });
         });
 
         $("#search").blur(function () {
@@ -142,13 +158,19 @@
         $("#sure_bu").click(function () {
             var uid = $("#uid").val();
             var gid = $("#gid").val();
-            var search = $("#search").val();
-            search = $.trim(search);
-            var url = "__CONTROLLER__/tmall/uid/"+uid+"/gid/"+gid;
-            if(search != ''){
-                url = url+"/search/"+search;
+            var res = checkForm();
+            if(res){
+                var search = $("#search").val();
+                var s_time = $("#startTime").val();
+                var e_time = $("#endTime").val();
+                search = $.trim(search);
+                var url = "__CONTROLLER__/tmall/uid/"+uid+"/gid/"+gid+"/s_time/"+s_time+"/e_time/"+e_time;
+                if(search != ''){
+                    url = url+"/search/"+search;
+                }
+                window.location.href = url;
             }
-            window.location.href = url;
+            
         });
         $("#gid").change(function () {
             var url = "/admin/bill/ajaxUser";
@@ -173,5 +195,32 @@
                 });
             }
         });
+
+        function checkForm() {
+            var s_time = $("#startTime").val();
+            var e_time = $("#endTime").val();
+
+            var time1 = new Date(s_time);
+            s_time = time1.getTime()/1000;
+
+            var time2 = new Date(e_time);
+            e_time = time2.getTime()/1000;
+            console.log(s_time);
+            console.log(e_time);
+            if(isNaN(s_time) && !isNaN(e_time) ){
+                toastr.warning('请设置好时间!');
+                return false;
+            }
+
+            if(!isNaN(s_time) && isNaN(e_time) ){
+                toastr.warning('请设置好时间!');
+                return false;
+            }
+            if(s_time > e_time){
+                toastr.warning('开始时间要小于结束时间!');
+                return false;
+            }
+            return true;
+        }
     </script>
 </block>
